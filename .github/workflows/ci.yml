@@ -115,6 +115,7 @@ jobs:
            cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/set-code-hash/updated-incrementer/Cargo.toml;
            foreach ($example in Get-ChildItem  -Directory "\*") {
                if ($example -Match 'upgradeable-contracts') { continue }
+               if ($example -Match 'artifacts') { continue }
                echo "Processing example: $example";
                cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
                cargo clean --manifest-path=$example/Cargo.toml;
@@ -134,6 +135,7 @@ jobs:
            cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/set-code-hash/updated-incrementer/Cargo.toml;
            for example in ./*/; do
                if [ "$example" = "upgradeable-contracts/" ]; then continue; fi;
+               if [ "$example" = "artifacts/" ]; then continue; fi;
                echo "Processing example: $example";
                cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
            done
