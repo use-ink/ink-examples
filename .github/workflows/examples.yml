@@ -60,7 +60,6 @@ jobs:
           command: install
           args: --git https://github.com/paritytech/cargo-contract.git
 
-
       - name: Install cargo-dylint
         uses: baptiste0928/cargo-install@bf6758885262d0e6f61089a9d8c8790d3ac3368f # v1.3.0
         with:
@@ -74,8 +73,7 @@ jobs:
           version: 1
 
       - name: Download and run latest `substrate-contracts-node` binary
-        if: runner.os == 'macOS'
-        if: runner.os == 'Linux'
+        if: #{{ runner.os == 'macOS' || runner.os == 'Linux' }}
         run: |
             curl -L -o substrate-contracts-node.zip 'https://gitlab.parity.io/parity/mirrors/substrate-contracts-node/-/jobs/artifacts/main/download?job=build-mac' && \
             unzip substrate-contracts-node.zip && \
