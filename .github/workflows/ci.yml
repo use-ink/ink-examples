@@ -27,7 +27,7 @@ jobs:
         toolchain:
           - stable
         job:
-          - build
+          - contract build
           - test
     runs-on: ${{ matrix.platform }}
     env:
@@ -97,19 +97,18 @@ jobs:
            $delegator_subcontracts = "accumulator","adder","subber"
            foreach ($contract in $delegator_subcontracts) {
                echo "Processing delegator contract: $contract";
-               cargo contract ${{ matrix.job }} --verbose --manifest-path delegator/${contract}/Cargo.toml;
+               cargo ${{ matrix.job }} --verbose --manifest-path delegator/${contract}/Cargo.toml;
            }
            $upgradeable_contracts = "forward-calls","set-code-hash"
            foreach ($contract in $upgradeable_contracts) {
                echo "Processing upgradeable contract: $contract";
-               cargo contract ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/${contract}/Cargo.toml;
+               cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/${contract}/Cargo.toml;
            }
-           cargo contract ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/set-code-hash/updated-incrementer/Cargo.toml;
+           cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/set-code-hash/updated-incrementer/Cargo.toml;
            foreach ($example in Get-ChildItem  -Directory "\*") {
                if ($example -Match 'upgradeable-contracts') { continue }
-               if ($example -Match 'lang-err-integration-tests') { continue }
                echo "Processing example: $example";
-               cargo contract ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
+               cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
                cargo clean --manifest-path=$example/Cargo.toml;
            }
 
@@ -118,15 +117,15 @@ jobs:
         run: |
            for contract in ${DELEGATOR_SUBCONTRACTS}; do
                echo "Processing delegator contract: $contract";
-               cargo contract ${{ matrix.job }} --verbose --manifest-path delegator/${contract}/Cargo.toml;
+               cargo ${{ matrix.job }} --verbose --manifest-path delegator/${contract}/Cargo.toml;
            done
            for contract in ${UPGRADEABLE_CONTRACTS}; do
                 echo "Processing upgradeable contract: $contract";
-                cargo contract ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/$contract/Cargo.toml;
+                cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/$contract/Cargo.toml;
            done
-           cargo contract ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/set-code-hash/updated-incrementer/Cargo.toml;
+           cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/set-code-hash/updated-incrementer/Cargo.toml;
            for example in ./*/; do
                if [ "$example" = "upgradeable-contracts/" ]; then continue; fi;
                echo "Processing example: $example";
-               cargo contract ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
+               cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
            done
