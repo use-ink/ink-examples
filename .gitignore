@@ -6,6 +6,7 @@
 /primitives/target/
 /examples/**/target/
 /design/
+.idea/
 
 # Ignore backup files creates by cargo fmt.
 **/*.rs.bk
