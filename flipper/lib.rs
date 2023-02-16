@@ -40,6 +40,7 @@ pub mod flipper {
         #[ink::test]
         fn default_works() {
             let flipper = Flipper::new_default();
+            eprintln!("test the gha ci");
             assert!(!flipper.get());
         }
 
