@@ -3,7 +3,7 @@ name: continuous-intergration/examples
 on:
   push:
     branches:
-      - master
+      - main
     tags:
         - v*
     paths-ignore:
@@ -11,7 +11,9 @@ on:
       - '.gitlab-ci.yml'
   pull_request:
     branches:
-      - master
+      - main
+    paths:
+      - '.github/workflows/examples.yml'
 
 jobs:
   check:
@@ -82,7 +84,7 @@ jobs:
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2.2.0
 
-      - name: Install `cargo-contract` `master`
+      - name: Install `cargo-contract` `main`
         uses: actions-rs/cargo@v1
         with:
             command: install
