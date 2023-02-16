@@ -1,0 +1,12 @@
+ContractResult {
+	gas_consumed: 5501174466,
+	gas_required: 74999922688,
+	storage_deposit: StorageDeposit::Charge(0),
+	debug_message: [],
+	result: Ok(
+		ExecReturnValue {
+			flags: (empty),
+			data: Bytes([0, 57, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+		}
+	)
+}
