@@ -69,7 +69,7 @@ jobs:
           version: 1
 
       - name: Download and run latest `substrate-contracts-node` binary
-        if: #{{ runner.os == 'macOS' || runner.os == 'Linux' }}
+        if: runner.os == 'macOS' || runner.os == 'Linux'
         run: |
             curl -L -o substrate-contracts-node.zip 'https://gitlab.parity.io/parity/mirrors/substrate-contracts-node/-/jobs/artifacts/main/download?job=build-mac' && \
             unzip substrate-contracts-node.zip && \
@@ -115,7 +115,7 @@ jobs:
            }
 
       - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: #{{ runner.os == 'macOS' || runner.os == 'Linux' }}
+        if: runner.os == 'macOS' || runner.os == 'Linux'
         run: |
            for contract in ${DELEGATOR_SUBCONTRACTS}; do
                echo "Processing delegator contract: $contract";
