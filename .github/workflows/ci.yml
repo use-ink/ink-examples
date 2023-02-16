@@ -134,8 +134,8 @@ jobs:
            done
            cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/set-code-hash/updated-incrementer/Cargo.toml;
            for example in ./*/; do
-               if [ "$example" = "upgradeable-contracts/" ]; then continue; fi;
-               if [ "$example" = "artifacts/" ]; then continue; fi;
+               if [ "$example" = "./upgradeable-contracts/" ]; then continue; fi;
+               if [ "$example" = "./artifacts/" ]; then continue; fi;
                echo "Processing example: $example";
                cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
            done
