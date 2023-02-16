@@ -21,11 +21,9 @@ jobs:
     strategy:
       matrix:
         platform:
-          # - macos-latest
           - ubuntu-latest
-# Windows installation of `cargo-contract` currently fails due to https://github.com/paritytech/cargo-contract/issues/649
-# Once this is resolved we should re-enable building the examples on windows
-#          - windows-latest
+          - macos-latest
+          - windows-latest
         toolchain:
           - stable
         job:
@@ -37,9 +35,6 @@ jobs:
       DELEGATOR_SUBCONTRACTS:   "accumulator adder subber"
       RUST_BACKTRACE:           full
     steps:
-
-      - uses: actions/setup-node@v3
-      - run: npm install wasm-opt -g
 
       - name: Checkout sources & submodules
         uses: actions/checkout@v3
@@ -56,6 +51,11 @@ jobs:
           components: rust-src
           override: true
 
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2.2.0
+
+      - name: Install `cargo-contract` `main`
+
       - name: Install cargo-dylint
         uses: baptiste0928/cargo-install@bf6758885262d0e6f61089a9d8c8790d3ac3368f # v1.3.0
         with:
@@ -69,7 +69,7 @@ jobs:
           version: 1
 
       - name: Download and run latest `substrate-contracts-node` binary
-        if: runner.os == 'macOS'
+        if: #{{ runner.os == 'macOS' || runner.os == 'Linux' }}
         run: |
             curl -L -o substrate-contracts-node.zip 'https://gitlab.parity.io/parity/mirrors/substrate-contracts-node/-/jobs/artifacts/main/download?job=build-mac' && \
             unzip substrate-contracts-node.zip && \
@@ -82,10 +82,6 @@ jobs:
             cargo install contracts-node --git https://github.com/paritytech/substrate-contracts-node.git --force --locked && \
             substrate-contracts-node -linfo,runtime::contracts=debug  2>&1 | tee /tmp/contracts-node.log &
 
-      - name: Rust Cache
-        uses: Swatinem/rust-cache@v2.2.0
-
-      - name: Install `cargo-contract` `main`
         uses: actions-rs/cargo@v1
         with:
             command: install
@@ -93,7 +89,6 @@ jobs:
 
       - name: Output versions
         run: |
-            wasm-opt --version
             cargo -vV
             cargo contract --version
 
@@ -120,7 +115,7 @@ jobs:
            }
 
       - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os == 'macOS'
+        if: #{{ runner.os == 'macOS' || runner.os == 'Linux' }}
         run: |
            for contract in ${DELEGATOR_SUBCONTRACTS}; do
                echo "Processing delegator contract: $contract";
