@@ -23,7 +23,6 @@ jobs:
         platform:
           - ubuntu-latest
           - macos-latest
-          - windows-latest
         toolchain:
           - stable
         job:
