@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         platform:
-          - ubuntu-latest
+          - ubuntu_20_64_core
           - macos-latest
         toolchain:
           - stable
