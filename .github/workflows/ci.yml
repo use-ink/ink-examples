@@ -14,7 +14,7 @@ on:
       - main
       - ln-add-windows-runner
     paths:
-      - '.github/workflows/examples.yml'
+      - '.github/workflows/ci.yml'
 
 jobs:
   check:
