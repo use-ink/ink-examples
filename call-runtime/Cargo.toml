@@ -1,12 +1,12 @@
 [package]
 name = "call-runtime"
-version = "4.0.0"
+version = "4.0.1"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 publish = false
 
 [dependencies]
-ink = { version = "4.0", default-features = false, features = ["call-runtime"] }
+ink = { version = "4.0.1", default-features = false, features = ["call-runtime"] }
 
 scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2.3", default-features = false, features = ["derive"], optional = true }
@@ -21,7 +21,7 @@ sp-io = { version = "18.0.0", default-features = false, features = ["disable_pan
 sp-runtime = { version = "19.0.0", default-features = false }
 
 [dev-dependencies]
-ink_e2e = { version = "4.0" }
+ink_e2e = { version = "4.0.1" }
 
 [lib]
 path = "lib.rs"
