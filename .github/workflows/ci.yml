@@ -125,7 +125,7 @@ jobs:
            }
 
       - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: #{{ runner.os == 'macOS' || runner.os == 'Linux' }}
+        if: runner.os != 'Windows'
         run: |
            for contract in ${DELEGATOR_SUBCONTRACTS}; do
                echo "Processing delegator contract: $contract";
