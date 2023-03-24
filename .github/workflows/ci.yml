@@ -114,7 +114,7 @@ jobs:
            cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/set-code-hash/updated-incrementer/Cargo.toml;
 
            cargo ${{ matrix.job }} --verbose --manifest-path conditional-compilation/Cargo.toml --features foo;
-           cargo ${{ matrix.job }} --verbose --manifest-path conditional-compilation/Cargo.toml --features foo;
+           cargo ${{ matrix.job }} --verbose --manifest-path conditional-compilation/Cargo.toml --features bar;
            cargo ${{ matrix.job }} --verbose --manifest-path conditional-compilation/Cargo.toml --features "foo, bar"; 
            foreach ($example in Get-ChildItem  -Directory "\*") {
                if ($example -Match 'upgradeable-contracts') { continue }
