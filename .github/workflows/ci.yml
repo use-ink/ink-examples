@@ -138,7 +138,7 @@ jobs:
            cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/set-code-hash/updated-incrementer/Cargo.toml;
 
            cargo ${{ matrix.job }} --verbose --manifest-path=conditional-compilation/Cargo.toml --features=foo;
-           cargo ${{ matrix.job }} --verbose --manifest-path=conditional-compilation/Cargo.toml --features=foo;
+           cargo ${{ matrix.job }} --verbose --manifest-path=conditional-compilation/Cargo.toml --features=bar;
            cargo ${{ matrix.job }} --verbose --manifest-path=conditional-compilation/Cargo.toml --features="foo, bar"; 
            for example in ./*/; do
                if [ "$example" = "./upgradeable-contracts/" ]; then continue; fi;
