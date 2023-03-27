@@ -1,6 +1,6 @@
 [package]
 name = "updated-incrementer"
-version = "4.0.1"
+version = "4.1.0"
 edition = "2021"
 authors = ["Parity Technologies <admin@parity.io>"]
 publish = false
@@ -8,7 +8,7 @@ publish = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ink = { version = "4.0", default-features = false }
+ink = { version = "4.1", default-features = false }
 
 scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2.3", default-features = false, features = ["derive"], optional = true }

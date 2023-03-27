@@ -13,7 +13,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/examples.yml'
+      - '.github/workflows/ci.yml'
 
 jobs:
   check:
@@ -112,6 +112,10 @@ jobs:
                cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/${contract}/Cargo.toml;
            }
            cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/set-code-hash/updated-incrementer/Cargo.toml;
+
+           cargo ${{ matrix.job }} --verbose --manifest-path conditional-compilation/Cargo.toml --features foo;
+           cargo ${{ matrix.job }} --verbose --manifest-path conditional-compilation/Cargo.toml --features bar;
+           cargo ${{ matrix.job }} --verbose --manifest-path conditional-compilation/Cargo.toml --features "foo, bar"; 
            foreach ($example in Get-ChildItem  -Directory "\*") {
                if ($example -Match 'upgradeable-contracts') { continue }
                if ($example -Match 'artifacts') { continue }
@@ -121,7 +125,7 @@ jobs:
            }
 
       - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: #{{ runner.os == 'macOS' || runner.os == 'Linux' }}
+        if: runner.os != 'Windows'
         run: |
            for contract in ${DELEGATOR_SUBCONTRACTS}; do
                echo "Processing delegator contract: $contract";
@@ -132,6 +136,10 @@ jobs:
                 cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/$contract/Cargo.toml;
            done
            cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/set-code-hash/updated-incrementer/Cargo.toml;
+
+           cargo ${{ matrix.job }} --verbose --manifest-path=conditional-compilation/Cargo.toml --features=foo;
+           cargo ${{ matrix.job }} --verbose --manifest-path=conditional-compilation/Cargo.toml --features=bar;
+           cargo ${{ matrix.job }} --verbose --manifest-path=conditional-compilation/Cargo.toml --features="foo, bar"; 
            for example in ./*/; do
                if [ "$example" = "./upgradeable-contracts/" ]; then continue; fi;
                if [ "$example" = "./artifacts/" ]; then continue; fi;
