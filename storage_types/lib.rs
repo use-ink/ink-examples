@@ -145,6 +145,13 @@ mod storage_types {
     impl StorageTypes {
         #[ink(constructor)]
         pub fn new() -> Self {
+            let mut vec_string_value: Vec<String> = Vec::new();
+            vec_string_value.push(String::from("This is a string"));
+            vec_string_value.push(String::from("This is another string"));
+
+            let mut vec_vec_string_value: Vec<Vec<String>> = Vec::new();
+            vec_vec_string_value.push(vec_string_value.clone());
+
             Self {
                 unsigned_integers: UnsignedIntegers {
                     u128_value_max: u128::MAX,
@@ -172,8 +179,8 @@ mod storage_types {
                 },
                 prelude_types: PreludeTypes {
                     string_value: String::from("This is a string"),
-                    vec_string_value: Vec::new(), // TODO add elements
-                    vec_vec_string_value: Vec::new(), // TODO add nested elements
+                    vec_string_value,
+                    vec_vec_string_value,
                 },
                 primitive_types: PrimitiveTypes {
                     bool_value: true,
