@@ -21,13 +21,12 @@ ink_e2e = { version = "4.0.1" }
 [lib]
 name = "delegator"
 path = "lib.rs"
-crate-type = ["cdylib"]
-# crate-type = [
-#     # Used for normal contract Wasm blobs.
-#     "cdylib",
-#     # Used for ABI generation.
-#     "rlib",
-# ]
+crate-type = [
+    # Used for normal contract Wasm blobs.
+    "cdylib",
+    # Used for ABI generation.
+    "rlib",
+]
 
 [features]
 default = ["std"]
