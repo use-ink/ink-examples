@@ -5,8 +5,7 @@ mod storage_types {
     use ink::prelude::string::String;
     use ink::prelude::vec::Vec;
 
-    /// Errors that can occur upon calling this contract.
-    #[derive(Debug, PartialEq, Eq, scale::Encode, scale::Decode)]
+    #[derive(Debug, scale::Encode, scale::Decode)]
     #[cfg_attr(feature = "std", derive(::scale_info::TypeInfo))]
     pub enum Error {
         ThisIsAnErrorEnum,
@@ -53,13 +52,7 @@ mod storage_types {
     #[derive(scale::Decode, scale::Encode, Clone)]
     #[cfg_attr(
         feature = "std",
-        derive(
-            Debug,
-            PartialEq,
-            Eq,
-            scale_info::TypeInfo,
-            ink::storage::traits::StorageLayout
-        )
+        derive(Debug, scale_info::TypeInfo, ink::storage::traits::StorageLayout)
     )]
     pub struct SignedIntegers {
         i128_value_max: i128,
@@ -77,13 +70,7 @@ mod storage_types {
     #[derive(scale::Decode, scale::Encode, Clone)]
     #[cfg_attr(
         feature = "std",
-        derive(
-            Debug,
-            PartialEq,
-            Eq,
-            scale_info::TypeInfo,
-            ink::storage::traits::StorageLayout
-        )
+        derive(Debug, scale_info::TypeInfo, ink::storage::traits::StorageLayout)
     )]
     pub struct SubstrateTypes {
         account_id_value: AccountId,
@@ -95,15 +82,9 @@ mod storage_types {
     #[derive(scale::Decode, scale::Encode, Clone)]
     #[cfg_attr(
         feature = "std",
-        derive(
-            Debug,
-            PartialEq,
-            Eq,
-            scale_info::TypeInfo,
-            ink::storage::traits::StorageLayout
-        )
+        derive(Debug, scale_info::TypeInfo, ink::storage::traits::StorageLayout)
     )]
-    pub struct PreludeTypes {
+    pub struct InkPreludeTypes {
         string_value: String,
         vec_string_value: Vec<String>,
         vec_vec_string_value: Vec<Vec<String>>,
@@ -112,13 +93,7 @@ mod storage_types {
     #[derive(scale::Decode, scale::Encode, Clone)]
     #[cfg_attr(
         feature = "std",
-        derive(
-            Debug,
-            PartialEq,
-            Eq,
-            scale_info::TypeInfo,
-            ink::storage::traits::StorageLayout
-        )
+        derive(Debug, scale_info::TypeInfo, ink::storage::traits::StorageLayout)
     )]
     pub struct UnsignedIntegers {
         u128_value_max: u128,
@@ -135,7 +110,7 @@ mod storage_types {
 
     #[ink(storage)]
     pub struct StorageTypes {
-        prelude_types: PreludeTypes,
+        ink_prelude_types: InkPreludeTypes,
         primitive_types: PrimitiveTypes,
         signed_integers: SignedIntegers,
         substrate_types: SubstrateTypes,
@@ -177,7 +152,7 @@ mod storage_types {
                     i8_value_max: i8::MAX,
                     i8_value_min: i8::MIN,
                 },
-                prelude_types: PreludeTypes {
+                ink_prelude_types: InkPreludeTypes {
                     string_value: String::from("This is a string"),
                     vec_string_value,
                     vec_vec_string_value,
@@ -209,8 +184,8 @@ mod storage_types {
         }
 
         #[ink(message)]
-        pub fn get_prelude_types(&self) -> PreludeTypes {
-            self.prelude_types.clone()
+        pub fn get_ink_prelude_types(&self) -> InkPreludeTypes {
+            self.ink_prelude_types.clone()
         }
 
         #[ink(message)]
