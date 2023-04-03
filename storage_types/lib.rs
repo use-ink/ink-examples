@@ -4,6 +4,7 @@
 mod storage_types {
     use ink::prelude::string::String;
     use ink::prelude::vec::Vec;
+    use ink::storage::Mapping;
 
     #[derive(Debug, scale::Encode, scale::Decode)]
     #[cfg_attr(feature = "std", derive(::scale_info::TypeInfo))]
@@ -115,17 +116,42 @@ mod storage_types {
         signed_integers: SignedIntegers,
         substrate_types: SubstrateTypes,
         unsigned_integers: UnsignedIntegers,
+        mapping_u128_u128_value: Mapping<u128, u128>,
+        mapping_account_balance_value: Mapping<AccountId, Balance>,
+        mapping_account_hash_value: Mapping<AccountId, Hash>,
+        mapping_account_account_balance_value: Mapping<(AccountId, AccountId), Balance>,
     }
 
     impl StorageTypes {
         #[ink(constructor)]
         pub fn new() -> Self {
+            // Vectors
             let mut vec_string_value: Vec<String> = Vec::new();
             vec_string_value.push(String::from("This is a string"));
             vec_string_value.push(String::from("This is another string"));
 
             let mut vec_vec_string_value: Vec<Vec<String>> = Vec::new();
             vec_vec_string_value.push(vec_string_value.clone());
+
+            let mut vec_vec_string_value: Vec<Vec<String>> = Vec::new();
+            vec_vec_string_value.push(vec_string_value.clone());
+
+            // Mappings
+            let mut mapping_u128_u128_value = Mapping::new();
+            mapping_u128_u128_value.insert(42, &23);
+
+            let mut mapping_account_balance_value = Mapping::new();
+            mapping_account_balance_value.insert(AccountId::from([0x01; 32]), &42);
+
+            let mut mapping_account_hash_value = Mapping::new();
+            mapping_account_hash_value
+                .insert(AccountId::from([0x01; 32]), &Hash::from([0xff; 32]));
+
+            let mut mapping_account_account_balance_value = Mapping::new();
+            mapping_account_account_balance_value.insert(
+                (AccountId::from([0x01; 32]), AccountId::from([0x02; 32])),
+                &23,
+            );
 
             Self {
                 unsigned_integers: UnsignedIntegers {
@@ -170,6 +196,10 @@ mod storage_types {
                     balance_value_min: Balance::MIN,
                     hash_value: Hash::from([0x00; 32]),
                 },
+                mapping_u128_u128_value,
+                mapping_account_balance_value,
+                mapping_account_hash_value,
+                mapping_account_account_balance_value,
             }
         }
 
