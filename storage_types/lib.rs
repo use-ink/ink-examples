@@ -17,15 +17,9 @@ mod storage_types {
     #[derive(Default, scale::Decode, scale::Encode, Clone)]
     #[cfg_attr(
         feature = "std",
-        derive(
-            Debug,
-            PartialEq,
-            Eq,
-            scale_info::TypeInfo,
-            ink::storage::traits::StorageLayout
-        )
+        derive(Debug, scale_info::TypeInfo, ink::storage::traits::StorageLayout)
     )]
-    pub enum TestEnum {
+    pub enum EnumWithoutValues {
         #[default]
         A,
         B,
@@ -37,9 +31,21 @@ mod storage_types {
         feature = "std",
         derive(Debug, scale_info::TypeInfo, ink::storage::traits::StorageLayout)
     )]
+    pub enum EnumWithValues {
+        OneValue(u32),
+        TwoValues(u32, u32),
+        TheeValues(u32, u32, u32),
+    }
+
+    #[derive(scale::Decode, scale::Encode, Clone)]
+    #[cfg_attr(
+        feature = "std",
+        derive(Debug, scale_info::TypeInfo, ink::storage::traits::StorageLayout)
+    )]
     pub struct OtherTypes {
         bool_value: bool,
-        enum_value: TestEnum,
+        enum_without_values: EnumWithoutValues,
+        enum_with_values: EnumWithValues,
     }
 
     #[derive(scale::Decode, scale::Encode, Clone)]
@@ -169,7 +175,8 @@ mod storage_types {
                 },
                 other_types: OtherTypes {
                     bool_value: true,
-                    enum_value: TestEnum::A,
+                    enum_without_values: EnumWithoutValues::A,
+                    enum_with_values: EnumWithValues::TheeValues(1, 2, 3),
                 },
                 substrate_types: SubstrateTypes {
                     account_id_value: AccountId::from([0x00; 32]),
