@@ -42,10 +42,12 @@ mod storage_types {
         feature = "std",
         derive(Debug, scale_info::TypeInfo, ink::storage::traits::StorageLayout)
     )]
-    pub struct OtherTypes {
+    pub struct PrimitiveTypes {
         bool_value: bool,
         enum_without_values: EnumWithoutValues,
         enum_with_values: EnumWithValues,
+        array_value: [u32; 3],
+        tuple_value: (u32, u32),
     }
 
     #[derive(scale::Decode, scale::Encode, Clone)]
@@ -133,11 +135,11 @@ mod storage_types {
 
     #[ink(storage)]
     pub struct StorageTypes {
-        unsigned_integers: UnsignedIntegers,
-        signed_integers: SignedIntegers,
         prelude_types: PreludeTypes,
-        other_types: OtherTypes,
+        primitive_types: PrimitiveTypes,
+        signed_integers: SignedIntegers,
         substrate_types: SubstrateTypes,
+        unsigned_integers: UnsignedIntegers,
     }
 
     impl StorageTypes {
@@ -173,10 +175,12 @@ mod storage_types {
                     vec_string_value: Vec::new(), // TODO add elements
                     vec_vec_string_value: Vec::new(), // TODO add nested elements
                 },
-                other_types: OtherTypes {
+                primitive_types: PrimitiveTypes {
                     bool_value: true,
-                    enum_without_values: EnumWithoutValues::A,
                     enum_with_values: EnumWithValues::TheeValues(1, 2, 3),
+                    enum_without_values: EnumWithoutValues::A,
+                    array_value: [3, 2, 1],
+                    tuple_value: (7, 8),
                 },
                 substrate_types: SubstrateTypes {
                     account_id_value: AccountId::from([0x00; 32]),
@@ -208,8 +212,8 @@ mod storage_types {
         }
 
         #[ink(message)]
-        pub fn get_other_types(&self) -> OtherTypes {
-            self.other_types.clone()
+        pub fn get_primitive_types(&self) -> PrimitiveTypes {
+            self.primitive_types.clone()
         }
 
         #[ink(message)]
