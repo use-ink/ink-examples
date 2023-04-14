@@ -2,10 +2,12 @@
 
 #[ink::contract]
 mod delegator {
+    use ink::env::Result as EnvResult;
     use ink::env::{
         call::{build_call, ExecutionInput, Selector},
         CallFlags, DefaultEnvironment,
     };
+    use ink::MessageResult;
 
     // Whether the contract calls the `adder` or `subber` contract.
     #[derive(Debug, Copy, Clone, PartialEq, Eq, scale::Decode, scale::Encode)]
@@ -47,7 +49,7 @@ mod delegator {
 
         #[ink(message)]
         pub fn get(&self) -> i32 {
-            build_call::<DefaultEnvironment>()
+            let result = build_call::<DefaultEnvironment>()
                 .call(self.acc_contract)
                 .gas_limit(0)
                 .transferred_value(0)
@@ -56,19 +58,11 @@ mod delegator {
                     "get"
                 ))))
                 .returns::<i32>()
-                .try_invoke()
-                .unwrap_or_else(|env_err| {
-                    panic!(
-                        "cross-contract call to {:?} failed due to {:?}",
-                        self.acc_contract, env_err
-                    )
-                })
-                .unwrap_or_else(|lang_err| {
-                    panic!(
-                        "cross-contract call to {:?} failed due to {:?}",
-                        self.acc_contract, lang_err
-                    )
-                })
+                .try_invoke();
+            match result {
+                EnvResult::Ok(MessageResult::Ok(result)) => result,
+                _ => unimplemented!(),
+            }
         }
 
         #[ink(message)]
@@ -111,7 +105,8 @@ mod delegator {
 
         #[ink::test]
         fn new() {
-            let delegator = Delegator::new([0x06; 32].into(), [0x07; 32].into(), [0x08; 32].into());
+            let delegator =
+                Delegator::new([0x06; 32].into(), [0x07; 32].into(), [0x08; 32].into());
             assert_eq!(delegator.acc_contract, [0x06; 32].into());
             assert_eq!(delegator.add_contract, [0x07; 32].into());
             assert_eq!(delegator.sub_contract, [0x08; 32].into());
@@ -205,8 +200,9 @@ mod delegator {
 
             // Build `increase` message of `adder` contract and execute
             let increase = 10;
-            let inc_message = ink_e2e::build_message::<AdderRef>(adder_contract_account_id.clone())
-                .call(|adder| adder.inc(increase));
+            let inc_message =
+                ink_e2e::build_message::<AdderRef>(adder_contract_account_id.clone())
+                    .call(|adder| adder.inc(increase));
             let inc_result = client.call(&ink_e2e::alice(), inc_message, 0, None).await;
             assert!(inc_result.is_ok());
 
@@ -263,7 +259,9 @@ mod delegator {
         }
 
         #[ink_e2e::test]
-        async fn instantiate_delegator(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+        async fn instantiate_delegator(
+            mut client: ink_e2e::Client<C, E>,
+        ) -> E2EResult<()> {
             // Instantiate `accumulator` contract
             let init_value = 10;
             let acc_constructor = AccumulatorRef::new(init_value);

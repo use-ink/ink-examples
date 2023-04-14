@@ -2,13 +2,7 @@
 
 set -eu
 
-cd accumulator
 cargo clean
-cd ..
-cd adder
-cargo clean
-cd ..
-cd subber
-cargo clean
-cd ..
-cargo clean
+cargo clean --manifest-path accumulator/Cargo.toml
+cargo clean --manifest-path adder/Cargo.toml
+cargo clean --manifest-path subber/Cargo.toml
