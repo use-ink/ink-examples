@@ -109,6 +109,15 @@ mod storage_types {
         u8_value_min: u8,
     }
 
+    #[derive(Debug)]
+    #[ink::storage_item]
+    pub struct MappingTypes {
+        mapping_u128_u128_value: Mapping<u128, u128>,
+        mapping_account_balance_value: Mapping<AccountId, Balance>,
+        mapping_account_hash_value: Mapping<AccountId, Hash>,
+        mapping_account_account_balance_value: Mapping<(AccountId, AccountId), Balance>,
+    }
+
     #[ink(storage)]
     pub struct StorageTypes {
         ink_prelude_types: InkPreludeTypes,
@@ -116,10 +125,7 @@ mod storage_types {
         signed_integers: SignedIntegers,
         substrate_types: SubstrateTypes,
         unsigned_integers: UnsignedIntegers,
-        mapping_u128_u128_value: Mapping<u128, u128>,
-        mapping_account_balance_value: Mapping<AccountId, Balance>,
-        mapping_account_hash_value: Mapping<AccountId, Hash>,
-        mapping_account_account_balance_value: Mapping<(AccountId, AccountId), Balance>,
+        mapping_types: MappingTypes,
     }
 
     impl StorageTypes {
@@ -196,10 +202,12 @@ mod storage_types {
                     balance_value_min: Balance::MIN,
                     hash_value: Hash::from([0x00; 32]),
                 },
-                mapping_u128_u128_value,
-                mapping_account_balance_value,
-                mapping_account_hash_value,
-                mapping_account_account_balance_value,
+                mapping_types: MappingTypes {
+                    mapping_u128_u128_value,
+                    mapping_account_balance_value,
+                    mapping_account_hash_value,
+                    mapping_account_account_balance_value,
+                },
             }
         }
 
