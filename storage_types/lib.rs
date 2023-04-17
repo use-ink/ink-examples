@@ -5,19 +5,18 @@ mod storage_types {
     use ink::prelude::string::String;
     use ink::prelude::vec::Vec;
     use ink::storage::Mapping;
+    use scale::{Decode, Encode};
 
-    #[derive(Debug, scale::Encode, scale::Decode)]
+    #[derive(Debug, Decode, Encode)]
     #[cfg_attr(feature = "std", derive(::scale_info::TypeInfo))]
-    pub enum Error {
+    pub enum CustomErrorEnum {
         ThisIsAnErrorEnum,
     }
 
-    pub type Result<T> = core::result::Result<T, Error>;
-
-    #[derive(Default, scale::Decode, scale::Encode, Clone)]
+    #[derive(Clone, Debug, Decode, Default, Encode)]
     #[cfg_attr(
         feature = "std",
-        derive(Debug, scale_info::TypeInfo, ink::storage::traits::StorageLayout)
+        derive(scale_info::TypeInfo, ink::storage::traits::StorageLayout)
     )]
     pub enum EnumWithoutValues {
         #[default]
@@ -26,10 +25,10 @@ mod storage_types {
         C,
     }
 
-    #[derive(scale::Decode, scale::Encode, Clone)]
+    #[derive(Clone, Debug, Decode, Encode)]
     #[cfg_attr(
         feature = "std",
-        derive(Debug, scale_info::TypeInfo, ink::storage::traits::StorageLayout)
+        derive(scale_info::TypeInfo, ink::storage::traits::StorageLayout)
     )]
     pub enum EnumWithValues {
         OneValue(u32),
@@ -37,10 +36,10 @@ mod storage_types {
         ThreeValues(u32, u32, u32),
     }
 
-    #[derive(scale::Decode, scale::Encode, Clone)]
+    #[derive(Clone, Debug, Decode, Encode)]
     #[cfg_attr(
         feature = "std",
-        derive(Debug, scale_info::TypeInfo, ink::storage::traits::StorageLayout)
+        derive(scale_info::TypeInfo, ink::storage::traits::StorageLayout)
     )]
     pub struct PrimitiveTypes {
         bool_value: bool,
@@ -50,10 +49,10 @@ mod storage_types {
         tuple_value: (u32, u32),
     }
 
-    #[derive(scale::Decode, scale::Encode, Clone)]
+    #[derive(Clone, Debug, Decode, Encode)]
     #[cfg_attr(
         feature = "std",
-        derive(Debug, scale_info::TypeInfo, ink::storage::traits::StorageLayout)
+        derive(scale_info::TypeInfo, ink::storage::traits::StorageLayout)
     )]
     pub struct SignedIntegers {
         i128_value_max: i128,
@@ -68,10 +67,10 @@ mod storage_types {
         i8_value_min: i8,
     }
 
-    #[derive(scale::Decode, scale::Encode, Clone)]
+    #[derive(Clone, Debug, Decode, Encode)]
     #[cfg_attr(
         feature = "std",
-        derive(Debug, scale_info::TypeInfo, ink::storage::traits::StorageLayout)
+        derive(scale_info::TypeInfo, ink::storage::traits::StorageLayout)
     )]
     pub struct SubstrateTypes {
         account_id_value: AccountId,
@@ -80,10 +79,10 @@ mod storage_types {
         hash_value: Hash,
     }
 
-    #[derive(scale::Decode, scale::Encode, Clone)]
+    #[derive(Clone, Debug, Decode, scale::Encode)]
     #[cfg_attr(
         feature = "std",
-        derive(Debug, scale_info::TypeInfo, ink::storage::traits::StorageLayout)
+        derive(scale_info::TypeInfo, ink::storage::traits::StorageLayout)
     )]
     pub struct InkPreludeTypes {
         string_value: String,
@@ -91,7 +90,7 @@ mod storage_types {
         vec_vec_string_value: Vec<Vec<String>>,
     }
 
-    #[derive(scale::Decode, scale::Encode, Clone)]
+    #[derive(Clone, Decode, Encode)]
     #[cfg_attr(
         feature = "std",
         derive(Debug, scale_info::TypeInfo, ink::storage::traits::StorageLayout)
@@ -247,13 +246,13 @@ mod storage_types {
         }
 
         #[ink(message)]
-        pub fn get_result_ok(&self) -> Result<()> {
+        pub fn get_result_ok(&self) -> Result<(), CustomErrorEnum> {
             Ok(())
         }
 
         #[ink(message)]
-        pub fn get_result_error(&self) -> Result<()> {
-            Err(Error::ThisIsAnErrorEnum)
+        pub fn get_result_error(&self) -> Result<(), CustomErrorEnum> {
+            Err(CustomErrorEnum::ThisIsAnErrorEnum)
         }
     }
 
