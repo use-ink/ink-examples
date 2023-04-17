@@ -34,7 +34,7 @@ mod storage_types {
     pub enum EnumWithValues {
         OneValue(u32),
         TwoValues(u32, u32),
-        TheeValues(u32, u32, u32),
+        ThreeValues(u32, u32, u32),
     }
 
     #[derive(scale::Decode, scale::Encode, Clone)]
@@ -185,7 +185,7 @@ mod storage_types {
                 },
                 primitive_types: PrimitiveTypes {
                     bool_value: true,
-                    enum_with_values: EnumWithValues::TheeValues(1, 2, 3),
+                    enum_with_values: EnumWithValues::ThreeValues(1, 2, 3),
                     enum_without_values: EnumWithoutValues::A,
                     array_value: [3, 2, 1],
                     tuple_value: (7, 8),
