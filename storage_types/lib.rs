@@ -237,7 +237,22 @@ mod storage_types {
         }
 
         #[ink(message)]
-        pub fn get_error(&self) -> Result<()> {
+        pub fn get_option_some(&self) -> Option<()> {
+            Some(())
+        }
+
+        #[ink(message)]
+        pub fn get_option_none(&self) -> Option<()> {
+            None
+        }
+
+        #[ink(message)]
+        pub fn get_result_ok(&self) -> Result<()> {
+            Ok(())
+        }
+
+        #[ink(message)]
+        pub fn get_result_error(&self) -> Result<()> {
             Err(Error::ThisIsAnErrorEnum)
         }
     }
