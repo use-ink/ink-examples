@@ -6,6 +6,11 @@ This repository contains a set of example contracts for ink!.
 
 Have a look at the different examples to better understand how to use ink! to build your own Substrate smart contracts.
 
+### Can I add a new example here?
+
+Please don't add them here, but create a Pull Request to the `integration-tests` folder in [the ink! repository](https://github.com/paritytech/ink) instead.
+The content of that folder is synchronized with this repository on new releases.
+
 ## Preparation
 
 For building the example smart contracts found in this folder you will need to have [`cargo-contract`](https://github.com/paritytech/cargo-contract) installed.
