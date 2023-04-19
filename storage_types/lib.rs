@@ -4,7 +4,7 @@
 mod storage_types {
     use ink::prelude::string::String;
     use ink::prelude::vec::Vec;
-    use ink::storage::Mapping;
+    use ink::storage::{traits::ManualKey, Mapping};
     use scale::{Decode, Encode};
 
     #[derive(Debug, Decode, Encode)]
@@ -124,7 +124,7 @@ mod storage_types {
         signed_integers: SignedIntegers,
         substrate_types: SubstrateTypes,
         unsigned_integers: UnsignedIntegers,
-        mapping_types: MappingTypes,
+        mapping_account_balance: Mapping<AccountId, Balance, ManualKey<123>>,
     }
 
     impl StorageTypes {
@@ -142,21 +142,8 @@ mod storage_types {
             vec_vec_string_value.push(vec_string_value.clone());
 
             // Mappings
-            let mut mapping_u128_u128_value = Mapping::new();
-            mapping_u128_u128_value.insert(42, &23);
-
-            let mut mapping_account_balance_value = Mapping::new();
-            mapping_account_balance_value.insert(AccountId::from([0x01; 32]), &42);
-
-            let mut mapping_account_hash_value = Mapping::new();
-            mapping_account_hash_value
-                .insert(AccountId::from([0x01; 32]), &Hash::from([0xff; 32]));
-
-            let mut mapping_account_account_balance_value = Mapping::new();
-            mapping_account_account_balance_value.insert(
-                (AccountId::from([0x01; 32]), AccountId::from([0x02; 32])),
-                &23,
-            );
+            let mut mapping_account_balance = Mapping::new();
+            mapping_account_balance.insert(AccountId::from([0x01; 32]), &100);
 
             Self {
                 unsigned_integers: UnsignedIntegers {
@@ -201,12 +188,7 @@ mod storage_types {
                     balance_value_min: Balance::MIN,
                     hash_value: Hash::from([0x00; 32]),
                 },
-                mapping_types: MappingTypes {
-                    mapping_u128_u128_value,
-                    mapping_account_balance_value,
-                    mapping_account_hash_value,
-                    mapping_account_account_balance_value,
-                },
+                mapping_account_balance,
             }
         }
 
@@ -253,6 +235,14 @@ mod storage_types {
         #[ink(message)]
         pub fn get_result_error(&self) -> Result<(), CustomErrorEnum> {
             Err(CustomErrorEnum::ThisIsAnErrorEnum)
+        }
+
+        #[ink(message)]
+        pub fn get_mapping_account_balance(
+            &self,
+            account_id: AccountId,
+        ) -> Option<Balance> {
+            self.mapping_account_balance.get(account_id)
         }
     }
 
