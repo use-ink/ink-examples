@@ -9,8 +9,8 @@ mod storage_types {
 
     #[derive(Debug, Decode, Encode)]
     #[cfg_attr(feature = "std", derive(::scale_info::TypeInfo))]
-    pub enum CustomErrorEnum {
-        ThisIsAnErrorEnum,
+    pub enum CustomError {
+        ErrorWithMessage(String),
     }
 
     #[derive(Clone, Debug, Decode, Default, Encode)]
@@ -228,18 +228,20 @@ mod storage_types {
         }
 
         #[ink(message)]
-        pub fn get_result_ok(&self) -> Result<(), CustomErrorEnum> {
+        pub fn get_result_ok(&self) -> Result<(), CustomError> {
             Ok(())
         }
 
         #[ink(message)]
-        pub fn get_result_error(&self) -> Result<(), CustomErrorEnum> {
-            Err(CustomErrorEnum::ThisIsAnErrorEnum)
+        pub fn get_result_error(&self) -> Result<(), CustomError> {
+            Err(CustomError::ErrorWithMessage(String::from(
+                "This is the Error Message.",
+            )))
         }
 
         #[ink(message)]
         pub fn get_panic(&self) -> Result<(), ()> {
-            panic!("panic message")
+            panic!("This is the Panic message.")
         }
 
         #[ink(message)]
