@@ -238,6 +238,11 @@ mod storage_types {
         }
 
         #[ink(message)]
+        pub fn get_panic(&self) -> Result<(), ()> {
+            panic!("panic message")
+        }
+
+        #[ink(message)]
         pub fn get_mapping_account_balance(
             &self,
             account_id: AccountId,
