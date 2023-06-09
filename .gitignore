@@ -3,7 +3,13 @@
 /**/target/
 /design/
 .idea/
+.vite/
+node_modules/
+/**/dist/
 
+pnpm-lock.yaml
+
+vite.config.ts.timestamp*
 
 # Ignore backup files creates by cargo fmt.
 **/*.rs.bk

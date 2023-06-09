@@ -1,0 +1,51 @@
+{
+  "name": "ui",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "Apache 2.0",
+  "scripts": {
+    "build": "tsc && vite build && pnpm run build-tailwind",
+    "dev": "vite build --watch && pnpm run build-tailwind",
+    "build-tailwind": "NODE_ENV=production npx tailwindcss -o ./dist/style.css -m",
+    "lint": "rome check ./*",
+    "lint:fix": "pnpm lint --apply-unsafe"
+  },
+  "sideEffects": false,
+  "peerDependencies": {
+    "useink": "^1.5.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.14",
+    "@heroicons/react": "^2.0.18",
+    "@lottiefiles/react-lottie-player": "^3.5.3"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.37",
+    "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.59.8",
+    "@typescript-eslint/parser": "^5.59.8",
+    "@vitejs/plugin-react": "^4.0.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.9",
+    "vite-plugin-dts": "^2.3.0"
+  },
+  "files": [
+    "dist",
+    "./src/index.css"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "default": "./dist/ui.es.js",
+        "types": "./dist/index.d.ts"
+      },
+      "require": {
+        "default": "./dist/ui.umd.js",
+        "types": "./dist/index.d.ts"
+      }
+    },
+    "./style.css": "./src/index.css"
+  }
+}

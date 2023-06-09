@@ -1,0 +1,34 @@
+{
+  "name": "ink-examples",
+  "version": "1.0.0",
+  "description": "Example dApps for ink! contracts.",
+  "main": "index.js",
+  "keywords": [],
+  "author": "Sam Ruberti <sam.ruberti@parity.io>",
+  "license": "Apache 2.0",
+  "scripts": {
+    "format": "rome format . --write",
+    "lint": "rome check ./*",
+    "lint:fix": "pnpm lint --apply-unsafe",
+    "build:ui": "pnpm --filter ui build",
+    "flipper": "pnpm --filter ui dev & pnpm --filter flipper dev",
+    "incrementer": "pnpm --filter ui dev & pnpm --filter incrementer dev"
+  },
+  "packages": [
+    "ui",
+    "*/frontend/*"
+  ],
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "useink": "^1.5.1"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.2",
+    "classnames": "^2.3.2",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
+    "rome": "12.1.3"
+  },
+  "packageManager": "pnpm@8.4.0"
+}

@@ -1,0 +1,2 @@
+export const CONTRACT_ROCOCO_ADDRESS =
+  '5Fsk6oqWHJzMAQmkBTVzxxqZPPngLbHG48Tro3i53LC3quao';
