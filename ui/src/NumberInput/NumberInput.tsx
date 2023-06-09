@@ -13,12 +13,11 @@ type Props = ClassNameable & {
 };
 
 const COMMON_CLASSES = [
-  'bg-brand-500 text-white border-none focuse:outline-none focus-visible:outline-none',
-  'focus:outline-none disabled:text-white/80 py-4 flex items-center justify-center',
+  'bg-brand-500 disabled:bg-brand-450 text-white border-none focuse:outline-none focus-visible:outline-none',
+  'focus:outline-none disabled:text-white/80 py-4 flex items-center justify-center disabled:cursor-not-allowed',
 ].join(' ');
 
-const BUTTON_CLASSES =
-  'hover:bg-brand-800 disabled:bg-brand-450 disabled:cursor-not-allowed';
+const BUTTON_CLASSES = 'hover:bg-brand-900';
 
 export const NumberInput: React.FC<Props> = ({
   value,
@@ -52,7 +51,7 @@ export const NumberInput: React.FC<Props> = ({
       <input
         className={classnames(
           COMMON_CLASSES,
-          'text-center grow bg-brand-500 focus:ring-0 focus:ring-offset-0 disabled:bg-brand-500/80 disabled:cursor-not-allowed',
+          'text-center grow focus:ring-0 focus:ring-offset-0 disabled:cursor-not-allowed',
         )}
         type='text'
         inputMode='numeric'
