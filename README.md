@@ -41,9 +41,10 @@ The `.contract` file combines the Wasm and metadata into one file and can be use
 
 ### Commands
 
+* `pnpm basic_contract_caller`
+* `pnpm contract_transfer`
 * `pnpm flipper`
 * `pnpm incrementer`
-* `pnpm contract_transfer`
 
 All examples are built with [useink](https://use.ink/frontend/overview), a React hooks library built by the ink! team.
 
