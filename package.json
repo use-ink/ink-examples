@@ -11,7 +11,8 @@
     "lint": "rome check ./*",
     "lint:fix": "pnpm lint --apply-unsafe",
     "build:ui": "pnpm --filter ui build",
-    "flipper": "pnpm --filter ui dev & pnpm --filter flipper dev"
+    "flipper": "pnpm --filter ui dev & pnpm --filter flipper dev",
+    "incrementer": "pnpm --filter ui dev & pnpm --filter incrementer dev"
   },
   "packages": [
     "ui",
