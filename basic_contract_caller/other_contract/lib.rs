@@ -29,5 +29,10 @@ mod other_contract {
         pub fn get(&self) -> bool {
             self.value
         }
+
+        #[ink(message)]
+        pub fn account_id(&self) -> AccountId {
+            self.env().account_id()
+        }
     }
 }

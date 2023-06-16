@@ -37,5 +37,12 @@ mod basic_contract_caller {
             self.other_contract.flip();
             self.other_contract.get()
         }
+
+        /// Get the address of the other contract after it has been instantiated. We can
+        /// use this so we can call the other contract on the frontend.
+        #[ink(message)]
+        pub fn other(&mut self) -> AccountId {
+            self.other_contract.account_id()
+        }
     }
 }
