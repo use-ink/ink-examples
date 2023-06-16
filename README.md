@@ -30,6 +30,17 @@ To build a single example and generate the contracts Wasm file, navigate to the 
 You should now have an optimized `<contract-name>.wasm` file, a `metadata.json` file and a `<contract-name>.contract` file in the `target` folder of your contract.
 The `.contract` file combines the Wasm and metadata into one file and can be used for instantiation.
 
+
+## Running front end dApp examples
+
+1. Install [nodejs](https://nodejs.org/en/) and then install [pnpm](https://pnpm.io/) `npm install -g pnpm`
+2. Install dependencies `pnpm i`
+3. Build the UI package `pnpm build:ui` (You only need to do this once)
+4. Run each example with `pnpm <contract-example-name>`. e.g. `pnpm flipper`
+5. Visit [http://localhost:5173](http://localhost:5173) in your browser.
+
+All examples are built with [useink](https://use.ink/frontend/overview), a React hooks library built by the ink! team.
+
 ## License
 
 The examples in this folder are released into the public domain.
