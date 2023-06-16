@@ -15,7 +15,7 @@ export const Accounts: React.FC<ClassNameable> = ({ className }) => {
   return (
     <div
       className={classNames(
-        'w-60 flex items-center gap-1 justify-end',
+        'max-w-md w-full flex items-center gap-1 justify-end',
         className,
       )}
     >
@@ -28,7 +28,7 @@ export const Accounts: React.FC<ClassNameable> = ({ className }) => {
         <div className='relative'>
           <Listbox.Button
             className={classNames(
-              'relative w-full cursor-default rounded-lg bg-violet-900 py-2 pl-3 pr-10 text-left shadow-md',
+              'relative min-w-[200px] w-full cursor-default rounded-lg bg-violet-900 py-2 pl-3 pr-10 text-left shadow-md',
               'focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white',
               'focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300',
               'sm:text-sm hover:cursor-pointer hover:opacity-80',
