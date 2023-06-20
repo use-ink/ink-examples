@@ -22,6 +22,7 @@ To integrate this example into Substrate you need to do two things:
 
 * Use the implementation as the associated type `ChainExtension` of the trait
   `pallet_contracts::Config`:
+
   ```rust
   impl pallet_contracts::Config for Runtime {
     …
@@ -32,4 +33,4 @@ To integrate this example into Substrate you need to do two things:
 
 ## ink! Integration
 
-See the example contract in [`lib.rs`](lib.rs).
+See the example contract in [`contract/lib.rs`](contract/lib.rs).
