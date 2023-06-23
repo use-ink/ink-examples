@@ -2,9 +2,9 @@
 
 #[ink::contract]
 mod fair_election {
-    use ink::storage::Mapping;
     use ink::prelude::vec::Vec;
     use ink::storage::traits::ManualKey;
+    use ink::storage::{Lazy, Mapping};
 
     /// Defines the storage of your contract.
     /// Add new fields to the below struct in order
@@ -12,16 +12,16 @@ mod fair_election {
     #[ink(storage)]
     pub struct FairElection {
         /// Current leader of the DAO.
-        leader: AccountId,
+        leader: Lazy<AccountId, ManualKey<1>>,
         /// Members of the DAO.
-        members: Mapping<AccountId, Balance, ManualKey<200>>,
+        members: Mapping<AccountId, Balance, ManualKey<2>>,
         /// Number of members in the DAO
-        member_count: u128,
+        member_count: Lazy<u128, ManualKey<3>>,
         /// Candidates for the re-election
-        leader_candidates: Vec<AccountId>,
+        leader_candidates: Lazy<Vec<AccountId>, ManualKey<4>>,
         /// The hash of the on-chain code
         /// that is responsible for the re-election of the leader.
-        election_code_hash: Hash,
+        election_code_hash: Lazy<Hash, ManualKey<5>>,
     }
 
     #[derive(scale::Encode, scale::Decode, Debug)]
@@ -29,7 +29,7 @@ mod fair_election {
     pub enum ExecutionError {
         Election,
         CodeHashUpdate,
-        Generic
+        Generic,
     }
 
     impl FairElection {
@@ -38,39 +38,55 @@ mod fair_election {
             let leader = Self::env().caller();
             let mut members = Mapping::new();
             members.insert(leader, &1_000_000);
-            Ok(Self {
-                leader,
+            let mut v = Self {
+                leader: Lazy::new(),
                 members,
-                leader_candidates: Vec::new(),
-                member_count: 1u128,
-                election_code_hash,
-            })
+                leader_candidates: Lazy::new(),
+                member_count: Lazy::new(),
+                election_code_hash: Lazy::new(),
+            };
+            v.leader.set(&leader);
+            v.leader_candidates.set(&Vec::new());
+            v.member_count.set(&1);
+            v.election_code_hash.set(&election_code_hash);
+            Ok(v)
         }
 
         #[ink(message)]
         pub fn elect(&mut self) -> Result<AccountId, ExecutionError> {
             // we simply elect an account with highest balance
-            let leader = self.leader_candidates.iter().max_by(|x, y| {
-                let x_balance = self.members.get(x).unwrap_or_default();
-                let y_balance = self.members.get(y).unwrap_or_default();
-                x_balance.cmp(&y_balance)
-            }).ok_or(ExecutionError::Election)?;
+            let candidates = self
+                .leader_candidates
+                .get()
+                .ok_or(ExecutionError::Generic)?;
+            let leader = candidates
+                .iter()
+                .max_by(|x, y| {
+                    let x_balance = self.members.get(x).unwrap_or_default();
+                    let y_balance = self.members.get(y).unwrap_or_default();
+                    x_balance.cmp(&y_balance)
+                })
+                .ok_or(ExecutionError::Election)?;
 
             //update records
-            self.leader = *leader;
-            self.leader_candidates.clear();
+            self.leader.set(leader);
+            self.leader_candidates.set(&Vec::new());
 
-            Ok(self.leader)
+            self.leader.get().ok_or(ExecutionError::Generic)
         }
 
         #[ink(message)]
-        pub fn update_logic(&mut self, election_code_hash: Hash) -> Result<(), ExecutionError> {
+        pub fn update_logic(
+            &mut self,
+            election_code_hash: Hash,
+        ) -> Result<(), ExecutionError> {
             // ensure we code hash is not the same
-            assert_ne!(self.election_code_hash, election_code_hash);
+            let local_hash = self.election_code_hash.get_or_default();
+            assert_ne!(local_hash, election_code_hash);
             // for simplicity, we just check that the election is not in progress
             // and then update thr code
-            assert!(self.leader_candidates.is_empty());
-            self.election_code_hash = election_code_hash;
+            assert!(self.leader_candidates.get_or_default().is_empty());
+            self.election_code_hash.set(&election_code_hash);
 
             Ok(())
         }
@@ -90,6 +106,6 @@ mod fair_election {
         use ink_e2e::build_message;
 
         /// The End-to-End test `Result` type.
-        type E2EResult<T> = std::result::Result<T, Box<dyn std::ExecutionError::ExecutionError>>;
+        type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
     }
 }

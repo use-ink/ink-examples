@@ -7,23 +7,23 @@ mod delegate_calls {
         CallFlags, DefaultEnvironment,
     }, storage::traits::ManualKey};
     use ink::prelude::vec::Vec;
-    use ink::storage::Mapping;
+     use ink::storage::{Mapping, Lazy};
 
     /// Since we delegate a call, we need to match the storage layout
     /// of the deployed code we are delegating to.
     #[ink(storage)]
     pub struct DelegateCalls {
         /// Current leader of the DAO.
-        leader: AccountId,
+        leader: Lazy<AccountId, ManualKey<1>>,
         /// Members of the DAO.
-        members: Mapping<AccountId, Balance, ManualKey<200>>,
+        members: Mapping<AccountId, Balance, ManualKey<2>>,
         /// Number of members in the DAO
-        member_count: u128,
+        member_count: Lazy<u128, ManualKey<3>>,
         /// Candidates for the re-election
-        leader_candidates: Vec<AccountId>,
+        leader_candidates: Lazy<Vec<AccountId>, ManualKey<4>>,
         /// The hash of the on-chain code
         /// that is responsible for the re-election of the leader.
-        election_code_hash: Hash,
+        election_code_hash: Lazy<Hash, ManualKey<5>>,
     }
 
     #[derive(scale::Encode, scale::Decode, Debug)]
@@ -43,16 +43,22 @@ mod delegate_calls {
 
     impl DelegateCalls {
         #[ink(constructor)]
-        pub fn new(election_code_hash: Hash, leader: AccountId) -> Result<Self, Error> {
+        pub fn new(election_code_hash: Hash) -> Result<Self, ExecutionError> {
+            let leader = Self::env().caller();
             let mut members = Mapping::new();
             members.insert(leader, &1_000_000);
-            Ok(Self {
-                leader,
+            let mut v = Self {
+                leader: Lazy::new(),
                 members,
-                leader_candidates: Vec::new(),
-                member_count: 1u128,
-                election_code_hash,
-            })
+                leader_candidates: Lazy::new(),
+                member_count: Lazy::new(),
+                election_code_hash: Lazy::new(),
+            };
+            v.leader.set(&leader);
+            v.leader_candidates.set(&Vec::new());
+            v.member_count.set(&1);
+            v.election_code_hash.set(&election_code_hash);
+            Ok(v)
         }
 
         #[ink(message)]
@@ -65,9 +71,10 @@ mod delegate_calls {
             // ensure that the given account is the member of the DAO
             assert!(self.members.get(address).is_some());
             // ensure that the caller is not the leader so it can't change their own balance
-            assert_ne!(self.leader, address);
+            let leader = self.leader.get().unwrap();
+            assert_ne!(leader, address);
             // ensure that the caller is the current leader
-            assert_eq!(caller, self.leader);
+            assert_eq!(leader, caller);
             // update the member's balance
             self.members
                 .insert(address, &new_balance)
@@ -77,7 +84,7 @@ mod delegate_calls {
 
         #[ink(message)]
         pub fn get_leader(&self) -> AccountId {
-            self.leader
+            self.leader.get().unwrap()
         }
 
         #[ink(message)]
@@ -92,9 +99,10 @@ mod delegate_calls {
             assert!(!self.members.contains(caller));
             //update records
             self.members.insert(caller, &1_000_000);
-            self.member_count += 1;
+            let count = self.member_count.get_or_default() + 1;
+            self.member_count.set(&count); 
 
-            Ok(self.member_count)
+            Ok(self.member_count.get_or_default())
         }
 
         #[ink(message)]
@@ -103,13 +111,16 @@ mod delegate_calls {
             // ensure the caller is the member
             assert!(self.members.contains(caller));
             // ensure that the account has not nominated itself already
-            assert!(!self.leader_candidates.contains(&caller));
+            assert!(!self.leader_candidates.get().unwrap().contains(&caller));
             // ensure the current leader does not renominate itself
-            assert_ne!(self.leader, caller);
+            let leader = self.leader.get().unwrap();
+            assert_ne!(leader, caller);
             // update records
-            self.leader_candidates.push(caller);
+            let mut candidates = self.leader_candidates.get_or_default();
+            candidates.push(caller);
+            self.leader_candidates.set(&candidates);
 
-            self.leader_candidates.len() as u128
+            self.leader_candidates.get_or_default().len() as u128
         }
 
         /// Update the hash of the code
@@ -123,8 +134,9 @@ mod delegate_calls {
             _code_hash: Hash,
         ) -> Result<(), Error> {
             let selector = ink::selector_bytes!("update_logic");
+            let hash = self.election_code_hash.get().ok_or(Error::ExecutionError)?;
             build_call::<DefaultEnvironment>()
-                .delegate(self.election_code_hash)
+                .delegate(hash)
                 .call_flags(
                     CallFlags::default()
                         // forward code_hash directly to the callee
@@ -147,8 +159,9 @@ mod delegate_calls {
         #[ink(message)]
         pub fn initiated_delegated_election(&mut self) -> Result<AccountId, Error> {
             let selector = ink::selector_bytes!("elect");
+            let hash = self.election_code_hash.get().ok_or(Error::ExecutionError)?;
             let result = build_call::<DefaultEnvironment>()
-                .delegate(self.election_code_hash)
+                .delegate(hash)
                 .exec_input(ExecutionInput::new(Selector::new(selector)))
                 .returns::<Result<AccountId, ExecutionError>>()
                 .try_invoke()
