@@ -2,10 +2,10 @@
 
 #[ink::contract]
 mod delegate_calls {
-    use ink::env::{
+    use ink::{env::{
         call::{build_call, ExecutionInput, Selector},
         CallFlags, DefaultEnvironment,
-    };
+    }, storage::traits::ManualKey};
     use ink::prelude::vec::Vec;
     use ink::storage::Mapping;
 
@@ -16,7 +16,7 @@ mod delegate_calls {
         /// Current leader of the DAO.
         leader: AccountId,
         /// Members of the DAO.
-        members: Mapping<AccountId, Balance>,
+        members: Mapping<AccountId, Balance, ManualKey<200>>,
         /// Number of members in the DAO
         member_count: u128,
         /// Candidates for the re-election

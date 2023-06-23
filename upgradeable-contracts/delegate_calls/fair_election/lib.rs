@@ -4,6 +4,7 @@
 mod fair_election {
     use ink::storage::Mapping;
     use ink::prelude::vec::Vec;
+    use ink::storage::traits::ManualKey;
 
     /// Defines the storage of your contract.
     /// Add new fields to the below struct in order
@@ -13,7 +14,7 @@ mod fair_election {
         /// Current leader of the DAO.
         leader: AccountId,
         /// Members of the DAO.
-        members: Mapping<AccountId, Balance>,
+        members: Mapping<AccountId, Balance, ManualKey<200>>,
         /// Number of members in the DAO
         member_count: u128,
         /// Candidates for the re-election
@@ -36,7 +37,7 @@ mod fair_election {
         pub fn new(election_code_hash: Hash) -> Result<Self, ExecutionError> {
             let leader = Self::env().caller();
             let mut members = Mapping::new();
-            members.insert(leader, &1_000_000).ok_or(ExecutionError::Generic)?;
+            members.insert(leader, &1_000_000);
             Ok(Self {
                 leader,
                 members,
