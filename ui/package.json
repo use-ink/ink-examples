@@ -11,11 +11,6 @@
     "lint:fix": "pnpm lint --apply-unsafe"
   },
   "sideEffects": false,
-  "peerDependencies": {
-    "useink": "^1.5.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
   "dependencies": {
     "@headlessui/react": "^1.7.14",
     "@heroicons/react": "^2.0.18",

@@ -3,6 +3,7 @@ export * from './Button';
 export * from './Card';
 export * from './ConnectButton';
 export * from './ConnectWallet';
+export * from './Events';
 export * from './InkLayout';
 export * from './Link';
 export * from './LottieEntity';
