@@ -30,7 +30,6 @@ To build a single example and generate the contracts Wasm file, navigate to the 
 You should now have an optimized `<contract-name>.wasm` file, a `metadata.json` file and a `<contract-name>.contract` file in the `target` folder of your contract.
 The `.contract` file combines the Wasm and metadata into one file and can be used for instantiation.
 
-
 ## Running front end dApp examples
 
 1. Install [nodejs](https://nodejs.org/en/) and then install [pnpm](https://pnpm.io/) `npm install -g pnpm`
@@ -42,7 +41,9 @@ The `.contract` file combines the Wasm and metadata into one file and can be use
 ### Commands
 
 * `pnpm basic_contract_caller`
+* `pnpm contract_terminate`
 * `pnpm contract_transfer`
+* `pnpm erc20`
 * `pnpm flipper`
 * `pnpm incrementer`
 
