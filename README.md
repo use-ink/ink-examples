@@ -44,6 +44,7 @@ The `.contract` file combines the Wasm and metadata into one file and can be use
 * `pnpm contract_terminate`
 * `pnpm contract_transfer`
 * `pnpm erc20`
+* `pnpm erc721`
 * `pnpm flipper`
 * `pnpm incrementer`
 

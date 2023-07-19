@@ -17,6 +17,7 @@ export * from './NumberInput';
 export * from './RunResults';
 export * from './Snackbar';
 export * from './Tabs';
+export * from './ToggleSwitch';
 
 export * from './contexts';
 export * from './hooks';
