@@ -5,6 +5,7 @@ export default {
     extend: {
       fontFamily: {
         montserrat: ['Montserrat'],
+        orbitron: ['Orbitron'],
       },
       colors: {
         brand: {
@@ -15,6 +16,8 @@ export default {
           600: '#7967EB',
           800: '#5a007e',
           900: '#4030a3',
+          950: '#1A1452',
+          1000: '#0C082B',
         },
         background: {
           100: '#F2F2F3',
@@ -28,7 +31,9 @@ export default {
           500: '#00c900',
         },
         warning: {
-          500: '#ffbe54',
+          500: '#FFBE54',
+          600: '#DE493E',
+          700: '#B23A32',
         },
         error: {
           500: '#d6502b',
@@ -47,7 +52,13 @@ export default {
         'gradient-1-dark': 'linear-gradient(180deg, #1B1B1D 0%, #242526 100%);',
       },
     },
+    keyframes: {
+      flicker: {
+        '0%': 'opacity: random()',
+        '50%': 'opacity: random()',
+        '100%': 'opacity: random()',
+      },
+    },
   },
   plugins: [],
 };
-

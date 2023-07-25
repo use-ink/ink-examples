@@ -1,7 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Orbitron:wght@400;600;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
     background-color: #1A1452;
+    font-family: Orbitron;
+}
+
+.screenlines:before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(18, 16, 16, 0) 50%,
+        rgba(0, 0, 0, 0.2) 50%
+    );
+    background-size: 100% 1.5px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.water-effect {
+    bottom: 0px;
+    animation: waterEffect 5s ease-in-out infinite;
+    -moz-animation: waterEffect 5s ease-in-out infinite; /* Firefox */
+    -webkit-animation: waterEffect 5s ease-in-out infinite; /* Safari and Chrome */               
+}
+
+@keyframes waterEffect {
+    0% { 
+        bottom: 0px; 
+    } 
+    50% { 
+        bottom: -60px; 
+    } 
+    100% { 
+        bottom: 0px; 
+    } 
 }

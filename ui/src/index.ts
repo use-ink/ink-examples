@@ -11,7 +11,6 @@ export * from './Label';
 export * from './Link';
 export * from './LottieEntity';
 export * from './Modal';
-export * from './Navbar';
 export * from './Notifications';
 export * from './NumberInput';
 export * from './RunResults';

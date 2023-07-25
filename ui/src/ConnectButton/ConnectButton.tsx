@@ -1,19 +1,15 @@
-import { Button, ButtonProps, useUI } from '..';
 import React from 'react';
+import { Button, ButtonProps, useUI } from '..';
 
 export const ConnectButton: React.FC<Omit<ButtonProps, 'onClick'>> = ({
   className,
   children = 'Connect Wallet',
   ...rest
 }) => {
-  const { setShowConnectWallet } = useUI();
+  const { setView } = useUI();
 
   return (
-    <Button
-      className={className}
-      onClick={() => setShowConnectWallet(true)}
-      {...rest}
-    >
+    <Button className={className} onClick={() => setView('wallet')} {...rest}>
       {children}
     </Button>
   );

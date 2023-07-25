@@ -4,9 +4,11 @@ import React from 'react';
 
 export const Card: React.FC<InkComponent> = ({ children, className }) => {
   const classes = classNames(
-    'bg-brand-500 text-white/90 rounded-xl max-w-3xl',
+    'text-white/90 lg:max-w-[50%] md:max-w-[65%] max-w-[75%] rounded-2xl bg-white/10 p-3',
     className,
   );
 
-  return <div className={classes}>{children}</div>;
+  return (
+    <div className={classNames('rotate-x-[50deg]', classes)}>{children}</div>
+  );
 };

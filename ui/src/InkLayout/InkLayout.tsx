@@ -1,26 +1,17 @@
-import { InkComponent, Notifications, useUI } from '..';
-import { ConnectWallet } from '../ConnectWallet';
+import { InkComponent, Notifications } from '..';
 import { LottieEntity } from '../LottieEntity';
-import { Navbar } from '../Navbar';
 import { UIProvider } from '../contexts';
+import { Screen } from './Screen';
+import { ScreenDarkener } from './ScreenDarkener';
+import { Submarine } from './Submarine';
 import classNames from 'classnames';
 import React from 'react';
 
 type Props = InkComponent & {
   animationSrc?: string;
-  withNotifications?: boolean;
-  withNavbar?: boolean;
 };
 
-const InkLayoutInner: React.FC<Props> = ({
-  children,
-  animationSrc,
-  className,
-  withNotifications = true,
-  withNavbar = true,
-}) => {
-  const { showConnectWallet, setShowConnectWallet } = useUI();
-
+const InkLayoutInner: React.FC<Props> = ({ children, animationSrc }) => {
   return (
     <div
       className={classNames(
@@ -30,17 +21,14 @@ const InkLayoutInner: React.FC<Props> = ({
       {animationSrc && (
         <LottieEntity
           src={animationSrc}
-          className='absolute right-[0] left-[0] bottom-[0]'
+          className='absolute right-[0] left-[0] bottom-[0] water-effect'
         />
       )}
-      {withNavbar && <Navbar />}
-      {withNotifications && <Notifications />}
-      <ConnectWallet
-        show={showConnectWallet}
-        onClose={() => setShowConnectWallet(false)}
-      />
 
-      <div className={className}>{children}</div>
+      <ScreenDarkener />
+      <Submarine />
+      <Screen>{children}</Screen>
+      <Notifications />
     </div>
   );
 };
