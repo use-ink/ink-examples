@@ -26,7 +26,6 @@ std = [
     "ink/std",
     "scale/std",
     "scale-info/std",
-
     "dyn-traits/std",
 ]
 e2e-tests = []
