@@ -1,11 +1,11 @@
 [package]
 name = "adder"
-version = "4.1.0"
+version = "4.2.0"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 
 [dependencies]
-ink = { version = "4.1", default-features = false }
+ink = { version = "4.2", default-features = false }
 
 accumulator = { path = "../accumulator", default-features = false, features = ["ink-as-dependency"] }
 
@@ -15,12 +15,6 @@ scale-info = { version = "2.3", default-features = false, features = ["derive"],
 [lib]
 name = "adder"
 path = "lib.rs"
-crate-type = [
-    # Used for normal contract Wasm blobs.
-    "cdylib",
-    # Used for ABI generation.
-    "rlib",
-]
 
 [features]
 default = ["std"]

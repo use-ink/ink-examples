@@ -1,23 +1,17 @@
 [package]
 name = "accumulator"
-version = "4.1.0"
+version = "4.2.0"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 
 [dependencies]
-ink = { version = "4.1", default-features = false }
+ink = { version = "4.2", default-features = false }
 scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2.3", default-features = false, features = ["derive"], optional = true }
 
 [lib]
 name = "accumulator"
 path = "lib.rs"
-crate-type = [
-    # Used for normal contract Wasm blobs.
-    "cdylib",
-    # Used for ABI generation.
-    "rlib",
-]
 
 [features]
 default = ["std"]

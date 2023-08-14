@@ -27,7 +27,6 @@ std = [
     "ink/std",
     "scale/std",
     "scale-info/std",
-
     "adder/std",
     "subber/std",
     "accumulator/std",
