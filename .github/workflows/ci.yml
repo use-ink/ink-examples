@@ -12,6 +12,7 @@ on:
   pull_request:
     branches:
       - main
+      - ln-add-windows-runner
     paths:
       - '.github/workflows/ci.yml'
 
@@ -23,6 +24,7 @@ jobs:
         platform:
           - ubuntu_20_64_core
           - macos-latest
+          - windows_server_64_core
         toolchain:
           - stable
         job:
