@@ -12,8 +12,6 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - '.github/workflows/ci.yml'
 
 jobs:
   check:
@@ -30,8 +28,7 @@ jobs:
           - test
     runs-on: ${{ matrix.platform }}
     env:
-      UPGRADEABLE_CONTRACTS:    "forward-calls set-code-hash"
-      DELEGATOR_SUBCONTRACTS:   "accumulator adder subber"
+      MULTI_CONTRACT_CALLER_SUBCONTRACTS:   "accumulator adder subber"
       RUST_BACKTRACE:           full
     steps:
 
@@ -103,21 +100,15 @@ jobs:
         run: |
            $multi_contract_caller_subcontracts = "accumulator","adder","subber"
            foreach ($contract in $multi_contract_caller_subcontracts) {
-               echo "Processing multi_contract_caller contract: $contract";
-               cargo ${{ matrix.job }} --verbose --manifest-path multi_contract_caller/${contract}/Cargo.toml;
+               echo "Processing multi-contract-caller contract: $contract";
+               cargo ${{ matrix.job }} --verbose --manifest-path multi-contract-caller/${contract}/Cargo.toml;
            }
-           $upgradeable_contracts = "forward-calls","set-code-hash"
-           foreach ($contract in $upgradeable_contracts) {
-               echo "Processing upgradeable contract: $contract";
-               cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/${contract}/Cargo.toml;
-           }
-           cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/set-code-hash/updated-incrementer/Cargo.toml;
+           cargo ${{ matrix.job }} --verbose --manifest-path set-code-hash/updated-incrementer/Cargo.toml;
 
            cargo ${{ matrix.job }} --verbose --manifest-path conditional-compilation/Cargo.toml --features foo;
            cargo ${{ matrix.job }} --verbose --manifest-path conditional-compilation/Cargo.toml --features bar;
            cargo ${{ matrix.job }} --verbose --manifest-path conditional-compilation/Cargo.toml --features "foo, bar"; 
            foreach ($example in Get-ChildItem  -Directory "\*") {
-               if ($example -Match 'upgradeable-contracts') { continue }
                if ($example -Match 'artifacts') { continue }
                echo "Processing example: $example";
                cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
@@ -127,21 +118,16 @@ jobs:
       - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows'
         run: |
-           for contract in ${DELEGATOR_SUBCONTRACTS}; do
-               echo "Processing multi_contract_caller contract: $contract";
-               cargo ${{ matrix.job }} --verbose --manifest-path multi_contract_caller/${contract}/Cargo.toml;
+           for contract in ${MULTI_CONTRACT_CALLER_SUBCONTRACTS}; do
+               echo "Processing multi-contract-caller contract: $contract";
+               cargo ${{ matrix.job }} --verbose --manifest-path multi-contract-caller/${contract}/Cargo.toml;
            done
-           for contract in ${UPGRADEABLE_CONTRACTS}; do
-                echo "Processing upgradeable contract: $contract";
-                cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/$contract/Cargo.toml;
-           done
-           cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/set-code-hash/updated-incrementer/Cargo.toml;
+           cargo ${{ matrix.job }} --verbose --manifest-path=set-code-hash/updated-incrementer/Cargo.toml;
 
            cargo ${{ matrix.job }} --verbose --manifest-path=conditional-compilation/Cargo.toml --features=foo;
            cargo ${{ matrix.job }} --verbose --manifest-path=conditional-compilation/Cargo.toml --features=bar;
            cargo ${{ matrix.job }} --verbose --manifest-path=conditional-compilation/Cargo.toml --features="foo, bar"; 
            for example in ./*/; do
-               if [ "$example" = "./upgradeable-contracts/" ]; then continue; fi;
                if [ "$example" = "./artifacts/" ]; then continue; fi;
                echo "Processing example: $example";
                cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;

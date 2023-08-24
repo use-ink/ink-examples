@@ -4,7 +4,7 @@
 //! to swap out the `code_hash` of an on-chain contract.
 //!
 //! We will swap the code of our `Incrementer` contract with that of the an `Incrementer`
-//! found in the `updated_incrementer` folder.
+//! found in the `updated-incrementer` folder.
 //!
 //! See the included End-to-End tests an example update workflow.
 
@@ -72,7 +72,7 @@ pub mod incrementer {
 
         type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
-        #[ink_e2e::test(additional_contracts = "./updated_incrementer/Cargo.toml")]
+        #[ink_e2e::test(additional_contracts = "./updated-incrementer/Cargo.toml")]
         async fn set_code_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             // Given
             let constructor = IncrementerRef::new();
@@ -101,9 +101,9 @@ pub mod incrementer {
 
             // When
             let new_code_hash = client
-                .upload("updated_incrementer", &ink_e2e::alice(), None)
+                .upload("updated-incrementer", &ink_e2e::alice(), None)
                 .await
-                .expect("uploading `updated_incrementer` failed")
+                .expect("uploading `updated-incrementer` failed")
                 .code_hash;
 
             let new_code_hash = new_code_hash.as_ref().try_into().unwrap();

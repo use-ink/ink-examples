@@ -29,15 +29,15 @@ mod vesting_contract {
         to: AccountId,
     }
 
-    /// # This is to set the following during contract deployment:
-    ///     - beneficiary: the account that will receive the tokens
-    ///     - duration_time: duration of the vesting period,
-    ///       please note that this is in seconds
-    ///     - start_time: the time (as Unix time) at which point
-    ///       vesting starts
-    ///     - owner: the account that can release the tokens
-    ///     - releasable_balance: the initial amount of tokens vested
-    ///     - released_balance: the initial amount of tokens released
+    /// ## This is to set the following during contract deployment:
+    /// - beneficiary: the account that will receive the tokens
+    /// - duration_time: duration of the vesting period,
+    ///   please note that this is in seconds
+    /// - start_time: the time (as Unix time) at which point
+    ///   vesting starts
+    /// - owner: the account that can release the tokens
+    /// - releasable_balance: the initial amount of tokens vested
+    /// - released_balance: the initial amount of tokens released
     ///
     /// # Note:
     /// The beneficiary cannot be the zero address.
@@ -170,19 +170,19 @@ mod vesting_contract {
         /// released evenly over the vesting duration.
         ///
         /// # Parameters:
-        ///     - total_allocation: The total number of tokens
-        ///       allocated for vesting.
-        ///     - current_time: The current timestamp for which
-        ///       we want to check the vested amount.
+        /// - total_allocation: The total number of tokens
+        ///   allocated for vesting.
+        /// - current_time: The current timestamp for which
+        ///   we want to check the vested amount.
         ///
         /// # Returns:
-        ///     - `0` if the current_time is before the vesting start time.
-        ///     - total_allocation if the current_time is after the vesting
-        ///       end time or at least equal to it.
-        ///     - A prorated amount based on how much time has passed since
-        ///       the start of the vesting period if the `current_time` is
-        ///       during the vesting period.
-        ///     
+        /// - `0` if the current_time is before the vesting start time.
+        /// - total_allocation if the current_time is after the vesting
+        ///   end time or at least equal to it.
+        /// - A prorated amount based on how much time has passed since
+        ///   the start of the vesting period if the `current_time` is
+        ///   during the vesting period.
+        ///
         /// # Example:
         /// If the vesting duration is 200 seconds and 100 seconds have
         /// passed since the start time, then 50% of the total_allocation
