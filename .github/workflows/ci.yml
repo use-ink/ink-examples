@@ -1,4 +1,4 @@
-name: continuous-intergration/examples
+name: continuous-integration/examples
 
 on:
   push:
@@ -101,10 +101,10 @@ jobs:
       - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os == 'Windows'
         run: |
-           $delegator_subcontracts = "accumulator","adder","subber"
-           foreach ($contract in $delegator_subcontracts) {
-               echo "Processing delegator contract: $contract";
-               cargo ${{ matrix.job }} --verbose --manifest-path delegator/${contract}/Cargo.toml;
+           $multi_contract_caller_subcontracts = "accumulator","adder","subber"
+           foreach ($contract in $multi_contract_caller_subcontracts) {
+               echo "Processing multi_contract_caller contract: $contract";
+               cargo ${{ matrix.job }} --verbose --manifest-path multi_contract_caller/${contract}/Cargo.toml;
            }
            $upgradeable_contracts = "forward-calls","set-code-hash"
            foreach ($contract in $upgradeable_contracts) {
@@ -128,8 +128,8 @@ jobs:
         if: runner.os != 'Windows'
         run: |
            for contract in ${DELEGATOR_SUBCONTRACTS}; do
-               echo "Processing delegator contract: $contract";
-               cargo ${{ matrix.job }} --verbose --manifest-path delegator/${contract}/Cargo.toml;
+               echo "Processing multi_contract_caller contract: $contract";
+               cargo ${{ matrix.job }} --verbose --manifest-path multi_contract_caller/${contract}/Cargo.toml;
            done
            for contract in ${UPGRADEABLE_CONTRACTS}; do
                 echo "Processing upgradeable contract: $contract";
