@@ -52,8 +52,8 @@ mod vesting_contract {
                 return Err(Error::InvalidBeneficiary);
             }
             
-            /// This is multiplied by 1000 to conform to the 
-            /// Timestamp fomat in ink.
+            // This is multiplied by 1000 to conform to the
+            // Timestamp fomat in ink.
             let duration_time = duration_time_in_sec * 1000;
 
             let start_time = Self::env().block_timestamp();

@@ -1,12 +1,12 @@
 [package]
 name = "forward_calls"
-version = "4.2.0"
+version = "4.3.0"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 publish = false
 
 [dependencies]
-ink = { version = "4.2", default-features = false }
+ink = { version = "4.3", default-features = false }
 
 scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2.3", default-features = false, features = ["derive"], optional = true }
