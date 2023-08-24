@@ -28,8 +28,7 @@ jobs:
           - test
     runs-on: ${{ matrix.platform }}
     env:
-      UPGRADEABLE_CONTRACTS:    "forward-calls set-code-hash"
-      DELEGATOR_SUBCONTRACTS:   "accumulator adder subber"
+      MULTI_CONTRACT_CALLER_SUBCONTRACTS:   "accumulator adder subber"
       RUST_BACKTRACE:           full
     steps:
 
@@ -99,8 +98,8 @@ jobs:
       - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os == 'Windows'
         run: |
-           $multi-contract-caller_subcontracts = "accumulator","adder","subber"
-           foreach ($contract in $multi-contract-caller_subcontracts) {
+           $multi_contract_caller_subcontracts = "accumulator","adder","subber"
+           foreach ($contract in $multi_contract_caller_subcontracts) {
                echo "Processing multi-contract-caller contract: $contract";
                cargo ${{ matrix.job }} --verbose --manifest-path multi-contract-caller/${contract}/Cargo.toml;
            }
@@ -119,7 +118,7 @@ jobs:
       - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows'
         run: |
-           for contract in ${DELEGATOR_SUBCONTRACTS}; do
+           for contract in ${MULTI_CONTRACT_CALLER_SUBCONTRACTS}; do
                echo "Processing multi-contract-caller contract: $contract";
                cargo ${{ matrix.job }} --verbose --manifest-path multi-contract-caller/${contract}/Cargo.toml;
            done
