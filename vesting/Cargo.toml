@@ -1,6 +1,6 @@
 [package]
 name = "vesting"
-version = "0.1.0"
+version = "0.1.5"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 

@@ -13,14 +13,22 @@ mod vesting_contract {
         owner: AccountId,
     }
 
-    /// Error for when the beneficiary is a zero address.
-    /// & Error for when the releasable balance is zero.
+    /// # Errors for the vesting contract:
+    ///   - ZeroReleasableBalance: when the releasable balance is zero.
+    ///   - Overflow: when an arithmetic operation resulted in an overflow.
+    ///   - Underflow: when a substraction operation resulted in an underflow.
+    ///   - TimestampError: in cases where an error related to timestamp 
+    ///     calculations occurs.
+    /// 
     #[derive(Debug, PartialEq, Eq, scale::Encode, scale::Decode)]
     #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
     pub enum Error {
-        InvalidBeneficiary,
         ZeroReleasableBalance,
+        Overflow,
+        Underflow,
+        TimestampError,
     }
+    pub type Result<T> = core::result::Result<T, Error>;
 
     /// To emit events when a release is made.
     #[ink(event)]
@@ -29,15 +37,16 @@ mod vesting_contract {
         to: AccountId,
     }
 
-    /// ## This is to set the following during contract deployment:
-    /// - beneficiary: the account that will receive the tokens
-    /// - duration_time: duration of the vesting period,
-    ///   please note that this is in seconds
-    /// - start_time: the time (as Unix time) at which point
-    ///   vesting starts
-    /// - owner: the account that can release the tokens
-    /// - releasable_balance: the initial amount of tokens vested
-    /// - released_balance: the initial amount of tokens released
+
+    /// # This is to set the following during contract deployment:
+    ///   - beneficiary: the account that will receive the tokens
+    ///   - duration_time: duration of the vesting period,
+    ///     please note that this is in seconds
+    ///   - start_time: the time (as Unix time) at which point
+    ///     vesting starts
+    ///   - owner: the account that can release the tokens
+    ///   - releasable_balance: the initial amount of tokens vested
+    ///   - released_balance: the initial amount of tokens released
     ///
     /// # Note:
     /// The beneficiary cannot be the zero address.
@@ -47,12 +56,21 @@ mod vesting_contract {
         pub fn new(
             beneficiary: AccountId,
             duration_time_in_sec: Timestamp,
-        ) -> Result<Self, Error> {
-            if beneficiary == AccountId::from([0x0; 32]) {
-                return Err(Error::InvalidBeneficiary);
-            }
-            
-            // This is multiplied by 1000 to conform to the
+        ) -> Result<Self> {
+            assert!(
+                beneficiary != AccountId::from([0x0; 32]), 
+                "Beneficiary should not be a zero address"
+            );
+            assert!(
+                duration_time_in_sec > 0, 
+                "Duration should not be instantiated with zero"
+            ); 
+            assert!(
+                duration_time_in_sec <= u64::MAX / 1000,
+                "Duration should not exceed the max value of u64"
+            );
+
+            // This is multiplied by 1000 to conform to the 
             // Timestamp fomat in ink.
             let duration_time = duration_time_in_sec * 1000;
 
@@ -105,18 +123,27 @@ mod vesting_contract {
         /// This returns the time at which point
         /// vesting ends.
         #[ink(message)]
-        pub fn end_time(&self) -> Timestamp {
-            self.start_time() + self.duration_time()
+        pub fn end_time(&self) -> Result<Timestamp> {
+            self.start_time()
+            .checked_add(self.duration_time())
+            .ok_or(Error::Overflow)
         }
 
         /// This returns the amount of time remaining
         /// until the end of the vesting period.
         #[ink(message)]
-        pub fn time_remaining(&self) -> Timestamp {
-            if self.time_now() < self.end_time() {
-                return self.end_time() - self.time_now();
+        pub fn time_remaining(&self) -> Result<Timestamp> {
+            if self.time_now() < self.end_time()? { 
+                let remaining_time = self.end_time()?
+                    .checked_sub(self.time_now())
+                    .unwrap_or_else(|| panic!(
+                        "An unexpected arithmetic error occurred 
+                        when calculating the remaining vesting duration."
+                    ));
+
+                Ok(remaining_time)
             } else {
-                return 0;
+                Ok(0)
             }
         }
 
@@ -130,30 +157,45 @@ mod vesting_contract {
         /// This returns the amount of native token that
         /// is currently available for release.
         #[ink(message)]
-        pub fn releasable_balance(&self) -> Balance {
-            return self.vested_amount() as Balance - self.released_balance();
+        pub fn releasable_balance(&self) -> Result<Balance> {
+            self.vested_amount()?
+                .checked_sub(self.released_balance())
+                .ok_or(Error::Underflow)
         }
 
         /// This calculates the amount that has already vested
-        /// but hasn't been released from the contract yet.
         #[ink(message)]
-        pub fn vested_amount(&self) -> Balance {
-            return self.vesting_schedule(self.this_contract_balance(), self.time_now());
+        pub fn vested_amount(&self) -> Result<Balance> {
+            let total_allocation = self.this_contract_balance()
+                .checked_add(self.released_balance)
+                .ok_or(Error::Overflow)?;
+
+            self.vesting_schedule(
+                total_allocation,
+                self.time_now()
+            )
         }
 
-        /// This sends the releasable balance to the beneficiary.
+        /// This sends the releasable balance to the beneficiary
         /// wallet address; no matter who triggers the release.
         #[ink(message)]
-        pub fn release(&mut self) -> Result<(), Error> {
-            let releasable = self.releasable_balance();
+        pub fn release(&mut self) -> Result<()> {
+            let releasable = self.releasable_balance()?;
+
             if releasable == 0 {
                 return Err(Error::ZeroReleasableBalance);
             }
 
-            self.released_balance += releasable;
+            self.released_balance = self.released_balance
+                .checked_add(releasable)
+                .ok_or(Error::Overflow)?;
+
             self.env()
                 .transfer(self.beneficiary, releasable)
-                .expect("Transfer failed during release");
+                .unwrap_or_else(|err| panic!(
+                    "Transfer during release fail due to: {:?}", 
+                    err,
+                ));
 
             self.env().emit_event(Released {
                 value: releasable,
@@ -170,18 +212,18 @@ mod vesting_contract {
         /// released evenly over the vesting duration.
         ///
         /// # Parameters:
-        /// - total_allocation: The total number of tokens
-        ///   allocated for vesting.
-        /// - current_time: The current timestamp for which
-        ///   we want to check the vested amount.
+        ///   - total_allocation: The total number of tokens
+        ///     allocated for vesting.
+        ///   - current_time: The current timestamp for which
+        ///     we want to check the vested amount.
         ///
         /// # Returns:
-        /// - `0` if the current_time is before the vesting start time.
-        /// - total_allocation if the current_time is after the vesting
-        ///   end time or at least equal to it.
-        /// - A prorated amount based on how much time has passed since
-        ///   the start of the vesting period if the `current_time` is
-        ///   during the vesting period.
+        ///   - `0` if the current_time is before the vesting start time.
+        ///   - total_allocation if the current_time is after the vesting
+        ///     end time or at least equal to it.
+        ///   - A prorated amount based on how much time has passed since
+        ///     the start of the vesting period if the `current_time` is
+        ///     during the vesting period.
         ///
         /// # Example:
         /// If the vesting duration is 200 seconds and 100 seconds have
@@ -192,17 +234,29 @@ mod vesting_contract {
             &self,
             total_allocation: Balance,
             current_time: Timestamp,
-        ) -> Balance {
+        ) -> Result<Balance> {
             if current_time < self.start_time() {
-                return 0;
-            } else if current_time >= self.end_time() {
-                return total_allocation;
+                Ok(0)
+            } else if current_time >= self.end_time()? {
+                Ok(total_allocation)
             } else {
-                return (total_allocation
-                    * (current_time - self.start_time()) as Balance)
-                    / self.duration_time() as Balance;
+
+                let time_elapsed = current_time
+                    .checked_sub(self.start_time())
+                    .ok_or(Error::TimestampError)?;
+
+                // This represents the portion of the total allocation 
+                // that has vested based on the time elapsed.
+                let vested_portion = total_allocation
+                    .checked_mul(time_elapsed as u128)
+                    .ok_or(Error::Overflow)?;
+
+                let vested_balance = vested_portion 
+                    / self.duration_time() as u128;
+
+                Ok(vested_balance)
             }
-        }
+        }        
     }
 
     #[cfg(test)]
@@ -217,22 +271,22 @@ mod vesting_contract {
             assert_eq!(contract.beneficiary(), AccountId::from([0x01; 32]));
             assert_eq!(contract.duration_time(), 200 * 1000);
             assert_eq!(contract.released_balance(), 0);
-            assert_eq!(contract.releasable_balance(), 0);
+            assert_eq!(contract.releasable_balance().unwrap(), 0);
         }
 
         /// There should be some time remaining before the vesting period ends.
         #[ink::test]
         fn time_remaining_works() {
             let contract = VestingContract::new(AccountId::from([0x01; 32]), 200).unwrap();
-            assert!(contract.time_remaining() > 0);
+            assert!(contract.time_remaining().unwrap() > 0);
         }
 
         /// # Checking that tokens cannot be released before
         /// the vesting period:
-        ///     - Trying to release tokens before the vesting period
-        ///       has ended, it will return an error.
-        ///     - The released_balance should remain 0 since no tokens
-        ///       were released.
+        ///   - Trying to release tokens before the vesting period
+        ///     has ended, it will return an error.
+        ///   - The released_balance should remain 0 since no tokens
+        ///     were released.
         #[ink::test]
         fn release_before_vesting_period_fails() {
             let mut contract = VestingContract::new(AccountId::from([0x01; 32]), 200).unwrap();
@@ -240,16 +294,26 @@ mod vesting_contract {
             assert_eq!(contract.release(), Err(Error::ZeroReleasableBalance));
             assert_eq!(contract.released_balance(), 0);
         }
-
+      
         /// # Checking if tokens can be released after the vesting period:
-        ///     - Setting the duration_time to 0 to simulate the end of
-        ///       the vesting period.
-        ///     - And then simulate a deposit into the contract.
-        ///     - After releasing, the released_balance should match the
-        ///       amount we simulated as a deposit.
+        ///   - Create a new vesting contract with a duration of 200 seconds.
+        ///   - Simulate the passage of time by advancing the block timestamp 
+        ///     beyond the vesting duration (201 seconds in this case).
+        ///   - The advanced time is multiplied by 1000 to conform to the 
+        ///     Timestamp format in ink.
+        ///   - And then simulate a deposit into the contract.
+        ///   - After releasing, the released_balance should match the 
+        ///     amount we simulated as a deposit. 
         #[ink::test]
         fn release_after_vesting_period_works() {
-            let mut contract = VestingContract::new(AccountId::from([0x01; 32]), 0).unwrap();
+            let mut contract = VestingContract::new(AccountId::from([0x01; 32]), 200).unwrap();
+            
+            // Simulating the end of the vesting period.
+            let end_block_timestamp = (200 + 1) * 1000;
+            ink::env::test::set_block_timestamp::<ink::env::
+            DefaultEnvironment>(end_block_timestamp);
+            
+            // Simulating a deposit into the contract.
             contract.releasable_balance += 1000000;
 
             assert_eq!(contract.release(), Ok(()));
@@ -257,17 +321,17 @@ mod vesting_contract {
         }
 
         /// # Checking the vesting_schedule function for a specific behavior:
-        ///     - Given a total allocation and a current time halfway through
-        ///       the vesting period, the vested amount should be half of
-        ///       the total allocation.
+        ///   - Given a total allocation and a current time halfway through
+        ///     the vesting period, the vested amount should be half of
+        ///     the total allocation.
         #[ink::test]
         fn vesting_schedule_works() {
             let contract = VestingContract::new(AccountId::from([0x01; 32]), 200).unwrap();
 
             assert_eq!(
                 contract.vesting_schedule(1000, contract.start_time() + 100 * 1000),
-                500
+                Ok(500)
             );
         }
-    }
+    }   
 }
