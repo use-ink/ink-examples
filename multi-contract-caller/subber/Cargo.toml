@@ -1,11 +1,11 @@
 [package]
 name = "subber"
-version = "4.3.0"
+version = "5.0.0-alpha"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 
 [dependencies]
-ink = { version = "4.3", default-features = false }
+ink = { version = "5.0.0-alpha", default-features = false }
 
 accumulator = { path = "../accumulator", default-features = false, features = ["ink-as-dependency"] }
 
