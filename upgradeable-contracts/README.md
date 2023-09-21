@@ -14,7 +14,7 @@ You can read more about storage compatibility on [use.ink](https://use.ink/basic
 
 ## [Delegator](delegator/)
 
-Delegator patter is based around a low level cross contract call function `delegate_call`.
+Delegator pattern is based around a low level cross contract call function `delegate_call`.
 It allows a contract to delegate its execution to some on-chain uploaded code.
 
 It is different from a traditional cross-contract call
