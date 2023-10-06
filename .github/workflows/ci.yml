@@ -30,6 +30,7 @@ jobs:
     env:
       MULTI_CONTRACT_CALLER_SUBCONTRACTS: "accumulator adder subber"
       UPGRADEABLE_CONTRACTS: "delegator set-code-hash"
+      WORKSPACE_CONTRACTS: "erc20 flipper incrementer"
       RUST_BACKTRACE: full
     steps:
 
@@ -55,7 +56,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: install
-          args: --git https://github.com/paritytech/cargo-contract.git
+          args: --git https://github.com/paritytech/cargo-contract.git --branch add-workspace-initial-support
 
       - name: Install cargo-dylint
         uses: baptiste0928/cargo-install@bf6758885262d0e6f61089a9d8c8790d3ac3368f # v1.3.0
@@ -111,6 +112,12 @@ jobs:
                cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/${contract}/Cargo.toml;
            }
 
+           $workspace_contracts = "erc20","flipper","incrementer"
+           foreach ($contract in $workspace_contracts) {
+               echo "Processing workspace contract: $contract";
+               cargo ${{ matrix.job }} --verbose --manifest-path workspace-contracts/${contract}/Cargo.toml;
+           }
+
            foreach ($example in Get-ChildItem  -Directory "\*") {
                if ($example -Match 'artifacts') { continue }
                echo "Processing example: $example";
@@ -131,8 +138,13 @@ jobs:
                 cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/$contract/Cargo.toml;
            done
 
+           for contract in ${WORKSPACE_CONTRACTS}; do
+                echo "Processing workspace contract: $contract";
+                cargo ${{ matrix.job }} --verbose --manifest-path=workspace-contracts/$contract/Cargo.toml;
+           done
+
            for example in ./*/; do
-                if [ "$example" = "./artifacts/" ] || [ "$example" = "./upgradeable-contracts/" ]; then continue; fi;
+                if [ "$example" = "./artifacts/" ] || [ "$example" = "./upgradeable-contracts/" ]|| [ "$example" = "./workspace-contracts/" ]; then continue; fi;
                 echo "Processing example: $example";
                 cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
            done
