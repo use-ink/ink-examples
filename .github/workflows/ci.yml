@@ -51,7 +51,7 @@ jobs:
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2.7.0
         with:
-          workspaces:
+          workspaces: |
             basic-contract-caller
             call-runtime
             conditional-compilation
