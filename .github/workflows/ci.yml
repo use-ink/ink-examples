@@ -49,7 +49,7 @@ jobs:
           override: true
 
       - name: Rust Cache
-        uses: Swatinem/rust-cache@v2.2.0
+        uses: Swatinem/rust-cache@v2.7.0
 
       - name: Install `cargo-contract` `main`
         uses: actions-rs/cargo@v1
