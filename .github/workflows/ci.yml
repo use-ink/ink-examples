@@ -36,8 +36,6 @@ jobs:
       - name: Free space on the runner
         run: |
           df -h
-          sudo apt -y autoremove --purge
-          sudo apt -y autoclean
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /opt/ghc
           sudo rm -rf "/usr/local/share/boost"
