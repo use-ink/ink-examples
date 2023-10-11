@@ -50,6 +50,32 @@ jobs:
 
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2.7.0
+        with:
+          workspaces:
+            basic-contract-caller
+            call-runtime
+            conditional-compilation
+            contract-terminate
+            custom-allocator
+            custom-environment
+            dns
+            e2e-call-runtime
+            erc20
+            erc721
+            erc1155
+            flipper
+            incrementer
+            multi-contract-caller
+            multisig
+            payment-channel
+            psp22-extension
+            rand-extension
+            trait-dyn-cross-contract-calls
+            trait-erc20
+            trait-flipper
+            trait-incrementer
+            upgradeable-contracts
+            vesting
 
       - name: Install `cargo-contract` `main`
         uses: actions-rs/cargo@v1
