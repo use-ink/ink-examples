@@ -24,3 +24,5 @@ std = [
 ]
 ink-as-dependency = []
 
+
+overflow-checks = false
