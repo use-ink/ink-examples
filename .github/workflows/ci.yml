@@ -7,15 +7,19 @@ on:
     tags:
         - v*
     paths-ignore:
-      - '**.gitignore'
-      - '**README.md'
+      - 'READMEmd'
+      - '.gitignore'
+      - '**/.gitignore'
+      - '**/README.md'
       - '.images/**'
   pull_request:
     branches:
       - main
     paths-ignore:
-      - '**.gitignore'
-      - '**README.md'
+      - 'READMEmd'
+      - '.gitignore'
+      - '**/.gitignore'
+      - '**/README.md'
       - '.images/**'
 
 jobs:
@@ -81,7 +85,8 @@ jobs:
             trait-erc20
             trait-flipper
             trait-incrementer
-            upgradeable-contracts
+            upgradeable-contracts/delegator
+            upgradeable-contracts/set-code-hash
             vesting
 
       # - name: Install `cargo-contract` `main`
