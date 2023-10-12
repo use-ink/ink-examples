@@ -7,13 +7,16 @@ on:
     tags:
         - v*
     paths-ignore:
-      - 'README.md'
-      - '.gitlab-ci.yml'
+      - '**.gitignore'
+      - '**README.md'
+      - '.images/**'
   pull_request:
     branches:
       - main
     paths-ignore:
-      - 'README.md'
+      - '**.gitignore'
+      - '**README.md'
+      - '.images/**'
 
 jobs:
   check:
@@ -92,7 +95,6 @@ jobs:
         with:
           crate: cargo-contract
           git: https://github.com/paritytech/cargo-contract.git
-          commit: 88c92bae020a0be243c45aa9344aa0ad03a10ba1
 
       - name: Install cargo-dylint
         uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
