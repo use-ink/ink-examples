@@ -7,18 +7,17 @@ on:
     tags:
         - v*
     paths-ignore:
-      - '.github/**'
       - '**.gitignore'
-      - '**README.md'
       - '.images/**'
+      - '**README.md'
+
   pull_request:
     branches:
       - main
     paths-ignore:
-      - '.github/**'
       - '**.gitignore'
-      - '**README.md'
       - '.images/**'
+      - '**README.md'
 
 jobs:
   check:
