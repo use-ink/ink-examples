@@ -28,21 +28,38 @@ jobs:
         job:
           - contract build
           - test
+        contract:
+        - basic-contract-caller
+        - call-runtime
+        - conditional-compilation
+        - contract-terminate
+        - custom-allocator
+        - custom-environment
+        - dns
+        - e2e-call-runtime
+        - erc20
+        - erc721
+        - erc1155
+        - flipper
+        - incrementer
+        - multi-contract-caller
+        - multisig
+        - payment-channel
+        - psp22-extension
+        - rand-extension
+        - trait-dyn-cross-contract-calls
+        - trait-erc20
+        - trait-flipper
+        - trait-incrementer
+        - upgradeable-contracts
+        - vesting
+
     runs-on: ${{ matrix.platform }}
     env:
       MULTI_CONTRACT_CALLER_SUBCONTRACTS: "accumulator adder subber"
       UPGRADEABLE_CONTRACTS: "delegator set-code-hash"
       RUST_BACKTRACE: full
     steps:
-
-      - name: Free space on the runner
-        run: |
-          df -h
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /opt/ghc
-          sudo rm -rf "/usr/local/share/boost"
-          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-          df -h
 
       - name: Checkout sources & submodules
         uses: actions/checkout@v4
