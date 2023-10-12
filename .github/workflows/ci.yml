@@ -7,7 +7,7 @@ on:
     tags:
         - v*
     paths-ignore:
-      - 'READMEmd'
+      - 'README.md'
       - '.gitignore'
       - '**/.gitignore'
       - '**/README.md'
@@ -16,7 +16,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - 'READMEmd'
+      - 'README.md'
       - '.gitignore'
       - '**/.gitignore'
       - '**/README.md'
