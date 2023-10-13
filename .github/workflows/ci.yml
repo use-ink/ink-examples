@@ -33,6 +33,35 @@ jobs:
         job:
           - contract build
           - test
+        contract:
+          - basic-contract-caller
+          - call-runtime
+          - conditional-compilation
+          - contract-terminate
+          - custom-allocator
+          - custom-environment
+          - dns
+          - e2e-call-runtime
+          - erc20
+          - erc721
+          - erc1155
+          - flipper
+          - incrementer
+          - multi-contract-caller
+          - multi-contract-caller/accumulator
+          - multi-contract-caller/adder
+          - multi-contract-caller/subber
+          - multisig
+          - payment-channel
+          - psp22-extension
+          - rand-extension
+          - trait-dyn-cross-contract-calls
+          - trait-erc20
+          - trait-flipper
+          - trait-incrementer
+          - upgradeable-contracts/delegator
+          - upgradeable-contracts/set-code-hash
+          - vesting
 
     runs-on: ${{ matrix.platform }}
     env:
@@ -56,188 +85,12 @@ jobs:
           components: rust-src
           override: true
 
-      - name: Rust Cache basic-contract-caller
+      - name: Rust Cache
         uses: Swatinem/rust-cache@v2.7.0
         with:
           cache-on-failure: true
-          workspaces: basic-contract-caller
-          key: basic-contract-caller
-
-      - name: Rust Cache call-runtime
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: call-runtime
-          key: call-runtime
-
-      - name: Rust Cache conditional-compilation
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: conditional-compilation
-          key: conditional-compilation
-
-      - name: Rust Cache contract-terminate
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: contract-terminate
-          key: contract-terminate
-
-      - name: Rust Cache custom-allocator
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: custom-allocator
-          key: custom-allocator
-
-      - name: Rust Cache custom-environment
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: custom-environment
-          key: custom-environment
-
-      - name: Rust Cache dns
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: dns
-          key: dns
-
-      - name: Rust Cache e2e-call-runtime
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: e2e-call-runtime
-          key: e2e-call-runtime
-
-      - name: Rust Cache erc20
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: erc20
-          key: erc20
-
-      - name: Rust Cache erc721
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: erc721
-          key: erc721
-
-      - name: Rust Cache erc1155
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: erc1155
-          key: erc1155
-
-      - name: Rust Cache flipper
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: flipper
-          key: flipper
-
-      - name: Rust Cache incrementer
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: incrementer
-          key: incrementer
-
-      - name: Rust Cache multi-contract-caller
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: multi-contract-caller
-          key: multi-contract-caller
-
-      - name: Rust Cache multisig
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: multisig
-          key: multisig
-
-      - name: Rust Cache payment-channel
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: payment-channel
-          key: payment-channel
-
-      - name: Rust Cache psp22-extension
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: psp22-extension
-          key: psp22-extension
-
-      - name: Rust Cache rand-extension
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: rand-extension
-          key: rand-extension
-
-      - name: Rust Cache trait-dyn-cross-contract-calls
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: trait-dyn-cross-contract-calls
-          key: trait-dyn-cross-contract-calls
-
-      - name: Rust Cache trait-erc20
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: trait-erc20
-          key: trait-erc20
-
-      - name: Rust Cache trait-flipper
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: trait-flipper
-          key: trait-flipper
-
-      - name: Rust Cache trait-incrementer
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: trait-incrementer
-          key: trait-incrementer
-
-      - name: Rust Cache upgradeable-contracts/delegator
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: upgradeable-contracts/delegator
-          key: upgradeable-contracts/delegator
-
-      - name: Rust Cache upgradeable-contracts/set-code-hash
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: upgradeable-contracts/set-code-hash
-          key: upgradeable-contracts/set-code-hash
-
-      - name: Rust Cache vesting
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: vesting
-          key: vesting
-
-      # TEST CHANGE
-
-      # - name: Install `cargo-contract` `main`
-      #   uses: actions-rs/cargo@v1
-      #   with:
-      #     command: install
-      #     args: --git https://github.com/paritytech/cargo-contract.git
+          workspaces: ${{ matrix.contract }}
+          key: ${{ matrix.contract }}-${{ matrix.job}}
 
       - name: Install `cargo-contract` `main`
         uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
@@ -306,21 +159,21 @@ jobs:
                cargo clean --manifest-path=$example/Cargo.toml;
            }
 
-      - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
+      - name: ${{ matrix.contract }} ${{ matrix.job }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows'
         run: |
-           for contract in ${MULTI_CONTRACT_CALLER_SUBCONTRACTS}; do
-               echo "Processing multi-contract-caller contract: $contract";
-               cargo ${{ matrix.job }} --verbose --manifest-path multi-contract-caller/${contract}/Cargo.toml;
-           done
+          #  for contract in ${MULTI_CONTRACT_CALLER_SUBCONTRACTS}; do
+          #      echo "Processing multi-contract-caller contract: $contract";
+          #      cargo ${{ matrix.job }} --verbose --manifest-path multi-contract-caller/${contract}/Cargo.toml;
+          #  done
 
-           for contract in ${UPGRADEABLE_CONTRACTS}; do
-                echo "Processing upgradeable contract: $contract";
-                cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/$contract/Cargo.toml;
-           done
+          #  for contract in ${UPGRADEABLE_CONTRACTS}; do
+          #       echo "Processing upgradeable contract: $contract";
+          #       cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/$contract/Cargo.toml;
+          #  done
 
-           for example in ./*/; do
-                if [ "$example" = "./artifacts/" ] || [ "$example" = "./upgradeable-contracts/" ]; then continue; fi;
-                echo "Processing example: $example";
-                cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
-           done
+          #  for example in ./*/; do
+          #       if [ "$example" = "./artifacts/" ] || [ "$example" = "./upgradeable-contracts/" ]; then continue; fi;
+            echo "Processing example: ${{ matrix.contract }};
+            cargo ${{ matrix.job }} --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+          #  done
