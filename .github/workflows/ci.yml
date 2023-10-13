@@ -157,22 +157,10 @@ jobs:
       #          cargo clean --manifest-path=$example/Cargo.toml;
       #      }
 
-      - name: Build and test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
+      - name: Build ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows'
-        run: |
-          #  for contract in ${MULTI_CONTRACT_CALLER_SUBCONTRACTS}; do
-          #      echo "Processing multi-contract-caller contract: $contract";
-          #      cargo ${{ matrix.job }} --verbose --manifest-path multi-contract-caller/${contract}/Cargo.toml;
-          #  done
+        run: cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
 
-          #  for contract in ${UPGRADEABLE_CONTRACTS}; do
-          #       echo "Processing upgradeable contract: $contract";
-          #       cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/$contract/Cargo.toml;
-          #  done
-
-          #  for example in ./*/; do
-          #       if [ "$example" = "./artifacts/" ] || [ "$example" = "./upgradeable-contracts/" ]; then continue; fi;
-            echo "Processing example: ${{ matrix.contract }}";
-            cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
-            cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
-          #  done
+      - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
+        if: runner.os != 'Windows'
+        run: cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
