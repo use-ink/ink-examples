@@ -26,13 +26,10 @@ jobs:
     strategy:
       matrix:
         platform:
-          # - ubuntu-latest
+          - ubuntu-latest
           - macos-latest
         toolchain:
           - stable
-        job:
-          - contract build
-          - test
         contract:
           - basic-contract-caller
           - call-runtime
@@ -90,7 +87,7 @@ jobs:
         with:
           cache-on-failure: true
           workspaces: ${{ matrix.contract }}
-          key: '${{ matrix.contract }}-${{ matrix.job}}'
+          key: ${{ matrix.contract }}
 
       - name: Install `cargo-contract` `main`
         uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
@@ -137,29 +134,29 @@ jobs:
             cargo -vV
             cargo contract --version
 
-      - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os == 'Windows'
-        run: |
-           $multi_contract_caller_subcontracts = "accumulator","adder","subber"
-           foreach ($contract in $multi_contract_caller_subcontracts) {
-               echo "Processing multi-contract-caller contract: $contract";
-               cargo ${{ matrix.job }} --verbose --manifest-path multi-contract-caller/${contract}/Cargo.toml;
-           }
+      # - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #      $multi_contract_caller_subcontracts = "accumulator","adder","subber"
+      #      foreach ($contract in $multi_contract_caller_subcontracts) {
+      #          echo "Processing multi-contract-caller contract: $contract";
+      #          cargo ${{ matrix.job }} --verbose --manifest-path multi-contract-caller/${contract}/Cargo.toml;
+      #      }
 
-           $upgradeable_contracts = "delegator","set-code-hash"
-           foreach ($contract in $upgradeable_contracts) {
-               echo "Processing upgradeable contract: $contract";
-               cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/${contract}/Cargo.toml;
-           }
+      #      $upgradeable_contracts = "delegator","set-code-hash"
+      #      foreach ($contract in $upgradeable_contracts) {
+      #          echo "Processing upgradeable contract: $contract";
+      #          cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/${contract}/Cargo.toml;
+      #      }
 
-           foreach ($example in Get-ChildItem  -Directory "\*") {
-               if ($example -Match 'artifacts') { continue }
-               echo "Processing example: $example";
-               cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
-               cargo clean --manifest-path=$example/Cargo.toml;
-           }
+      #      foreach ($example in Get-ChildItem  -Directory "\*") {
+      #          if ($example -Match 'artifacts') { continue }
+      #          echo "Processing example: $example";
+      #          cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
+      #          cargo clean --manifest-path=$example/Cargo.toml;
+      #      }
 
-      - name: ${{ matrix.contract }} ${{ matrix.job }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
+      - name: Build and test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows'
         run: |
           #  for contract in ${MULTI_CONTRACT_CALLER_SUBCONTRACTS}; do
@@ -175,5 +172,6 @@ jobs:
           #  for example in ./*/; do
           #       if [ "$example" = "./artifacts/" ] || [ "$example" = "./upgradeable-contracts/" ]; then continue; fi;
             echo "Processing example: ${{ matrix.contract }}";
-            cargo ${{ matrix.job }} --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+            cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+            cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
           #  done
