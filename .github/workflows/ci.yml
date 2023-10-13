@@ -90,7 +90,7 @@ jobs:
         with:
           cache-on-failure: true
           workspaces: ${{ matrix.contract }}
-          key: ${{ matrix.contract }}-${{ matrix.job}}
+          key: '${{ matrix.contract }}-${{ matrix.job}}'
 
       - name: Install `cargo-contract` `main`
         uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
@@ -174,6 +174,6 @@ jobs:
 
           #  for example in ./*/; do
           #       if [ "$example" = "./artifacts/" ] || [ "$example" = "./upgradeable-contracts/" ]; then continue; fi;
-            echo "Processing example: ${{ matrix.contract }};
+            echo "Processing example: ${{ matrix.contract }}";
             cargo ${{ matrix.job }} --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
           #  done
