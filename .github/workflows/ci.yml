@@ -134,7 +134,7 @@ jobs:
             cargo -vV
             cargo contract --version
 
-      # - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
+      # - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }} 
       #   if: runner.os == 'Windows'
       #   run: |
       #      $multi_contract_caller_subcontracts = "accumulator","adder","subber"
