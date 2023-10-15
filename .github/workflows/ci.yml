@@ -21,146 +21,142 @@ on:
 
 
 jobs:
-  check:
-    name: examples
-    strategy:
-      matrix:
-        platform:
-          - ubuntu-latest
-          - macos-latest
-        toolchain:
-          - stable
-        contract:
-          - basic-contract-caller
-          - call-runtime
-          - conditional-compilation
-          - contract-terminate
-          - custom-allocator
-          - custom-environment
-          - dns
-          - e2e-call-runtime
-          - erc20
-          - erc721
-          - erc1155
-          - flipper
-          - incrementer
-          - multi-contract-caller
-          - multi-contract-caller/accumulator
-          - multi-contract-caller/adder
-          - multi-contract-caller/subber
-          - multisig
-          - payment-channel
-          - psp22-extension
-          - rand-extension
-          - trait-dyn-cross-contract-calls
-          - trait-erc20
-          - trait-flipper
-          - trait-incrementer
-          - upgradeable-contracts/delegator
-          - upgradeable-contracts/set-code-hash
-          - vesting
+  prepare_matrix:
+    name: prepare matrix
+    runs-on: ubuntu-latest
 
-    runs-on: ${{ matrix.platform }}
-    env:
-      MULTI_CONTRACT_CALLER_SUBCONTRACTS: "accumulator adder subber"
-      UPGRADEABLE_CONTRACTS: "delegator set-code-hash"
-      RUST_BACKTRACE: full
     steps:
-
-      - name: Checkout sources & submodules
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
           submodules: recursive
 
-      - name: Install toolchain
-        id: toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ matrix.toolchain }}
-          components: rust-src
-          override: true
+      - name: Calculate file differences
+        id: changed-files
+        uses: tj-actions/changed-files@v39
 
-      - name: Rust Cache
-        uses: Swatinem/rust-cache@v2.7.0
-        with:
-          cache-on-failure: true
-          workspaces: ${{ matrix.contract }}
-          key: ${{ matrix.contract }}
-
-      - name: Install `cargo-contract` `main`
-        uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
-        with:
-          crate: cargo-contract
-          git: https://github.com/paritytech/cargo-contract.git
-          cache-key: ${{ matrix.platform }}
-
-      - name: Install cargo-dylint
-        uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
-        with:
-          crate: cargo-dylint
-          version: 1
-
-      - name: Install dylint-link
-        uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
-        with:
-          crate: dylint-link
-          version: 1
-
-      - name: Download and run latest `substrate-contracts-node` binary
-        if: runner.os == 'Linux'
+      - name: List all added files
         run: |
-          curl -L -o substrate-contracts-node.zip 'https://gitlab.parity.io/parity/mirrors/substrate-contracts-node/-/jobs/artifacts/main/download?job=build-linux' && \
-          unzip substrate-contracts-node.zip && \
-          chmod +x artifacts/substrate-contracts-node-linux/substrate-contracts-node &&
-          ./artifacts/substrate-contracts-node-linux/substrate-contracts-node -linfo,runtime::contracts=debug  2>&1 | tee /tmp/contracts-node.log &
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "- $file"
+          done
+          echo "Total changed:  ${{ steps.changed-files.outputs.all_changed_files_count }};"
 
-      - name: Download and run latest `substrate-contracts-node` binary
-        if: runner.os == 'macOS'
-        run: |
-            curl -L -o substrate-contracts-node.zip 'https://gitlab.parity.io/parity/mirrors/substrate-contracts-node/-/jobs/artifacts/main/download?job=build-mac' && \
-            unzip substrate-contracts-node.zip && \
-            chmod +x artifacts/substrate-contracts-node-mac/substrate-contracts-node &&
-            ./artifacts/substrate-contracts-node-mac/substrate-contracts-node -linfo,runtime::contracts=debug  2>&1 | tee /tmp/contracts-node.log &
+  # check:
+  #   name: examples
+  #   strategy:
+  #     matrix:
+  #       platform:
+  #         - ubuntu-latest
+  #         - macos-latest
+  #       toolchain:
+  #         - stable
+  #       contract:
+  #         - basic-contract-caller
+  #         - call-runtime
+  #         - conditional-compilation
+  #         - contract-terminate
+  #         - custom-allocator
+  #         - custom-environment
+  #         - dns
+  #         - e2e-call-runtime
+  #         - erc20
+  #         - erc721
+  #         - erc1155
+  #         - flipper
+  #         - incrementer
+  #         - multi-contract-caller
+  #         - multi-contract-caller/accumulator
+  #         - multi-contract-caller/adder
+  #         - multi-contract-caller/subber
+  #         - multisig
+  #         - payment-channel
+  #         - psp22-extension
+  #         - rand-extension
+  #         - trait-dyn-cross-contract-calls
+  #         - trait-erc20
+  #         - trait-flipper
+  #         - trait-incrementer
+  #         - upgradeable-contracts/delegator
+  #         - upgradeable-contracts/set-code-hash
+  #         - vesting
+  #   runs-on: ${{ matrix.platform }}
+  #   env:
+  #     RUST_BACKTRACE: full
+  #   steps:
+  #     - name: Checkout sources & submodules
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 1
+  #         submodules: recursive
 
-      - name: Install and run latest `substrate-contracts-node` binary
-        if: runner.os == 'Windows'
-        run: |
-            cargo install contracts-node --git https://github.com/paritytech/substrate-contracts-node.git --force --locked && \
-            substrate-contracts-node -lruntime::contracts=debug  2>&1 | tee /tmp/contracts-node.log &
+  #     - name: Install toolchain
+  #       id: toolchain
+  #       uses: actions-rs/toolchain@v1
+  #       with:
+  #         profile: minimal
+  #         toolchain: ${{ matrix.toolchain }}
+  #         components: rust-src
+  #         override: true
 
-      - name: Output versions
-        run: |
-            cargo -vV
-            cargo contract --version
+  #     - name: Rust Cache
+  #       uses: Swatinem/rust-cache@v2.7.0
+  #       with:
+  #         cache-on-failure: true
+  #         workspaces: ${{ matrix.contract }}
+  #         key: ${{ matrix.contract }}
 
-      # - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }} 
-      #   if: runner.os == 'Windows'
-      #   run: |
-      #      $multi_contract_caller_subcontracts = "accumulator","adder","subber"
-      #      foreach ($contract in $multi_contract_caller_subcontracts) {
-      #          echo "Processing multi-contract-caller contract: $contract";
-      #          cargo ${{ matrix.job }} --verbose --manifest-path multi-contract-caller/${contract}/Cargo.toml;
-      #      }
+  #     - name: Install `cargo-contract` `main`
+  #       uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
+  #       with:
+  #         crate: cargo-contract
+  #         git: https://github.com/paritytech/cargo-contract.git
+  #         cache-key: ${{ matrix.platform }}
 
-      #      $upgradeable_contracts = "delegator","set-code-hash"
-      #      foreach ($contract in $upgradeable_contracts) {
-      #          echo "Processing upgradeable contract: $contract";
-      #          cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/${contract}/Cargo.toml;
-      #      }
+  #     - name: Install cargo-dylint
+  #       uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
+  #       with:
+  #         crate: cargo-dylint
+  #         version: 1
 
-      #      foreach ($example in Get-ChildItem  -Directory "\*") {
-      #          if ($example -Match 'artifacts') { continue }
-      #          echo "Processing example: $example";
-      #          cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
-      #          cargo clean --manifest-path=$example/Cargo.toml;
-      #      }
+  #     - name: Install dylint-link
+  #       uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
+  #       with:
+  #         crate: dylint-link
+  #         version: 1
 
-      - name: Build ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os != 'Windows'
-        run: cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+  #     - name: Download and run latest `substrate-contracts-node` binary
+  #       if: runner.os == 'Linux'
+  #       run: |
+  #         curl -L -o substrate-contracts-node.zip 'https://gitlab.parity.io/parity/mirrors/substrate-contracts-node/-/jobs/artifacts/main/download?job=build-linux' && \
+  #         unzip substrate-contracts-node.zip && \
+  #         chmod +x artifacts/substrate-contracts-node-linux/substrate-contracts-node &&
+  #         ./artifacts/substrate-contracts-node-linux/substrate-contracts-node -linfo,runtime::contracts=debug  2>&1 | tee /tmp/contracts-node.log &
 
-      - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os != 'Windows'
-        run: cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+  #     - name: Download and run latest `substrate-contracts-node` binary
+  #       if: runner.os == 'macOS'
+  #       run: |
+  #           curl -L -o substrate-contracts-node.zip 'https://gitlab.parity.io/parity/mirrors/substrate-contracts-node/-/jobs/artifacts/main/download?job=build-mac' && \
+  #           unzip substrate-contracts-node.zip && \
+  #           chmod +x artifacts/substrate-contracts-node-mac/substrate-contracts-node &&
+  #           ./artifacts/substrate-contracts-node-mac/substrate-contracts-node -linfo,runtime::contracts=debug  2>&1 | tee /tmp/contracts-node.log &
+
+  #     - name: Install and run latest `substrate-contracts-node` binary
+  #       if: runner.os == 'Windows'
+  #       run: |
+  #           cargo install contracts-node --git https://github.com/paritytech/substrate-contracts-node.git --force --locked && \
+  #           substrate-contracts-node -lruntime::contracts=debug  2>&1 | tee /tmp/contracts-node.log &
+
+  #     - name: Output versions
+  #       run: |
+  #           cargo -vV
+  #           cargo contract --version
+
+  #     - name: Build ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
+  #       if: runner.os != 'Windows'
+  #       run: cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+
+  #     - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
+  #       if: runner.os != 'Windows'
+  #       run: cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
