@@ -19,19 +19,46 @@ on:
       - '.images/**'
       - '**README.md'
 
+
 jobs:
   check:
     name: examples
     strategy:
       matrix:
         platform:
-          # - ubuntu-latest
+          - ubuntu-latest
           - macos-latest
         toolchain:
           - stable
-        job:
-          - contract build
-          - test
+        contract:
+          - basic-contract-caller
+          - call-runtime
+          - conditional-compilation
+          - contract-terminate
+          - custom-allocator
+          - custom-environment
+          - dns
+          - e2e-call-runtime
+          - erc20
+          - erc721
+          - erc1155
+          - flipper
+          - incrementer
+          - multi-contract-caller
+          - multi-contract-caller/accumulator
+          - multi-contract-caller/adder
+          - multi-contract-caller/subber
+          - multisig
+          - payment-channel
+          - psp22-extension
+          - rand-extension
+          - trait-dyn-cross-contract-calls
+          - trait-erc20
+          - trait-flipper
+          - trait-incrementer
+          - upgradeable-contracts/delegator
+          - upgradeable-contracts/set-code-hash
+          - vesting
 
     runs-on: ${{ matrix.platform }}
     env:
@@ -59,44 +86,15 @@ jobs:
         uses: Swatinem/rust-cache@v2.7.0
         with:
           cache-on-failure: true
-          workspaces: |
-            basic-contract-caller
-            call-runtime
-            conditional-compilation
-            contract-terminate
-            custom-allocator
-            custom-environment
-            dns
-            e2e-call-runtime
-            erc20
-            erc721
-            erc1155
-            flipper
-            incrementer
-            multi-contract-caller
-            multisig
-            payment-channel
-            psp22-extension
-            rand-extension
-            trait-dyn-cross-contract-calls
-            trait-erc20
-            trait-flipper
-            trait-incrementer
-            upgradeable-contracts/delegator
-            upgradeable-contracts/set-code-hash
-            vesting
-
-      # - name: Install `cargo-contract` `main`
-      #   uses: actions-rs/cargo@v1
-      #   with:
-      #     command: install
-      #     args: --git https://github.com/paritytech/cargo-contract.git
+          workspaces: ${{ matrix.contract }}
+          key: ${{ matrix.contract }}
 
       - name: Install `cargo-contract` `main`
         uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
         with:
           crate: cargo-contract
           git: https://github.com/paritytech/cargo-contract.git
+          cache-key: ${{ matrix.platform }}
 
       - name: Install cargo-dylint
         uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
@@ -137,43 +135,32 @@ jobs:
             cargo -vV
             cargo contract --version
 
-      - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os == 'Windows'
-        run: |
-           $multi_contract_caller_subcontracts = "accumulator","adder","subber"
-           foreach ($contract in $multi_contract_caller_subcontracts) {
-               echo "Processing multi-contract-caller contract: $contract";
-               cargo ${{ matrix.job }} --verbose --manifest-path multi-contract-caller/${contract}/Cargo.toml;
-           }
+      # - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }} 
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #      $multi_contract_caller_subcontracts = "accumulator","adder","subber"
+      #      foreach ($contract in $multi_contract_caller_subcontracts) {
+      #          echo "Processing multi-contract-caller contract: $contract";
+      #          cargo ${{ matrix.job }} --verbose --manifest-path multi-contract-caller/${contract}/Cargo.toml;
+      #      }
 
-           $upgradeable_contracts = "delegator","set-code-hash"
-           foreach ($contract in $upgradeable_contracts) {
-               echo "Processing upgradeable contract: $contract";
-               cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/${contract}/Cargo.toml;
-           }
+      #      $upgradeable_contracts = "delegator","set-code-hash"
+      #      foreach ($contract in $upgradeable_contracts) {
+      #          echo "Processing upgradeable contract: $contract";
+      #          cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/${contract}/Cargo.toml;
+      #      }
 
-           foreach ($example in Get-ChildItem  -Directory "\*") {
-               if ($example -Match 'artifacts') { continue }
-               echo "Processing example: $example";
-               cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
-               cargo clean --manifest-path=$example/Cargo.toml;
-           }
+      #      foreach ($example in Get-ChildItem  -Directory "\*") {
+      #          if ($example -Match 'artifacts') { continue }
+      #          echo "Processing example: $example";
+      #          cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
+      #          cargo clean --manifest-path=$example/Cargo.toml;
+      #      }
 
-      - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
+      - name: Build ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows'
-        run: |
-           for contract in ${MULTI_CONTRACT_CALLER_SUBCONTRACTS}; do
-               echo "Processing multi-contract-caller contract: $contract";
-               cargo ${{ matrix.job }} --verbose --manifest-path multi-contract-caller/${contract}/Cargo.toml;
-           done
+        run: cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
 
-           for contract in ${UPGRADEABLE_CONTRACTS}; do
-                echo "Processing upgradeable contract: $contract";
-                cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/$contract/Cargo.toml;
-           done
-
-           for example in ./*/; do
-                if [ "$example" = "./artifacts/" ] || [ "$example" = "./upgradeable-contracts/" ]; then continue; fi;
-                echo "Processing example: $example";
-                cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
-           done
+      - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
+        if: runner.os != 'Windows'
+        run: cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
