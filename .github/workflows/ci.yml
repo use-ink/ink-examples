@@ -10,6 +10,7 @@ on:
       - '**.gitignore'
       - '.images/**'
       - '**README.md'
+      - 'LICENSE'
 
   pull_request:
     branches:
@@ -18,6 +19,7 @@ on:
       - '**.gitignore'
       - '.images/**'
       - '**README.md'
+      - 'LICENSE'
 
 
 jobs:
@@ -30,6 +32,7 @@ jobs:
       toolchain: '[\"stable\"]'
     outputs:
       MATRIX: ${{ steps.build_matrix.outputs.MATRIX }}
+      SKIP_CHECKS: ${{ steps.build_matrix.outputs.SKIP_CHECKS }}
 
     steps:
       - name: Checkout
@@ -42,11 +45,12 @@ jobs:
         uses: tj-actions/changed-files@v39
         with:
           dir_names: "true"
+          dir_names_exclude_current_dir: "true"
           dir_names_max_depth: 1
           files_ignore: |
             .github/**
-            **.gitignore
-            *.md
+            **/.gitignore
+            **/*.md
             multi-contract-caller/**
             upgradeable-contracts/**
           json: true
@@ -56,13 +60,14 @@ jobs:
         uses: tj-actions/changed-files@v39
         with:
           dir_names: "true"
+          dir_names_exclude_current_dir: "true"
           dir_names_max_depth: 2
           files: |
             multi-contract-caller/**
             upgradeable-contracts/**
           files_ignore: |
-            **.gitignore
-            *.md
+            **/.gitignore
+            **/*.md
           json: true
 
       - name: Build matrix
@@ -71,6 +76,15 @@ jobs:
           ALL_CHANGED_CONTRACTS=$(jq -s 'add' \
                                 <(echo "${{ steps.CHANGED_CONTRACTS.outputs.all_changed_files }}") \
                                 <(echo "${{ steps.CHANGED_MULTI_AND_UPGRADEABLE_CONTRACTS.outputs.all_changed_files }}"))
+
+          if [ $ALL_CHANGED_CONTRACTS = "[]" ]
+          then
+            echo "Nothing important changed. Checks job will be skipped."
+            echo "SKIP_CHECKS=true" >> $GITHUB_OUTPUT
+          else
+            echo "There are changes in following contracts: $ALL_CHANGED_CONTRACTS"
+            echo "SKIP_CHECKS=false" >> $GITHUB_OUTPUT
+          fi
 
           echo "MATRIX={\"platform\":${{env.platform}},\
                           \"toolchain\":${{env.toolchain}},\
@@ -85,6 +99,7 @@ jobs:
   check:
     name: examples
     needs: prepare_matrix
+    if: ${{ needs.prepare_matrix.outputs.SKIP_CHECKS  == 'false' }}
     env:
       RUST_BACKTRACE: full
 
