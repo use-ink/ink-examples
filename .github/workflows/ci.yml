@@ -21,47 +21,78 @@ on:
 
 
 jobs:
+  prepare_matrix:
+    name:
+    runs-on: ubuntu-latest
+    env:
+      # constant values for matrix
+      platform: '[\"ubuntu-latest\", \"macos-latest\"]'
+      toolchain: '[\"stable\"]'
+    outputs:
+      MATRIX: ${{ steps.build_matrix.outputs.MATRIX }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Look for changes in standalone contracts
+        id: CHANGED_CONTRACTS
+        uses: tj-actions/changed-files@v39
+        with:
+          dir_names: "true"
+          dir_names_max_depth: 1
+          files_ignore: |
+            .github/**
+            **.gitignore
+            *.md
+            multi-contract-caller/**
+            upgradeable-contracts/**
+          json: true
+
+      - name: Look for changes in multi and upgradable contracts
+        id: CHANGED_MULTI_AND_UPGRADEABLE_CONTRACTS
+        uses: tj-actions/changed-files@v39
+        with:
+          dir_names: "true"
+          dir_names_max_depth: 2
+          files: |
+            multi-contract-caller/**
+            upgradeable-contracts/**
+          files_ignore: |
+            **.gitignore
+            *.md
+          json: true
+
+      - name: Build matrix
+        id: build_matrix
+        run: |
+          ALL_CHANGED_CONTRACTS=$(jq -s 'add' \
+                                <(echo "${{ steps.CHANGED_CONTRACTS.outputs.all_changed_files }}") \
+                                <(echo "${{ steps.CHANGED_MULTI_AND_UPGRADEABLE_CONTRACTS.outputs.all_changed_files }}"))
+
+          echo "MATRIX={\"platform\":${{env.platform}},\
+                          \"toolchain\":${{env.toolchain}},\
+                          \"contract\":"$ALL_CHANGED_CONTRACTS"}"\
+                          >> $GITHUB_OUTPUT
+
+      - name: Show resulting matrix
+        run: |
+          echo "Following matrix will be used to generate test jobs."
+          echo ${{ toJson(steps.build_matrix.outputs.MATRIX) }} | jq
+
   check:
     name: examples
-    strategy:
-      matrix:
-        platform:
-          - ubuntu-latest
-          - macos-latest
-        toolchain:
-          - stable
-        contract:
-          - basic-contract-caller
-          - call-runtime
-          - conditional-compilation
-          - contract-terminate
-          - custom-allocator
-          - custom-environment
-          - dns
-          - e2e-call-runtime
-          - erc20
-          - erc721
-          - erc1155
-          - flipper
-          - incrementer
-          - multi-contract-caller
-          - multi-contract-caller/accumulator
-          - multi-contract-caller/adder
-          - multi-contract-caller/subber
-          - multisig
-          - payment-channel
-          - psp22-extension
-          - rand-extension
-          - trait-dyn-cross-contract-calls
-          - trait-erc20
-          - trait-flipper
-          - trait-incrementer
-          - upgradeable-contracts/delegator
-          - upgradeable-contracts/set-code-hash
-          - vesting
-    runs-on: ${{ matrix.platform }}
+    needs: prepare_matrix
     env:
       RUST_BACKTRACE: full
+
+    strategy:
+      matrix:
+        ${{ fromJson(needs.prepare_matrix.outputs.MATRIX) }}
+
+    runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout sources & submodules
         uses: actions/checkout@v4
