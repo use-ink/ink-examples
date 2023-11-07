@@ -56,7 +56,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: install
-          args: --git https://github.com/paritytech/cargo-contract.git --branch add-workspace-initial-support
+          args: --git https://github.com/paritytech/cargo-contract.git
 
       - name: Install cargo-dylint
         uses: baptiste0928/cargo-install@bf6758885262d0e6f61089a9d8c8790d3ac3368f # v1.3.0
