@@ -159,7 +159,7 @@ jobs:
 
            for contract in ${{ env.WORKSPACE_CONTRACTS }} 
            do
-                echo "Processing workspace contract: $contract";
+                echo "Processing workspace contract: $contract "
                 cargo ${{ matrix.job }} --verbose --manifest-path=workspace-contracts/$contract/Cargo.toml;
            done
 
