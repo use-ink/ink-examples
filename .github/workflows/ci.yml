@@ -62,7 +62,7 @@ jobs:
     env:
       MULTI_CONTRACT_CALLER_SUBCONTRACTS: "accumulator adder subber"
       UPGRADEABLE_CONTRACTS: "delegator set-code-hash"
-      WORKSPACE_CONTRACTS: "erc20,flipper,incrementer"
+      WORKSPACE_CONTRACTS: "erc20 flipper incrementer"
       RUST_BACKTRACE: full
     steps:
       - name: Checkout sources & submodules
