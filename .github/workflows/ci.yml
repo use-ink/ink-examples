@@ -62,7 +62,7 @@ jobs:
     env:
       MULTI_CONTRACT_CALLER_SUBCONTRACTS: "accumulator adder subber"
       UPGRADEABLE_CONTRACTS: "delegator set-code-hash"
-      WORKSPACE_CONTRACTS: "erc20 flipper incrementer"
+      WORKSPACE_CONTRACTS: "erc20,flipper,incrementer"
       RUST_BACKTRACE: full
     steps:
       - name: Checkout sources & submodules
@@ -157,7 +157,8 @@ jobs:
         if: runner.os != 'Windows'
         run: cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
 
-           for contract in $WORKSPACE_CONTRACTS; do
+           for contract in ${{ env.WORKSPACE_CONTRACTS }} 
+           do
                 echo "Processing workspace contract: $contract";
                 cargo ${{ matrix.job }} --verbose --manifest-path=workspace-contracts/$contract/Cargo.toml;
            done
