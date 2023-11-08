@@ -19,7 +19,6 @@ on:
       - '.images/**'
       - '**README.md'
 
-
 jobs:
   check:
     name: examples
@@ -61,6 +60,9 @@ jobs:
           - vesting
     runs-on: ${{ matrix.platform }}
     env:
+      MULTI_CONTRACT_CALLER_SUBCONTRACTS: "accumulator adder subber"
+      UPGRADEABLE_CONTRACTS: "delegator set-code-hash"
+      WORKSPACE_CONTRACTS: "erc20 flipper incrementer"
       RUST_BACKTRACE: full
     steps:
       - name: Checkout sources & submodules
@@ -111,7 +113,6 @@ jobs:
           unzip substrate-contracts-node.zip && \
           chmod +x artifacts/substrate-contracts-node-linux/substrate-contracts-node &&
           ./artifacts/substrate-contracts-node-linux/substrate-contracts-node -linfo,runtime::contracts=debug  2>&1 | tee /tmp/contracts-node.log &
-
       - name: Download and run latest `substrate-contracts-node` binary
         if: runner.os == 'macOS'
         run: |
@@ -119,22 +120,55 @@ jobs:
             unzip substrate-contracts-node.zip && \
             chmod +x artifacts/substrate-contracts-node-mac/substrate-contracts-node &&
             ./artifacts/substrate-contracts-node-mac/substrate-contracts-node -linfo,runtime::contracts=debug  2>&1 | tee /tmp/contracts-node.log &
-
       - name: Install and run latest `substrate-contracts-node` binary
         if: runner.os == 'Windows'
         run: |
             cargo install contracts-node --git https://github.com/paritytech/substrate-contracts-node.git --force --locked && \
             substrate-contracts-node -lruntime::contracts=debug  2>&1 | tee /tmp/contracts-node.log &
-
       - name: Output versions
         run: |
             cargo -vV
             cargo contract --version
-
+      - name: Build ${{ matrix.contract }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
+        if: runner.os == 'Windows'
+        run: |
+           $multi_contract_caller_subcontracts = "accumulator","adder","subber"
+           foreach ($contract in $multi_contract_caller_subcontracts) {
+               echo "Processing multi-contract-caller contract: $contract";
+               cargo ${{ matrix.job }} --verbose --manifest-path multi-contract-caller/${contract}/Cargo.toml;
+           }
+           $upgradeable_contracts = "delegator","set-code-hash"
+           foreach ($contract in $upgradeable_contracts) {
+               echo "Processing upgradeable contract: $contract";
+               cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/${contract}/Cargo.toml;
+           }
+           $workspace_contracts = "erc20","flipper","incrementer"
+           foreach ($contract in $workspace_contracts) {
+               echo "Processing workspace contract: $contract";
+               cargo ${{ matrix.job }} --verbose --manifest-path workspace-contracts/${contract}/Cargo.toml;
+           }
+           foreach ($example in Get-ChildItem  -Directory "\*") {
+               if ($example -Match 'artifacts') { continue }
+               echo "Processing example: $example";
+               cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
+               cargo clean --manifest-path=$example/Cargo.toml;
+           }
       - name: Build ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows'
         run: cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
 
+           for contract in ${{ env.WORKSPACE_CONTRACTS }} 
+           do
+                echo "Processing workspace contract: $contract "
+                cargo ${{ matrix.job }} --verbose --manifest-path=workspace-contracts/$contract/Cargo.toml;
+           done
+
+           for example in ./*/; do
+                if [ "$example" = "./artifacts/" ] || [ "$example" = "./upgradeable-contracts/" ]|| [ "$example" = "./workspace-contracts/" ]; then continue; fi;
+                echo "Processing example: $example";
+                cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
+           done
+           
       - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows'
         run: cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
