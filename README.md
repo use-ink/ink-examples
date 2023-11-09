@@ -39,6 +39,12 @@ The `.contract` file combines the Wasm and metadata into one file and can be use
 4. Run each example with `pnpm <contract-example-name>`. e.g. `pnpm flipper`
 5. Visit [http://localhost:5173](http://localhost:5173) in your browser.
 
+### Commands
+
+* `pnpm flipper`
+* `pnpm incrementer`
+* `pnpm contract_transfer`
+
 All examples are built with [useink](https://use.ink/frontend/overview), a React hooks library built by the ink! team.
 
 ## License
