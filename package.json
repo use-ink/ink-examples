@@ -13,7 +13,8 @@
     "build:ui": "pnpm --filter ui build",
     "flipper": "pnpm --filter ui dev & pnpm --filter flipper dev",
     "incrementer": "pnpm --filter ui dev & pnpm --filter incrementer dev",
-    "basic_contract_caller": "pnpm --filter ui dev & pnpm --filter basic_contract_caller dev"
+    "basic-contract-caller": "pnpm --filter ui dev & pnpm --filter basic_contract_caller dev",
+    "contract_transfer": "pnpm --filter ui dev & pnpm --filter contract_transfer dev"
   },
   "packages": [
     "ui",
@@ -22,7 +23,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "useink": "^1.7.5"
+    "useink": "^1.9.1"
   },
   "devDependencies": {
     "tailwindcss": "^3.3.2",
