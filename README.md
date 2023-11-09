@@ -41,8 +41,8 @@ The `.contract` file combines the Wasm and metadata into one file and can be use
 
 ### Commands
 
-* `pnpm basic_contract_caller`
-* `pnpm contract_transfer`
+* `pnpm basic-contract-caller`
+* `pnpm contract-transfer`
 * `pnpm flipper`
 * `pnpm incrementer`
 
