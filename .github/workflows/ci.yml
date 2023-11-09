@@ -54,6 +54,7 @@ jobs:
             multi-contract-caller/**
             upgradeable-contracts/**
             ui/**
+            **/frontend/**
           json: true
 
       - name: Look for changes in multi and upgradable contracts
