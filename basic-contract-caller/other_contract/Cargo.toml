@@ -1,8 +1,9 @@
 [package]
-name = "conditional-compilation"
-version = "0.1.0"
+name = "other_contract"
+version = "4.3.0"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
+publish = false
 
 [dependencies]
 ink = { version = "4.3", default-features = false }
@@ -25,6 +26,3 @@ std = [
 ]
 ink-as-dependency = []
 e2e-tests = []
-# user-defined features
-foo = []
-bar = []

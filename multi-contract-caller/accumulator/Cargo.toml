@@ -1,17 +1,13 @@
 [package]
-name = "conditional-compilation"
-version = "0.1.0"
+name = "accumulator"
+version = "4.3.0"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 
 [dependencies]
 ink = { version = "4.3", default-features = false }
-
 scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2.5", default-features = false, features = ["derive"], optional = true }
-
-[dev-dependencies]
-ink_e2e = { version = "4.3" }
 
 [lib]
 path = "lib.rs"
@@ -24,7 +20,3 @@ std = [
     "scale-info/std",
 ]
 ink-as-dependency = []
-e2e-tests = []
-# user-defined features
-foo = []
-bar = []
