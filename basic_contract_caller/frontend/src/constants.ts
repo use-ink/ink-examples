@@ -1,2 +1,0 @@
-export const BASIC_CONTRACT_ROCOCO_ADDRESS =
-  '5EnufwqqxnkWT6hc1LgjYWQGUsqQCtcr5192K2HuQJtRJgCi';

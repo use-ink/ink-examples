@@ -1,7 +1,15 @@
 import metadata from './assets/contract_transfer.json';
 import { CONTRACT_ROCOCO_ADDRESS } from './constants';
 import { useMemo, useState } from 'react';
-import { Button, Card, ConnectButton, InkLayout, Link, NumberInput } from 'ui';
+import {
+  Button,
+  Card,
+  ConnectButton,
+  InkLayout,
+  Link,
+  NumberInput,
+  formatContractName,
+} from 'ui';
 import { useBalance, useContract, useTx, useWallet } from 'useink';
 import { useTxNotifications } from 'useink/notifications';
 import {
@@ -40,7 +48,7 @@ function App() {
     >
       <Card className='mx-auto p-6 flex flex-col w-full max-w-md backdrop-blur-sm bg-opacity-70'>
         <h1 className='text-2xl font-bold'>
-          {metadata.contract.name.toUpperCase()}
+          {formatContractName(metadata.contract.name)}
         </h1>
 
         <hgroup className='mt-6 mb-2 ml-2 text-white/80 text-xs'>
