@@ -40,6 +40,7 @@ The `.contract` file combines the Wasm and metadata into one file and can be use
 
 ### Commands
 
+* `pnpm erc20`
 * `pnpm basic-contract-caller`
 * `pnpm contract-terminate`
 * `pnpm contract-transfer`

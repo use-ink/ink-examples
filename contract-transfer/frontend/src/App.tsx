@@ -56,11 +56,10 @@ function App() {
             Contract Balance:{' '}
             <b className='uppercase'>
               {contractBalance
-                ? planckToDecimalFormatted(
-                    contractBalance?.freeBalance,
-                    chainContract?.contract.api,
-                    { decimals: 4 },
-                  )
+                ? planckToDecimalFormatted(contractBalance?.freeBalance, {
+                    api: chainContract?.contract.api,
+                    significantFigures: 4,
+                  })
                 : '--'}
             </b>
           </h3>
@@ -69,11 +68,10 @@ function App() {
             Your Balance:{' '}
             <b className='uppercase'>
               {userBalance
-                ? planckToDecimalFormatted(
-                    userBalance?.freeBalance,
-                    chainContract?.contract.api,
-                    { decimals: 4 },
-                  )
+                ? planckToDecimalFormatted(userBalance?.freeBalance, {
+                    api: chainContract?.contract.api,
+                    significantFigures: 4,
+                  })
                 : '--'}
             </b>
           </h3>
