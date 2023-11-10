@@ -1,4 +1,4 @@
-name: continuous-intergration/examples
+name: continuous-integration/examples
 
 on:
   push:
@@ -7,36 +7,112 @@ on:
     tags:
         - v*
     paths-ignore:
-      - 'README.md'
-      - '.gitlab-ci.yml'
+      - '**.gitignore'
+      - '.images/**'
+      - '**README.md'
+      - 'LICENSE'
+
   pull_request:
     branches:
       - main
-    paths:
-      - '.github/workflows/ci.yml'
+    paths-ignore:
+      - '**.gitignore'
+      - '.images/**'
+      - '**README.md'
+      - 'LICENSE'
+
 
 jobs:
+  prepare_matrix:
+    name:
+    runs-on: ubuntu-latest
+    env:
+      # constant values for matrix
+      platform: '[\"ubuntu-latest\", \"macos-latest\"]'
+      toolchain: '[\"stable\"]'
+    outputs:
+      MATRIX: ${{ steps.build_matrix.outputs.MATRIX }}
+      SKIP_CHECKS: ${{ steps.build_matrix.outputs.SKIP_CHECKS }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Look for changes in standalone contracts
+        id: CHANGED_CONTRACTS
+        uses: tj-actions/changed-files@v39
+        with:
+          dir_names: "true"
+          dir_names_exclude_current_dir: "true"
+          dir_names_max_depth: 1
+          files_ignore: |
+            .github/**
+            **/.gitignore
+            **/*.md
+            multi-contract-caller/**
+            upgradeable-contracts/**
+            ui/**
+            **/frontend/**
+          json: true
+
+      - name: Look for changes in multi and upgradable contracts
+        id: CHANGED_MULTI_AND_UPGRADEABLE_CONTRACTS
+        uses: tj-actions/changed-files@v39
+        with:
+          dir_names: "true"
+          dir_names_exclude_current_dir: "true"
+          dir_names_max_depth: 2
+          files: |
+            multi-contract-caller/**
+            upgradeable-contracts/**
+          files_ignore: |
+            **/.gitignore
+            **/*.md
+          json: true
+
+      - name: Build matrix
+        id: build_matrix
+        run: |
+          ALL_CHANGED_CONTRACTS=$(jq -s 'add' \
+                                <(echo "${{ steps.CHANGED_CONTRACTS.outputs.all_changed_files }}") \
+                                <(echo "${{ steps.CHANGED_MULTI_AND_UPGRADEABLE_CONTRACTS.outputs.all_changed_files }}"))
+
+          if [ $ALL_CHANGED_CONTRACTS = "[]" ]
+          then
+            echo "Nothing important changed. Checks job will be skipped."
+            echo "SKIP_CHECKS=true" >> $GITHUB_OUTPUT
+          else
+            echo "There are changes in following contracts: $ALL_CHANGED_CONTRACTS"
+            echo "SKIP_CHECKS=false" >> $GITHUB_OUTPUT
+          fi
+
+          echo "MATRIX={\"platform\":${{env.platform}},\
+                          \"toolchain\":${{env.toolchain}},\
+                          \"contract\":"$ALL_CHANGED_CONTRACTS"}"\
+                          >> $GITHUB_OUTPUT
+
+      - name: Show resulting matrix
+        run: |
+          echo "Following matrix will be used to generate test jobs."
+          echo ${{ toJson(steps.build_matrix.outputs.MATRIX) }} | jq
+
   check:
     name: examples
+    needs: prepare_matrix
+    if: ${{ needs.prepare_matrix.outputs.SKIP_CHECKS  == 'false' }}
+    env:
+      RUST_BACKTRACE: full
+
     strategy:
       matrix:
-        platform:
-          - ubuntu_20_64_core
-          - macos-latest
-        toolchain:
-          - stable
-        job:
-          - contract build
-          - test
-    runs-on: ${{ matrix.platform }}
-    env:
-      UPGRADEABLE_CONTRACTS:    "forward-calls set-code-hash"
-      DELEGATOR_SUBCONTRACTS:   "accumulator adder subber"
-      RUST_BACKTRACE:           full
-    steps:
+        ${{ fromJson(needs.prepare_matrix.outputs.MATRIX) }}
 
+    runs-on: ${{ matrix.platform }}
+    steps:
       - name: Checkout sources & submodules
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
           submodules: recursive
@@ -51,22 +127,27 @@ jobs:
           override: true
 
       - name: Rust Cache
-        uses: Swatinem/rust-cache@v2.2.0
+        uses: Swatinem/rust-cache@v2.7.0
+        with:
+          cache-on-failure: true
+          workspaces: ${{ matrix.contract }}
+          key: ${{ matrix.contract }}
 
       - name: Install `cargo-contract` `main`
-        uses: actions-rs/cargo@v1
+        uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
         with:
-          command: install
-          args: --git https://github.com/paritytech/cargo-contract.git
+          crate: cargo-contract
+          git: https://github.com/paritytech/cargo-contract.git
+          cache-key: ${{ matrix.platform }}
 
       - name: Install cargo-dylint
-        uses: baptiste0928/cargo-install@bf6758885262d0e6f61089a9d8c8790d3ac3368f # v1.3.0
+        uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
         with:
           crate: cargo-dylint
           version: 1
 
       - name: Install dylint-link
-        uses: baptiste0928/cargo-install@bf6758885262d0e6f61089a9d8c8790d3ac3368f # v1.3.0
+        uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
         with:
           crate: dylint-link
           version: 1
@@ -98,51 +179,10 @@ jobs:
             cargo -vV
             cargo contract --version
 
-      - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os == 'Windows'
-        run: |
-           $delegator_subcontracts = "accumulator","adder","subber"
-           foreach ($contract in $delegator_subcontracts) {
-               echo "Processing delegator contract: $contract";
-               cargo ${{ matrix.job }} --verbose --manifest-path delegator/${contract}/Cargo.toml;
-           }
-           $upgradeable_contracts = "forward-calls","set-code-hash"
-           foreach ($contract in $upgradeable_contracts) {
-               echo "Processing upgradeable contract: $contract";
-               cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/${contract}/Cargo.toml;
-           }
-           cargo ${{ matrix.job }} --verbose --manifest-path upgradeable-contracts/set-code-hash/updated-incrementer/Cargo.toml;
-
-           cargo ${{ matrix.job }} --verbose --manifest-path conditional-compilation/Cargo.toml --features foo;
-           cargo ${{ matrix.job }} --verbose --manifest-path conditional-compilation/Cargo.toml --features bar;
-           cargo ${{ matrix.job }} --verbose --manifest-path conditional-compilation/Cargo.toml --features "foo, bar"; 
-           foreach ($example in Get-ChildItem  -Directory "\*") {
-               if ($example -Match 'upgradeable-contracts') { continue }
-               if ($example -Match 'artifacts') { continue }
-               echo "Processing example: $example";
-               cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
-               cargo clean --manifest-path=$example/Cargo.toml;
-           }
-
-      - name: ${{ matrix.job }} examples on ${{ matrix.platform }}-${{ matrix.toolchain }}
+      - name: Build ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows'
-        run: |
-           for contract in ${DELEGATOR_SUBCONTRACTS}; do
-               echo "Processing delegator contract: $contract";
-               cargo ${{ matrix.job }} --verbose --manifest-path delegator/${contract}/Cargo.toml;
-           done
-           for contract in ${UPGRADEABLE_CONTRACTS}; do
-                echo "Processing upgradeable contract: $contract";
-                cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/$contract/Cargo.toml;
-           done
-           cargo ${{ matrix.job }} --verbose --manifest-path=upgradeable-contracts/set-code-hash/updated-incrementer/Cargo.toml;
+        run: cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
 
-           cargo ${{ matrix.job }} --verbose --manifest-path=conditional-compilation/Cargo.toml --features=foo;
-           cargo ${{ matrix.job }} --verbose --manifest-path=conditional-compilation/Cargo.toml --features=bar;
-           cargo ${{ matrix.job }} --verbose --manifest-path=conditional-compilation/Cargo.toml --features="foo, bar"; 
-           for example in ./*/; do
-               if [ "$example" = "./upgradeable-contracts/" ]; then continue; fi;
-               if [ "$example" = "./artifacts/" ]; then continue; fi;
-               echo "Processing example: $example";
-               cargo ${{ matrix.job }} --verbose --manifest-path=$example/Cargo.toml;
-           done
+      - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
+        if: runner.os != 'Windows'
+        run: cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;

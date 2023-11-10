@@ -1,0 +1,33 @@
+[package]
+name = "custom_allocator"
+version = "4.3.0"
+authors = ["Parity Technologies <admin@parity.io>"]
+edition = "2021"
+publish = false
+
+[dependencies]
+# We're going to use a different allocator than the one provided by ink!. To do that we
+# first need to disable the included memory allocator.
+ink = { version = "4.3", default-features = false, features = ["no-allocator"]  }
+
+# This is going to be our new global memory allocator.
+dlmalloc = {version = "0.2", default-features = false, features = ["global"] }
+
+scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
+scale-info = { version = "2.5", default-features = false, features = ["derive"], optional = true }
+
+[dev-dependencies]
+ink_e2e = { version = "4.3" }
+
+[lib]
+path = "lib.rs"
+
+[features]
+default = ["std"]
+std = [
+    "ink/std",
+    "scale/std",
+    "scale-info/std",
+]
+ink-as-dependency = []
+e2e-tests = []
