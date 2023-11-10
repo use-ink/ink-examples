@@ -28,21 +28,8 @@
     "vite": "^4.3.9",
     "vite-plugin-dts": "^2.3.0"
   },
-  "files": [
-    "dist",
-    "./src/index.css"
-  ],
   "exports": {
-    ".": {
-      "import": {
-        "default": "./dist/ui.es.js",
-        "types": "./dist/index.d.ts"
-      },
-      "require": {
-        "default": "./dist/ui.umd.js",
-        "types": "./dist/index.d.ts"
-      }
-    },
+    ".": "./src/index.ts",
     "./style.css": "./src/index.css"
   }
 }

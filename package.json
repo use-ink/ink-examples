@@ -10,7 +10,6 @@
     "format": "rome format . --write",
     "lint": "rome check ./*",
     "lint:fix": "pnpm lint --apply-unsafe",
-    "build:ui": "pnpm --filter ui build",
     "basic-contract-caller": "pnpm --filter basic-contract-caller dev",
     "contract-terminate": "pnpm --filter contract-terminate dev",
     "contract-transfer": "pnpm --filter contract-transfer dev",
