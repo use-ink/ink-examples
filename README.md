@@ -15,7 +15,7 @@ The content of that folder is synchronized with this repository on new releases.
 
 For building the example smart contracts found in this folder you will need to have [`cargo-contract`](https://github.com/paritytech/cargo-contract) installed.
 
-```
+```sh
 cargo install cargo-contract --force
 ```
 
@@ -30,7 +30,6 @@ To build a single example and generate the contracts Wasm file, navigate to the 
 You should now have an optimized `<contract-name>.wasm` file, a `metadata.json` file and a `<contract-name>.contract` file in the `target` folder of your contract.
 The `.contract` file combines the Wasm and metadata into one file and can be used for instantiation.
 
-
 ## Running front end dApp examples
 
 1. Install [nodejs](https://nodejs.org/en/) and then install [pnpm](https://pnpm.io/) `npm install -g pnpm`
@@ -42,6 +41,7 @@ The `.contract` file combines the Wasm and metadata into one file and can be use
 ### Commands
 
 * `pnpm basic-contract-caller`
+* `pnpm contract-terminate`
 * `pnpm contract-transfer`
 * `pnpm flipper`
 * `pnpm incrementer`

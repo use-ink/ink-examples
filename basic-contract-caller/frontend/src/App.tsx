@@ -1,18 +1,15 @@
 import { Other } from './Other';
-import basicContractMetadata from './assets/basic_contract_caller.json';
+import metadata from './assets/basic_contract_caller.json';
 import { BASIC_CONTRACT_ROCOCO_ADDRESS } from './constants';
 import { useEffect } from 'react';
-import { Button, Card, ConnectButton, InkLayout } from 'ui';
+import { Button, Card, ConnectButton, InkLayout, formatContractName } from 'ui';
 import { useCall, useContract, useTx, useWallet } from 'useink';
 import { useTxNotifications } from 'useink/notifications';
 import { isPendingSignature, pickDecoded, shouldDisable } from 'useink/utils';
 
 function App() {
   const { account } = useWallet();
-  const basicContract = useContract(
-    BASIC_CONTRACT_ROCOCO_ADDRESS,
-    basicContractMetadata,
-  );
+  const basicContract = useContract(BASIC_CONTRACT_ROCOCO_ADDRESS, metadata);
   const flipAndGet = useTx<boolean>(basicContract, 'flipAndGet');
   useTxNotifications(flipAndGet);
 
@@ -32,7 +29,7 @@ function App() {
       <div className='flex flex-col md:flex-row md:justify-center justify-start items-stretch gap-3'>
         <Card className='p-6 flex flex-col w-full max-w-md backdrop-blur-sm bg-opacity-70'>
           <h1 className='text-2xl font-bold'>
-            {basicContractMetadata.contract.name.toUpperCase()}
+            {formatContractName(metadata.contract.name)}
           </h1>
 
           {account ? (
