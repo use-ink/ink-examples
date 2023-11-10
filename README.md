@@ -15,7 +15,7 @@ The content of that folder is synchronized with this repository on new releases.
 
 For building the example smart contracts found in this folder you will need to have [`cargo-contract`](https://github.com/paritytech/cargo-contract) installed.
 
-```
+```sh
 cargo install cargo-contract --force
 ```
 
@@ -40,11 +40,11 @@ The `.contract` file combines the Wasm and metadata into one file and can be use
 
 ### Commands
 
-* `pnpm basic_contract_caller`
-* `pnpm contract_terminate`
-* `pnpm contract_transfer`
 * `pnpm erc20`
 * `pnpm erc721`
+* `pnpm basic-contract-caller`
+* `pnpm contract-terminate`
+* `pnpm contract-transfer`
 * `pnpm flipper`
 * `pnpm incrementer`
 
