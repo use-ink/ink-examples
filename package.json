@@ -4,7 +4,7 @@
   "description": "Example dApps for ink! contracts.",
   "main": "index.js",
   "keywords": [],
-  "author": "Sam Ruberti <sam.ruberti@parity.io>",
+  "author": "Parity Technologies <admin@parity.io>",
   "license": "Apache 2.0",
   "scripts": {
     "format": "rome format . --write",
