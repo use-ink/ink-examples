@@ -1,6 +1,6 @@
 import metadata from './assets/flipper.json';
 import { CONTRACT_ROCOCO_ADDRESS } from './constants';
-import { Button, Card, ConnectButton, InkLayout } from 'ui';
+import { Button, Card, ConnectButton, InkLayout, formatContractName } from 'ui';
 import { useCallSubscription, useContract, useTx, useWallet } from 'useink';
 import { useTxNotifications } from 'useink/notifications';
 import { pickDecoded, shouldDisable } from 'useink/utils';
@@ -22,7 +22,7 @@ function App() {
     >
       <Card className='mx-auto p-6 flex flex-col w-full max-w-md backdrop-blur-sm bg-opacity-70'>
         <h1 className='text-2xl font-bold'>
-          {metadata.contract.name.toUpperCase()}
+          {formatContractName(metadata.contract.name)}
         </h1>
 
         <p className='mt-6'>
