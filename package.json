@@ -11,13 +11,13 @@
     "lint": "rome check ./*",
     "lint:fix": "pnpm lint --apply-unsafe",
     "build:ui": "pnpm --filter ui build",
-    "basic_contract_caller": "pnpm --filter ui dev & pnpm --filter basic_contract_caller dev",
-    "contract_terminate": "pnpm --filter ui dev & pnpm --filter contract_terminate dev",
-    "contract_transfer": "pnpm --filter ui dev & pnpm --filter contract_transfer dev",
-    "erc20": "pnpm --filter ui dev & pnpm --filter erc20 dev",
-    "erc721": "pnpm --filter ui dev & pnpm --filter erc721 dev",
-    "flipper": "pnpm --filter ui dev & pnpm --filter flipper dev",
-    "incrementer": "pnpm --filter ui dev & pnpm --filter incrementer dev"
+    "basic-contract-caller": "pnpm --filter basic-contract-caller dev",
+    "contract-terminate": "pnpm --filter contract-terminate dev",
+    "contract-transfer": "pnpm --filter contract-transfer dev",
+    "erc20": "pnpm --filter erc20 dev",
+    "erc721": "pnpm --filter erc721 dev",
+    "flipper": "pnpm --filter flipper dev",
+    "incrementer": "pnpm --filter incrementer dev"
   },
   "packages": [
     "ui",
