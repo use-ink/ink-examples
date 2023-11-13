@@ -1,4 +1,3 @@
-import metadata from './assets/contract_terminate.json';
 import { useEffect, useMemo } from 'react';
 import {
   Button,
@@ -17,6 +16,7 @@ import {
   planckToDecimalFormatted,
   shouldDisable,
 } from 'useink/utils';
+import metadata from './assets/contract_terminate.json';
 
 // We already deployed the contract Wasm blob on chain. We use this code hash to
 // re-deploy;

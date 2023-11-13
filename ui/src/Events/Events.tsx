@@ -1,4 +1,3 @@
-import { ClassNameable } from '..';
 import classNames from 'classnames';
 import React from 'react';
 import { EventRecord } from 'useink/core';
@@ -8,6 +7,7 @@ import {
   isContractInstantiatedEvent,
   isExtrinsicFailedEvent,
 } from 'useink/utils';
+import { ClassNameable } from '..';
 
 export interface Props extends ClassNameable {
   events?: EventRecord[];

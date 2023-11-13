@@ -1,24 +1,16 @@
-import { Button } from '../Button';
-import { Modal } from '../Modal';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useInstalledWallets, useUninstalledWallets, useWallet } from 'useink';
+import { Button } from '../Button';
 
-type Props = {
-  show: boolean;
-  onClose: () => void;
-};
-
-export const ConnectWallet: React.FC<Props> = ({ show, onClose }) => {
+export const ConnectWallet: React.FC = () => {
   const { account, connect } = useWallet();
   const installed = useInstalledWallets();
   const uninstalled = useUninstalledWallets();
 
-  useEffect(() => {
-    account && onClose();
-  }, [account, onClose]);
+  if (account) return null;
 
   return (
-    <Modal open={show} className='p-6 max-w-lg bg-brand-500'>
+    <div>
       <h2 className='text-2xl font-bold mb-8 text-white'>Connect Wallet</h2>
 
       {!account && installed.length > 0 && (
@@ -65,10 +57,6 @@ export const ConnectWallet: React.FC<Props> = ({ show, onClose }) => {
           </ul>
         </>
       )}
-
-      <Button className='mt-6' onClick={onClose}>
-        Close
-      </Button>
-    </Modal>
+    </div>
   );
 };

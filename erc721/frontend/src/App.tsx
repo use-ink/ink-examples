@@ -1,6 +1,6 @@
+import { DeployerProvider, InkLayout } from 'ui';
 import metadata from '../assets/erc721.json';
 import { Erc721 } from './components';
-import { DeployerProvider, InkLayout } from 'ui';
 
 function App() {
   return (

@@ -1,5 +1,5 @@
-import { ClassNameable } from '../types';
 import React from 'react';
+import { ClassNameable } from '../types';
 
 export const Logo: React.FC<ClassNameable> = ({ className }) => (
   <svg

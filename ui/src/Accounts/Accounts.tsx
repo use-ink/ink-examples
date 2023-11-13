@@ -1,24 +1,19 @@
-import { ClassNameable } from '../types';
 import { Listbox, Transition } from '@headlessui/react';
-import {
-  CheckIcon,
-  ChevronUpDownIcon,
-  XCircleIcon,
-} from '@heroicons/react/24/solid';
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/solid';
 import classNames from 'classnames';
 import React, { Fragment } from 'react';
 import { useWallet } from 'useink';
+import { ClassNameable } from '../types';
 
 export const Accounts: React.FC<ClassNameable> = ({ className }) => {
-  const { setAccount, account, accounts, disconnect } = useWallet();
+  const { setAccount, account, accounts } = useWallet();
+
+  if (!accounts?.length) return null;
 
   return (
-    <div
-      className={classNames(
-        'max-w-md w-full flex items-center gap-1 justify-end',
-        className,
-      )}
-    >
+    <div className={classNames('w-full', className)}>
+      <h2 className='text-2xl font-bold mb-6 text-white'>Accounts</h2>
+
       <Listbox
         value={account}
         onChange={(a) => {
@@ -28,7 +23,7 @@ export const Accounts: React.FC<ClassNameable> = ({ className }) => {
         <div className='relative'>
           <Listbox.Button
             className={classNames(
-              'relative min-w-[200px] w-full cursor-default rounded-lg bg-violet-900 py-2 pl-3 pr-10 text-left shadow-md',
+              'relative min-w-[200px] w-full cursor-default rounded-lg bg-violet-900 py-2 pl-3 pr-10 text-left',
               'focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white',
               'focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300',
               'sm:text-sm hover:cursor-pointer hover:opacity-80',
@@ -94,14 +89,6 @@ export const Accounts: React.FC<ClassNameable> = ({ className }) => {
           </Transition>
         </div>
       </Listbox>
-      <button
-        type='button'
-        onClick={disconnect}
-        className='py-1 px-2 text-xs bg-gray-800 bg-opacity-0 text-gray-300 hover:bg-gray-800 hover:bg-opacity-0 hover:opacity-80'
-        title='disconnect wallet'
-      >
-        <XCircleIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
-      </button>
     </div>
   );
 };

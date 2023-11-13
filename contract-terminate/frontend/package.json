@@ -1,5 +1,5 @@
 {
-  "name": "contract_terminate",
+  "name": "contract-terminate",
   "private": true,
   "version": "0.1.0",
   "type": "module",

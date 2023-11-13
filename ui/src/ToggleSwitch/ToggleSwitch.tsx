@@ -18,7 +18,7 @@ export const ToggleSwitch: React.FC<Props> = ({
       checked={enabled}
       onChange={handleClose}
       className={classNames(
-        'bg-white/30 relative inline-flex items-center flex-shrink-0',
+        'bg-white/30 relative inline-flex items-center flex-shrink-0 z-0',
         'h-[18px] w-[32px] border-transparent rounded-full cursor-pointer transition-colors',
         'ease-in-out duration-200 focus:outline-none focus-visible:ring-2',
         'focus-visible:ring-white focus-visible:ring-opacity-75',

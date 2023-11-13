@@ -1,8 +1,3 @@
-import { RunResults } from '../..';
-import { Button } from '../../Button';
-import { Card } from '../../Card';
-import { ConnectButton } from '../../ConnectButton';
-import { formatContractName } from '../../utils';
 import React, {
   PropsWithChildren,
   createContext,
@@ -18,6 +13,11 @@ import {
   isPendingSignature,
   shouldDisableStrict,
 } from 'useink/utils';
+import { RunResults } from '../..';
+import { Button } from '../../Button';
+import { Card } from '../../Card';
+import { ConnectButton } from '../../ConnectButton';
+import { formatContractName } from '../../utils';
 
 export interface DeployerContextProps {
   metadata: Record<string, unknown>;
@@ -128,7 +128,7 @@ export const DeployerProvider: React.FC<
                 </p>
               )}
 
-              {D.error && (
+              {account && D.error && (
                 <p className='text-warning-500 mt-3'>
                   <span className='text-xs'>Deployer: </span>
                   {D.error}

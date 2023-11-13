@@ -1,6 +1,6 @@
-import { ClassNameable } from '..';
 import { Player } from '@lottiefiles/react-lottie-player';
 import React from 'react';
+import { ClassNameable } from '..';
 
 type Props = {
   src: string;
