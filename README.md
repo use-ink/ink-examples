@@ -34,17 +34,16 @@ The `.contract` file combines the Wasm and metadata into one file and can be use
 
 1. Install [nodejs](https://nodejs.org/en/) and then install [pnpm](https://pnpm.io/) `npm install -g pnpm`
 2. Install dependencies `pnpm i`
-3. Build the UI package `pnpm build:ui` (You only need to do this once)
-4. Run each example with `pnpm <contract-example-name>`. e.g. `pnpm flipper`
-5. Visit [http://localhost:5173](http://localhost:5173) in your browser.
+3. Run each example with `pnpm <contract-example-name>`. e.g. `pnpm flipper`
+4. Visit [http://localhost:5173](http://localhost:5173) in your browser.
 
 ### Commands
 
-* `pnpm erc20`
-* `pnpm erc721`
 * `pnpm basic-contract-caller`
 * `pnpm contract-terminate`
 * `pnpm contract-transfer`
+* `pnpm erc20`
+* `pnpm erc721`
 * `pnpm flipper`
 * `pnpm incrementer`
 
