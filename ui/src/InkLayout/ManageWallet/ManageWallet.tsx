@@ -14,13 +14,13 @@ export const ManageWallet: React.FC = () => {
       {account && (
         <>
           <Button
-            className="mx-auto mt-6 w-full"
+            className='mx-auto mt-6 w-full'
             onClick={() => setView('contract')}
           >
             View Contract
           </Button>
 
-          <Button className="mx-auto mt-6 w-full" onClick={disconnect}>
+          <Button className='mx-auto mt-6 w-full' onClick={disconnect}>
             Disconnect
           </Button>
         </>

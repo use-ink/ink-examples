@@ -100,14 +100,14 @@ export const DeployerProvider: React.FC<
       {savedAddress || (D.wasDeployed && isFinalized(D)) ? (
         children
       ) : (
-        <div className="flex flex-col md:flex-row md:justify-center justify-start items-stretch gap-3 w-full">
-          <Card className="p-6 flex flex-col w-full max-w-md backdrop-blur-sm bg-opacity-70">
-            <div className="mt-6">
+        <div className='flex flex-col md:flex-row md:justify-center justify-start items-stretch gap-3 w-full'>
+          <Card className='p-6 flex flex-col w-full max-w-md backdrop-blur-sm bg-opacity-70'>
+            <div className='mt-6'>
               <hgroup>
-                <h1 className="text-2xl font-bold">
+                <h1 className='text-2xl font-bold'>
                   {formatContractName(name)}
                 </h1>
-                <h2 className="font-bold text-xl">
+                <h2 className='font-bold text-xl'>
                   {D.storageDeposit
                     ? "Let's first deploy the contract!"
                     : 'Loading...'}
@@ -116,21 +116,21 @@ export const DeployerProvider: React.FC<
 
               {D.storageDeposit && (
                 <RunResults
-                  className="mt-6 w-full text-xs"
+                  className='mt-6 w-full text-xs'
                   {...{ ...D, chainApi }}
                 />
               )}
 
               {M.error && (
-                <p className="text-warning-500 mt-3">
-                  <span className="text-xs">Metadata: </span>
+                <p className='text-warning-500 mt-3'>
+                  <span className='text-xs'>Metadata: </span>
                   {M.error}
                 </p>
               )}
 
               {account && D.error && (
-                <p className="text-warning-500 mt-3">
-                  <span className="text-xs">Deployer: </span>
+                <p className='text-warning-500 mt-3'>
+                  <span className='text-xs'>Deployer: </span>
                   {D.error}
                 </p>
               )}
@@ -139,7 +139,7 @@ export const DeployerProvider: React.FC<
                 <Button
                   disabled={shouldDisableStrict(D) || !D.willBeSuccessful}
                   onClick={signAndSend}
-                  className="w-full mt-6"
+                  className='w-full mt-6'
                 >
                   {isPendingSignature(D)
                     ? 'Please sign transaction...'
@@ -148,7 +148,7 @@ export const DeployerProvider: React.FC<
                     : 'Deploy'}
                 </Button>
               ) : (
-                <ConnectButton className="w-full mt-6" />
+                <ConnectButton className='w-full mt-6' />
               )}
             </div>
           </Card>

@@ -45,19 +45,19 @@ function App() {
 
   return (
     <InkLayout
-      className="md:py-12 md:p-6 p-4 h-screen flex items-center justify-center"
-      animationSrc="https://raw.githubusercontent.com/paritytech/ink-workshop/d819d10a35b2ac3d2bff4f77a96701a527b3ad3a/frontend/public/dark-sea-creatures.json"
+      className='md:py-12 md:p-6 p-4 h-screen flex items-center justify-center'
+      animationSrc='https://raw.githubusercontent.com/paritytech/ink-workshop/d819d10a35b2ac3d2bff4f77a96701a527b3ad3a/frontend/public/dark-sea-creatures.json'
     >
-      <div className="flex flex-col justify-center items-center h-full">
-        <Card className="mx-auto p-6 flex flex-col w-full max-w-md backdrop-blur-sm bg-opacity-70">
-          <h1 className="text-2xl font-bold">
+      <div className='flex flex-col justify-center items-center h-full'>
+        <Card className='mx-auto p-6 flex flex-col w-full max-w-md backdrop-blur-sm bg-opacity-70'>
+          <h1 className='text-2xl font-bold'>
             {formatContractName(metadata.contract.name)}
           </h1>
 
-          <hgroup className="mt-6 mb-2 ml-2 text-white/80 text-xs">
+          <hgroup className='mt-6 mb-2 ml-2 text-white/80 text-xs'>
             <h3>
               Contract Balance:{' '}
-              <b className="uppercase">
+              <b className='uppercase'>
                 {contractBalance
                   ? planckToDecimalFormatted(contractBalance?.freeBalance, {
                       api: chainContract?.contract.api,
@@ -69,7 +69,7 @@ function App() {
 
             <h3>
               Your Balance:{' '}
-              <b className="uppercase">
+              <b className='uppercase'>
                 {userBalance
                   ? planckToDecimalFormatted(userBalance?.freeBalance, {
                       api: chainContract?.contract.api,
@@ -96,7 +96,7 @@ function App() {
             <Button
               disabled={shouldDisable(giveMe) || needsMoreFunds}
               onClick={() => giveMe.signAndSend([planckAmount])}
-              className="mt-6"
+              className='mt-6'
             >
               {isPendingSignature(giveMe)
                 ? 'Please sign transaction...'
@@ -105,17 +105,17 @@ function App() {
                 : `Withdraw ${amount} ROC`}
             </Button>
           ) : (
-            <ConnectButton className="mt-6" />
+            <ConnectButton className='mt-6' />
           )}
 
-          <div className="text-center mt-6">
+          <div className='text-center mt-6'>
             {needsMoreFunds && (
-              <p className="mb-3">There are not enough funds.</p>
+              <p className='mb-3'>There are not enough funds.</p>
             )}
 
             <Link
               href={`https://use.ink/faucet?acc=${CONTRACT_ROCOCO_ADDRESS}`}
-              target="_blank"
+              target='_blank'
             >
               Add ROC to contract with faucet
             </Link>

@@ -20,11 +20,11 @@ export const Screen: React.FC<React.PropsWithChildren> = ({ children }) => {
         ...screenPosition,
       }}
     >
-      <div className="py-32 h-full overflow-y-scroll">
+      <div className='py-32 h-full overflow-y-scroll'>
         {view === 'contract' && children}
         {view === 'wallet' && (
-          <div className="flex flex-col items-center h-full justify-center w-full">
-            <Card className="mx-auto w-full">
+          <div className='flex flex-col items-center h-full justify-center w-full'>
+            <Card className='mx-auto w-full'>
               <ManageWallet />
             </Card>
           </div>

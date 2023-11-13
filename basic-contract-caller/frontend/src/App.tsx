@@ -23,12 +23,12 @@ function App() {
 
   return (
     <InkLayout
-      className="md:py-12 md:p-6 p-4 h-screen flex items-center justify-center"
-      animationSrc="https://raw.githubusercontent.com/paritytech/ink-workshop/d819d10a35b2ac3d2bff4f77a96701a527b3ad3a/frontend/public/dark-sea-creatures.json"
+      className='md:py-12 md:p-6 p-4 h-screen flex items-center justify-center'
+      animationSrc='https://raw.githubusercontent.com/paritytech/ink-workshop/d819d10a35b2ac3d2bff4f77a96701a527b3ad3a/frontend/public/dark-sea-creatures.json'
     >
-      <div className="flex flex-col justify-center items-center gap-3 h-full">
-        <Card className="p-6 flex flex-col w-full max-w-md backdrop-blur-sm bg-opacity-70">
-          <h1 className="text-2xl font-bold">
+      <div className='flex flex-col justify-center items-center gap-3 h-full'>
+        <Card className='p-6 flex flex-col w-full max-w-md backdrop-blur-sm bg-opacity-70'>
+          <h1 className='text-2xl font-bold'>
             {formatContractName(metadata.contract.name)}
           </h1>
 
@@ -36,7 +36,7 @@ function App() {
             <Button
               disabled={shouldDisable(flipAndGet)}
               onClick={() => flipAndGet.signAndSend()}
-              className="mt-6"
+              className='mt-6'
             >
               {isPendingSignature(flipAndGet)
                 ? 'Please sign transaction...'
@@ -45,7 +45,7 @@ function App() {
                 : 'Flip Other Contract'}
             </Button>
           ) : (
-            <ConnectButton className="mt-6" />
+            <ConnectButton className='mt-6' />
           )}
         </Card>
 
