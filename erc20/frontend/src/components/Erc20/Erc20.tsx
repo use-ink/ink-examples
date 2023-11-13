@@ -1,6 +1,3 @@
-import metadata from '../../../assets/erc20.json';
-import { ReadView } from '../ReadView';
-import { WriteView } from '../WriteView';
 import { useMemo, useState } from 'react';
 import { Card, Tab, Tabs, formatContractName, useDeployerState } from 'ui';
 import { useCallSubscription, useContract, useTx, useWallet } from 'useink';
@@ -10,6 +7,9 @@ import {
   planckToDecimalFormatted,
   stringNumberToBN,
 } from 'useink/utils';
+import metadata from '../../../assets/erc20.json';
+import { ReadView } from '../ReadView';
+import { WriteView } from '../WriteView';
 
 export const Erc20: React.FC = () => {
   const { contractAddress } = useDeployerState();

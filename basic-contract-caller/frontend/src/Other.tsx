@@ -1,7 +1,7 @@
-import otherContractMetadata from './assets/other_contract.json';
 import { Card } from 'ui';
 import { useCallSubscription, useContract } from 'useink';
 import { pickDecoded } from 'useink/utils';
+import otherContractMetadata from './assets/other_contract.json';
 
 interface Props {
   address: string;

@@ -1,11 +1,11 @@
-import metadata from '../../../assets/erc721.json';
-import { ReadView } from '../ReadView';
-import { WriteView } from '../WriteView';
 import { useState } from 'react';
 import { Card, Tab, Tabs, formatContractName, useDeployerState } from 'ui';
 import { useCallSubscription, useContract, useTx, useWallet } from 'useink';
 import { useTxNotifications } from 'useink/notifications';
 import { pickDecoded } from 'useink/utils';
+import metadata from '../../../assets/erc721.json';
+import { ReadView } from '../ReadView';
+import { WriteView } from '../WriteView';
 
 export const Erc721: React.FC = () => {
   const { contractAddress } = useDeployerState();

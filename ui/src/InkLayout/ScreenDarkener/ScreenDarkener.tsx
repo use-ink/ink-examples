@@ -1,6 +1,6 @@
-import { useUI } from '../..';
 import classNames from 'classnames';
 import * as React from 'react';
+import { useUI } from '../..';
 
 export const ScreenDarkener: React.FC = () => {
   const { showScreen } = useUI();

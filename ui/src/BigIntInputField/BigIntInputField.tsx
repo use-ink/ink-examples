@@ -1,5 +1,5 @@
-import { InputField } from '..';
 import React, { DetailedHTMLProps, InputHTMLAttributes } from 'react';
+import { InputField } from '..';
 
 interface Props
   extends DetailedHTMLProps<

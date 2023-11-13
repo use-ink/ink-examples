@@ -73,7 +73,7 @@ export const Submarine: React.FC<React.PropsWithChildren> = () => {
   }, [setPosition]);
 
   return (
-    /* rome-ignore lint/a11y/noSvgWithoutTitle: We don't want a tooltip to appear */
+    /* biome-ignore lint/a11y/noSvgWithoutTitle: We don't want a tooltip to appear */
     <svg
       xmlns='http://www.w3.org/2000/svg'
       viewBox='0 0 1920.01 1830.89'

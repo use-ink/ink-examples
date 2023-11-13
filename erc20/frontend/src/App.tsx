@@ -1,6 +1,6 @@
+import { DeployerProvider, InkLayout } from 'ui';
 import metadata from '../assets/erc20.json';
 import { Erc20 } from './components';
-import { DeployerProvider, InkLayout } from 'ui';
 
 const ONE_BILLION_TOKENS = '1000000000000000000000';
 

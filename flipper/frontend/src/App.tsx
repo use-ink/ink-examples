@@ -1,9 +1,9 @@
-import metadata from './assets/flipper.json';
-import { CONTRACT_ROCOCO_ADDRESS } from './constants';
 import { Button, Card, ConnectButton, InkLayout, formatContractName } from 'ui';
 import { useCallSubscription, useContract, useTx, useWallet } from 'useink';
 import { useTxNotifications } from 'useink/notifications';
 import { pickDecoded, shouldDisable } from 'useink/utils';
+import metadata from './assets/flipper.json';
+import { CONTRACT_ROCOCO_ADDRESS } from './constants';
 
 function App() {
   const { account } = useWallet();

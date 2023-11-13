@@ -1,9 +1,9 @@
-import { ClassNameable } from '../types';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/solid';
 import classNames from 'classnames';
 import React, { Fragment } from 'react';
 import { useWallet } from 'useink';
+import { ClassNameable } from '../types';
 
 export const Accounts: React.FC<ClassNameable> = ({ className }) => {
   const { setAccount, account, accounts } = useWallet();

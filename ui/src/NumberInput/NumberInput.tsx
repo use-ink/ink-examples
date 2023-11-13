@@ -1,7 +1,7 @@
-import { ClassNameable } from '..';
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/solid';
 import classNames from 'classnames';
 import React from 'react';
+import { ClassNameable } from '..';
 
 type Props = ClassNameable & {
   onChange: (v: number) => void;

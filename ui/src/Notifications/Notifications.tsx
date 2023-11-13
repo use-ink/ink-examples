@@ -1,7 +1,7 @@
-import { Snackbar } from '../Snackbar';
 import React from 'react';
 // eslint-disable-next-line import/no-unresolved
 import { toNotificationLevel, useNotifications } from 'useink/notifications';
+import { Snackbar } from '../Snackbar';
 
 export const Notifications: React.FC = () => {
   const { notifications } = useNotifications();

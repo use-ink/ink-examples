@@ -1,6 +1,6 @@
-import { InkComponent } from '../types';
 import classNames from 'classnames';
 import React from 'react';
+import { InkComponent } from '../types';
 
 export const Card: React.FC<InkComponent> = ({ children, className }) => {
   const classes = classNames(

@@ -1,5 +1,3 @@
-import metadata from './assets/incrementer.json';
-import { CONTRACT_ROCOCO_ADDRESS } from './constants';
 import { useState } from 'react';
 import {
   Button,
@@ -12,6 +10,8 @@ import {
 import { useCallSubscription, useContract, useTx, useWallet } from 'useink';
 import { useTxNotifications } from 'useink/notifications';
 import { pickDecoded, shouldDisable } from 'useink/utils';
+import metadata from './assets/incrementer.json';
+import { CONTRACT_ROCOCO_ADDRESS } from './constants';
 
 function App() {
   const { account } = useWallet();

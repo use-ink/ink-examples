@@ -1,11 +1,11 @@
+import classNames from 'classnames';
+import React from 'react';
 import { InkComponent, Notifications } from '..';
 import { LottieEntity } from '../LottieEntity';
 import { UIProvider } from '../contexts';
 import { Screen } from './Screen';
 import { ScreenDarkener } from './ScreenDarkener';
 import { Submarine } from './Submarine';
-import classNames from 'classnames';
-import React from 'react';
 
 type Props = InkComponent & {
   animationSrc?: string;
