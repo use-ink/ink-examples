@@ -1,0 +1,10 @@
+[workspace]
+members = ["*"]
+exclude = [".cargo", "target"]
+resolver = "2"
+
+[workspace.dependencies]
+ink = { version = "4.3.0", default-features = false }
+ink_e2e = "4.3.0"
+scale = { package = "parity-scale-codec", version = "=3.6.5", default-features = false, features = ["derive"] }
+scale-info = { version = "2.6", default-features = false, features = ["derive"] }
