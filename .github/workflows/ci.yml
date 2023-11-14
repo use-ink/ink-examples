@@ -228,9 +228,9 @@ jobs:
       - name: Build workspace ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows' && matrix.contract == 'workspace-contracts'
         run: |
-          echo SHOULD WORK: cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+          echo SHOULD WORK BUT #1172, #1265: cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
           RUSTC_BOOTSTRAP=1 cargo build --target=wasm32-unknown-unknown -Zbuild-std=core,alloc --no-default-features --features ink/ink-debug --verbose --all --manifest-path=workspace-contracts/Cargo.toml
 
       - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os != 'Windows'
+        if: runner.os != 'Windows' && matrix.contract != 'workspace-contracts'
         run: cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
