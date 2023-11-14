@@ -54,6 +54,7 @@ jobs:
             **/*.md
             multi-contract-caller/**
             upgradeable-contracts/**
+            workspace-contracts/**
             ui/**
             **/frontend/**
           json: true
@@ -71,6 +72,7 @@ jobs:
           files_ignore: |
             **/.gitignore
             **/*.md
+            workspace-contracts/**
           json: true
 
       - name: Look for changes in workspace contracts
@@ -110,7 +112,7 @@ jobs:
             echo "Nothing important changed. Workspace contracts job will be skipped."
             echo "CHECK_WORKSPACE_CONTRACTS=true" >> $GITHUB_OUTPUT
           else
-            echo "There are changes in following workspace-contracts: $ALL_CHANGED_CONTRACTS"
+            echo "There are changes in following workspace-contracts: ${{steps.CHANGED_WORKSPACE_CONTRACTS}}"
             echo "CHECK_WORKSPACE_CONTRACTS=false" >> $GITHUB_OUTPUT
           fi
 
