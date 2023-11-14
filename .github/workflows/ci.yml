@@ -112,11 +112,11 @@ jobs:
             echo "Nothing important changed. Workspace contracts job will be skipped."
             echo "CHECK_WORKSPACE_CONTRACTS=true" >> $GITHUB_OUTPUT
           else
-            echo "There are changes in following workspace-contracts: $ALL_CHANGED_CONTRACTS"
             echo "CHECK_WORKSPACE_CONTRACTS=false" >> $GITHUB_OUTPUT
             ALL_CHANGED_CONTRACTS=$(jq -s 'add' \
                                 <(echo "$ALL_CHANGED_CONTRACTS") \
-                                <(echo "[\"workspace-contracts/flipper\", \"workspace-contracts/incrementer\"]"))
+                                <(echo "[\"workspace-contracts\"]"))
+            #                    <(echo "[\"workspace-contracts/flipper\", \"workspace-contracts/incrementer\"]"))
             echo "AFTER: $ALL_CHANGED_CONTRACTS"
           fi
 
@@ -222,14 +222,15 @@ jobs:
             cargo contract --version
 
       - name: Build ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os != 'Windows' && ${{ !startsWith(matrix.contract, 'workspace-contract') }}
+        if: runner.os != 'Windows' && matrix.contract != 'workspace-contracts'
         run: cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
 
       - name: Build workspace ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os != 'Windows' && ${{ startsWith(matrix.contract, 'workspace-contract') }}
+        if: runner.os != 'Windows' && matrix.contract == 'workspace-contracts'
         run: |
           echo SHOULD WORK: cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
-          RUSTC_BOOTSTRAP=1 cargo build --target=wasm32-unknown-unknown -Zbuild-std=core,alloc --no-default-features --features ink/ink-debug --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+          RUSTC_BOOTSTRAP=1 cargo build --target=wasm32-unknown-unknown -Zbuild-std=core,alloc --no-default-features --features ink/ink-debug --verbose --manifest-path=workspace-contracts/flipper/Cargo.toml;
+          RUSTC_BOOTSTRAP=1 cargo build --target=wasm32-unknown-unknown -Zbuild-std=core,alloc --no-default-features --features ink/ink-debug --verbose --manifest-path=workspace-contracts/incrementer/Cargo.toml;
 
       - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows'
