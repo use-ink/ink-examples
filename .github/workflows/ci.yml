@@ -91,6 +91,15 @@ jobs:
             upgradeable-contracts/**
           json: true
 
+
+      - name: List all changed files
+        run: |
+          echo " Changed workspace contracts " 
+          for file in ${{ steps.CHANGED_WORKSPACE_CONTRACTS.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
+          echo "no more files.." 
+
       - name: Build matrix
         id: build_matrix
         run: |
@@ -98,7 +107,7 @@ jobs:
                                 <(echo "${{ steps.CHANGED_CONTRACTS.outputs.all_changed_files }}") \
                                 <(echo "${{ steps.CHANGED_MULTI_AND_UPGRADEABLE_CONTRACTS.outputs.all_changed_files }}"))
 
-          if [ ${{steps.CHANGED_WORKSPACE_CONTRACTS}} = "[]" ]
+          if [ ${{steps.CHANGED_WORKSPACE_CONTRACTS.outputs.all_changed_files }} = "[]" ]
           then
             echo "Nothing important changed. Workspace contracts job will be skipped."
             echo "CHECK_WORKSPACE_CONTRACTS=true" >> $GITHUB_OUTPUT
