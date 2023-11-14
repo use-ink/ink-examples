@@ -130,7 +130,7 @@ jobs:
   check:
     name: examples
     needs: prepare_matrix
-    if: ${{ needs.prepare_matrix.outputs.SKIP_CHECKS  == 'false' }}
+    if: ${{ needs.prepare_matrix.outputs.SKIP_CHECKS  == 'false' }} || ${{ needs.prepare_matrix.outputs.CHECK_WORKSPACE_CONTRACTS  == 'true' }}
     env:
       RUST_BACKTRACE: full
 
