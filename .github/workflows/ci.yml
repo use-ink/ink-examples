@@ -33,6 +33,7 @@ jobs:
     outputs:
       MATRIX: ${{ steps.build_matrix.outputs.MATRIX }}
       SKIP_CHECKS: ${{ steps.build_matrix.outputs.SKIP_CHECKS }}
+      CHECK_WORKSPACE_CONTRACTS: ${{ step.build_matrix.outputs.CHECK_WORKSPACE_CONTRACTS }}
 
     steps:
       - name: Checkout
