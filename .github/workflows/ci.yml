@@ -116,7 +116,7 @@ jobs:
             echo "CHECK_WORKSPACE_CONTRACTS=false" >> $GITHUB_OUTPUT
             ALL_CHANGED_CONTRACTS=$(jq -s 'add' \
                                 <(echo "$ALL_CHANGED_CONTRACTS") \
-                                <(echo "[\"workspace-contracts\\flipper\", \"workspace-contracts\\incrementer\"]"))
+                                <(echo "[\"workspace-contracts/flipper\", \"workspace-contracts/incrementer\"]"))
             echo "AFTER: $ALL_CHANGED_CONTRACTS"
           fi
 
