@@ -33,7 +33,6 @@ jobs:
     outputs:
       MATRIX: ${{ steps.build_matrix.outputs.MATRIX }}
       SKIP_CHECKS: ${{ steps.build_matrix.outputs.SKIP_CHECKS }}
-      CHECK_WORKSPACE_CONTRACTS: ${{ steps.build_matrix.outputs.CHECK_WORKSPACE_CONTRACTS }}
 
     steps:
       - name: Checkout
@@ -99,6 +98,19 @@ jobs:
                                 <(echo "${{ steps.CHANGED_CONTRACTS.outputs.all_changed_files }}") \
                                 <(echo "${{ steps.CHANGED_MULTI_AND_UPGRADEABLE_CONTRACTS.outputs.all_changed_files }}"))
 
+          if [ ${{steps.CHANGED_WORKSPACE_CONTRACTS}} = "[]" ]
+          then
+            echo "Nothing important changed. Workspace contracts job will be skipped."
+            echo "CHECK_WORKSPACE_CONTRACTS=true" >> $GITHUB_OUTPUT
+          else
+            echo "There are changes in following workspace-contracts: $ALL_CHANGED_CONTRACTS"
+            echo "CHECK_WORKSPACE_CONTRACTS=false" >> $GITHUB_OUTPUT
+            ALL_CHANGED_CONTRACTS=$(jq -s 'add' \
+                                <(echo "$ALL_CHANGED_CONTRACTS") \
+                                <(echo "[\"workspace-contracts\\flipper\", \"workspace-contracts\\incrementer\"]"))
+            echo "AFTER: $ALL_CHANGED_CONTRACTS"
+          fi
+
           if [ $ALL_CHANGED_CONTRACTS = "[]" ]
           then
             echo "Nothing important changed. Checks job will be skipped."
@@ -108,14 +120,6 @@ jobs:
             echo "SKIP_CHECKS=false" >> $GITHUB_OUTPUT
           fi
 
-          if [ ${{steps.CHANGED_WORKSPACE_CONTRACTS}} = "[]" ]
-          then
-            echo "Nothing important changed. Workspace contracts job will be skipped."
-            echo "CHECK_WORKSPACE_CONTRACTS=true" >> $GITHUB_OUTPUT
-          else
-            echo "There are changes in following workspace-contracts: ${{steps.CHANGED_WORKSPACE_CONTRACTS}}"
-            echo "CHECK_WORKSPACE_CONTRACTS=false" >> $GITHUB_OUTPUT
-          fi
 
           echo "MATRIX={\"platform\":${{env.platform}},\
                           \"toolchain\":${{env.toolchain}},\
@@ -130,7 +134,7 @@ jobs:
   check:
     name: examples
     needs: prepare_matrix
-    if: ${{ needs.prepare_matrix.outputs.SKIP_CHECKS  == 'false' }} || ${{ needs.prepare_matrix.outputs.CHECK_WORKSPACE_CONTRACTS  == 'true' }}
+    if: ${{ needs.prepare_matrix.outputs.SKIP_CHECKS  == 'false' }}
     env:
       RUST_BACKTRACE: full
 
@@ -209,16 +213,15 @@ jobs:
             cargo contract --version
 
       - name: Build ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os != 'Windows'
+        if: runner.os != 'Windows' && ${{ !startsWith(matrix.contract, 'workspace-contract') }}
         run: cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+
+      - name: Build workspace ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
+        if: runner.os != 'Windows' && ${{ startsWith(matrix.contract, 'workspace-contract') }}
+        run: |
+          echo SHOULD WORK: cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+          RUSTC_BOOTSTRAP=1 cargo build --target=wasm32-unknown-unknown -Zbuild-std=core,alloc --no-default-features --features ink/ink-debug --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
 
       - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows'
         run: cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
-
-      - name: Build workspace-contracts on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os != 'Windows' && ${{ needs.prepare_matrix.outputs.CHECK_WORKSPACE_CONTRACTS == 'false' }}
-        run: |
-          echo SHOULD WORK: cargo contract build --verbose --manifest-path={each contract in the workspace folder}/Cargo.toml;
-          RUSTC_BOOTSTRAP=1 cargo build --target=wasm32-unknown-unknown -Zbuild-std=core,alloc --no-default-features --features ink/ink-debug --manifest-path=workspace-contracts/flipper/Cargo.toml;
-          RUSTC_BOOTSTRAP=1 cargo build --target=wasm32-unknown-unknown -Zbuild-std=core,alloc --no-default-features --features ink/ink-debug --manifest-path=workspace-contracts/incrementer/Cargo.toml;
