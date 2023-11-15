@@ -20,7 +20,7 @@ mod incrementer {
 
         #[ink(message)]
         pub fn inc(&mut self, by: i32) {
-            self.value += by;
+            self.value = self.value.saturating_add(by);
         }
 
         #[ink(message)]
