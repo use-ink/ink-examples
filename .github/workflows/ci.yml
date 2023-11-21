@@ -54,6 +54,7 @@ jobs:
             **/*.md
             multi-contract-caller/**
             upgradeable-contracts/**
+            workspace-contracts/**
             ui/**
             **/frontend/**
           json: true
@@ -71,7 +72,31 @@ jobs:
           files_ignore: |
             **/.gitignore
             **/*.md
+            workspace-contracts/**
           json: true
+
+      - name: Look for changes in workspace contracts
+        id: CHANGED_WORKSPACE_CONTRACTS
+        uses: tj-actions/changed-files@v39
+        with:
+          dir_names: "true"
+          dir_names_exclude_current_dir: "true"
+          dir_names_max_depth: 2
+          files: |
+            workspace-contracts/**
+          files_ignore: |
+            **/.gitignore
+            **/*.md
+          json: true
+
+
+      - name: List all changed files
+        run: |
+          echo " Changed workspace contracts " 
+          for file in ${{ steps.CHANGED_WORKSPACE_CONTRACTS.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
+          echo "no more files.." 
 
       - name: Build matrix
         id: build_matrix
@@ -79,6 +104,15 @@ jobs:
           ALL_CHANGED_CONTRACTS=$(jq -s 'add' \
                                 <(echo "${{ steps.CHANGED_CONTRACTS.outputs.all_changed_files }}") \
                                 <(echo "${{ steps.CHANGED_MULTI_AND_UPGRADEABLE_CONTRACTS.outputs.all_changed_files }}"))
+
+          if [ ${{steps.CHANGED_WORKSPACE_CONTRACTS.outputs.all_changed_files }} = "[]" ]
+          then
+            echo "Nothing important changed. Workspace contracts job will be skipped."
+          else
+            ALL_CHANGED_CONTRACTS=$(jq -s 'add' \
+                                <(echo "$ALL_CHANGED_CONTRACTS") \
+                                <(echo "[\"workspace-contracts\"]"))
+          fi
 
           if [ $ALL_CHANGED_CONTRACTS = "[]" ]
           then
@@ -181,9 +215,16 @@ jobs:
             cargo contract --version
 
       - name: Build ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os != 'Windows'
+        if: runner.os != 'Windows' && matrix.contract != 'workspace-contracts'
         run: cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
 
       - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os != 'Windows'
+        if: runner.os != 'Windows' && matrix.contract != 'workspace-contracts'
         run: cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+
+      - name: Build workspace ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
+        if: runner.os != 'Windows' && matrix.contract == 'workspace-contracts'
+        run: |
+          echo FOLLOWING SEEMS TO WORK WITH CARGO-CONTRACT 4.0
+          cargo contract build --verbose --manifest-path=workspace-contracts/flipper/Cargo.toml
+          cargo contract build --verbose --manifest-path=workspace-contracts/incrementer/Cargo.toml
