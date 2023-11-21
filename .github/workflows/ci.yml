@@ -87,8 +87,6 @@ jobs:
           files_ignore: |
             **/.gitignore
             **/*.md
-            multi-contract-caller/**
-            upgradeable-contracts/**
           json: true
 
 
