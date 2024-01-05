@@ -1,0 +1,40 @@
+{
+  "name": "@inkathon/contracts",
+  "type": "module",
+  "private": true,
+  "version": "0.4.2",
+  "scripts": {
+    "postinstall": "bash postinstall.sh",
+    "test": "bash test-all.sh",
+    "build": "bash build-all.sh",
+    "node": "substrate-contracts-node --dev --base-path ./.node-data",
+    "script": "f() { tsx ./scripts/$1; }; f \"$@\"",
+    "deploy": "pnpm run script deploy",
+    "contracts-ui": "open https://contracts-ui.substrate.io/?rpc=ws://127.0.0.1:9944",
+    "explorer-ui": "open https://polkadot.js.org/apps/#/explorer?rpc=ws://127.0.0.1:9944",
+    "type-check": "tsc --pretty --noEmit",
+    "sync-types": "typesync",
+    "lint": "prettier . --check && eslint .",
+    "lint:fix": "prettier . --write && eslint . --fix",
+    "lint:format": "prettier . --write"
+  },
+  "devDependencies": {
+    "@polkadot/api": "^10.11.2",
+    "@polkadot/api-contract": "^10.11.2",
+    "@polkadot/keyring": "^12.6.2",
+    "@polkadot/types": "^10.11.2",
+    "@polkadot/util": "^12.6.2",
+    "@polkadot/util-crypto": "^12.6.2",
+    "@scio-labs/use-inkathon": "^0.6.3",
+    "@types/eslint": "^8.44.9",
+    "@types/eslint-config-prettier": "^6.11.3",
+    "@types/node": "^20.10.5",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "dotenv": "^16.3.1",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "tsx": "^4.6.2",
+    "typescript": "^5.3.3"
+  }
+}
