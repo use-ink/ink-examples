@@ -13,6 +13,29 @@ import DNS_ABI from './dns.json';
 import { useRef, useState } from 'react';
 import { blake2AsHex } from '@polkadot/util-crypto';
 
+const getDeployments = async (): Promise<SubstrateDeployment[]> => {
+  return [
+    {
+      contractId: 'dns',
+      networkId: rococo.network,
+      abi: DNS_ABI,
+      address: '5GWCUiApMhV3QYK4RedaLpbhcCBWLeGVT2wtZPfCHhnHxoud',
+    },
+  ];
+};
+
+export default function WrappedApp() {
+  return (
+    <UseInkathonProvider
+      appName='DNS Frontend Example'
+      deployments={getDeployments()}
+      defaultChain={rococo}
+    >
+      <App />
+    </UseInkathonProvider>
+  );
+}
+
 function App() {
   const { isConnected } = useInkathon();
   return (
@@ -97,6 +120,7 @@ const RegisterName = () => {
   const nameRef = useRef<HTMLInputElement>(null);
 
   const { contract } = useRegisteredContract('dns');
+
   const {
     loading,
     error,
@@ -128,6 +152,7 @@ const RegisterName = () => {
             register();
           }}
         >
+
           {loading ? 'Registering...' : 'Register'}
         </button>
       </form>
@@ -138,6 +163,7 @@ const RegisterName = () => {
           <div className='error'>{error}</div>
         </>
       )}
+
       {result && !!result.successEvent && (
         <>
           <hr />
@@ -279,31 +305,6 @@ const GetAddress = () => {
     </div>
   );
 };
-
-const getDeployments = async (): Promise<SubstrateDeployment[]> => {
-  return [
-    {
-      contractId: 'dns',
-      networkId: rococo.network,
-      abi: DNS_ABI,
-      address: '5GWCUiApMhV3QYK4RedaLpbhcCBWLeGVT2wtZPfCHhnHxoud',
-    },
-  ];
-};
-
-function WrappedApp() {
-  return (
-    <UseInkathonProvider
-      appName='DNS Frontend Example'
-      deployments={getDeployments()}
-      defaultChain={rococo}
-    >
-      <App />
-    </UseInkathonProvider>
-  );
-}
-
-export default WrappedApp;
 
 const usePromise = <T,>(promise: () => Promise<T>) => {
   const [result, setResult] = useState<T | null>(null);
