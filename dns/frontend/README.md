@@ -1,4 +1,4 @@
-# DNS Frontend Example
+# ink! Frontend Example
 
 This is a vanilla [vite + typescript](https://vitejs.dev/) project to showcase the use of [`useinkathon`](https://github.com/scio-labs/use-inkathon).
 
