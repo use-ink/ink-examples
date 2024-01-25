@@ -6,7 +6,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-ink = { version = "5.0.0-rc", default-features = false, features = false }
+ink = { version = "5.0.0-rc", default-features = false }
 
 # Substrate
 #
