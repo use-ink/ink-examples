@@ -48,7 +48,7 @@ pub mod delegator {
             let selector = ink::selector_bytes!("inc");
             let _ = build_call::<DefaultEnvironment>()
                 .delegate(hash)
-                // We specify `set_tail_call(true)` to use the delegatee last memory frame
+                // We specify `CallFlags::TAIL_CALL` to use the delegatee last memory frame
                 // as the end of the execution cycle.
                 // So any mutations to `Packed` types, made by delegatee,
                 // will be flushed to storage.
@@ -56,14 +56,14 @@ pub mod delegator {
                 // If we don't specify this flag.
                 // The storage state before the delegate call will be flushed to storage instead.
                 // See https://substrate.stackexchange.com/questions/3336/i-found-set-allow-reentry-may-have-some-problems/3352#3352
-                .call_flags(CallFlags::default().set_tail_call(true))
+                .call_flags(CallFlags::TAIL_CALL)
                 .exec_input(ExecutionInput::new(Selector::new(selector)))
                 .returns::<()>()
                 .try_invoke();
         }
 
         /// Adds entry to `addresses` using delegate call.
-        /// Note that we don't need `set_tail_call(true)` flag
+        /// Note that we don't need `CallFlags::TAIL_CALL` flag
         /// because `Mapping` updates the storage instantly on-demand.
         #[ink(message)]
         pub fn add_entry_delegate(&mut self, hash: Hash) {
@@ -107,15 +107,17 @@ pub mod delegator {
                 .create_and_fund_account(&ink_e2e::alice(), 10_000_000_000_000)
                 .await;
 
-            let constructor = DelegatorRef::new_default();
+            let mut constructor = DelegatorRef::new_default();
             let call_builder = client
-                .instantiate("delegator", &origin, constructor, 0, None)
+                .instantiate("delegator", &origin, &mut constructor)
+                .submit()
                 .await
                 .expect("instantiate failed");
             let mut call_builder_call = call_builder.call::<Delegator>();
 
             let code_hash = client
-                .upload("delegatee", &origin, None)
+                .upload("delegatee", &origin)
+                .submit()
                 .await
                 .expect("upload `delegatee` failed")
                 .code_hash;
@@ -123,10 +125,10 @@ pub mod delegator {
             // when
             let call_delegate = call_builder_call.inc_delegate(code_hash);
 
-            let result = client.call(&origin, &call_delegate, 0, None).await;
+            let result = client.call(&origin, &call_delegate).submit().await;
             assert!(result.is_ok(), "delegate call failed.");
 
-            let result = client.call(&origin, &call_delegate, 0, None).await;
+            let result = client.call(&origin, &call_delegate).submit().await;
             assert!(result.is_ok(), "second delegate call failed.");
 
             // then
@@ -135,8 +137,9 @@ pub mod delegator {
 
             let call_get = call.get_counter();
             let call_get_result = client
-                .call_dry_run(&origin, &call_get, 0, None)
-                .await
+                .call(&origin, &call_get)
+                .dry_run()
+                .await?
                 .return_value();
 
             // This fails
@@ -157,22 +160,24 @@ pub mod delegator {
                 .await;
 
             // given
-            let constructor = DelegatorRef::new(10);
+            let mut constructor = DelegatorRef::new(10);
             let call_builder = client
-                .instantiate("delegator", &origin, constructor, 0, None)
+                .instantiate("delegator", &origin, &mut constructor)
+                .submit()
                 .await
                 .expect("instantiate failed");
             let mut call_builder_call = call_builder.call::<Delegator>();
 
             let code_hash = client
-                .upload("delegatee", &origin, None)
+                .upload("delegatee", &origin)
+                .submit()
                 .await
                 .expect("upload `delegatee` failed")
                 .code_hash;
 
             // when
             let call_delegate = call_builder_call.add_entry_delegate(code_hash);
-            let result = client.call(&origin, &call_delegate, 0, None).await;
+            let result = client.call(&origin, &call_delegate).submit().await;
             assert!(result.is_ok(), "delegate call failed.");
 
             // then
@@ -185,7 +190,8 @@ pub mod delegator {
 
             let call_get_value = call_builder_call.get_value(address);
             let call_get_result = client
-                .call(&origin, &call_get_value, 0, None)
+                .call(&origin, &call_get_value)
+                .submit()
                 .await
                 .unwrap()
                 .return_value();

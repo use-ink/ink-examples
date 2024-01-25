@@ -1,5 +1,5 @@
 [package]
-name = "erc1155"
+name = "other-contract"
 version = "5.0.0-rc"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
@@ -7,6 +7,9 @@ publish = false
 
 [dependencies]
 ink = { version = "5.0.0-rc", default-features = false }
+
+[dev-dependencies]
+ink_e2e = { version = "5.0.0-rc" }
 
 [lib]
 path = "lib.rs"
@@ -17,3 +20,4 @@ std = [
     "ink/std",
 ]
 ink-as-dependency = []
+e2e-tests = []
