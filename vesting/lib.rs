@@ -151,7 +151,8 @@ mod vesting_contract {
                 return Err(Error::ZeroReleasableBalance)
             }
 
-            self.released_balance += releasable;
+            self.released_balance =
+                self.released_balance.checked_add(releasable).unwrap();
             self.env()
                 .transfer(self.beneficiary, releasable)
                 .expect("Transfer failed during release");
@@ -198,10 +199,12 @@ mod vesting_contract {
             } else if current_time >= self.end_time() {
                 return total_allocation
             } else {
-                return (total_allocation
-                    * (current_time.checked_sub(self.start_time()).unwrap()) as Balance)
-                    .checked_div(self.duration_time() as Balance)
-                    .unwrap()
+                return (total_allocation.checked_mul(
+                    (current_time.checked_sub(self.start_time()).unwrap()) as Balance,
+                ))
+                .unwrap()
+                .checked_div(self.duration_time() as Balance)
+                .unwrap()
             }
         }
     }
