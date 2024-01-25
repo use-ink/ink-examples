@@ -15,8 +15,8 @@ mod vesting_contract {
 
     /// Error for when the beneficiary is a zero address.
     /// & Error for when the releasable balance is zero.
-    #[derive(Debug, PartialEq, Eq, scale::Encode, scale::Decode)]
-    #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
+    #[derive(Debug, PartialEq, Eq)]
+    #[ink::scale_derive(Encode, Decode, TypeInfo)]
     pub enum Error {
         InvalidBeneficiary,
         ZeroReleasableBalance,
