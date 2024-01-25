@@ -41,7 +41,6 @@ mod vesting_contract {
     ///
     /// # Note:
     /// The beneficiary cannot be the zero address.
-    ///
     impl VestingContract {
         #[ink(constructor, payable)]
         pub fn new(
@@ -49,12 +48,12 @@ mod vesting_contract {
             duration_time_in_sec: Timestamp,
         ) -> Result<Self, Error> {
             if beneficiary == AccountId::from([0x0; 32]) {
-                return Err(Error::InvalidBeneficiary);
+                return Err(Error::InvalidBeneficiary)
             }
-            
+
             // This is multiplied by 1000 to conform to the
             // Timestamp fomat in ink.
-            let duration_time = duration_time_in_sec * 1000;
+            let duration_time = duration_time_in_sec.checked_mul(1000).unwrap();
 
             let start_time = Self::env().block_timestamp();
             let owner = Self::env().caller();
@@ -106,7 +105,7 @@ mod vesting_contract {
         /// vesting ends.
         #[ink(message)]
         pub fn end_time(&self) -> Timestamp {
-            self.start_time() + self.duration_time()
+            self.start_time().checked_add(self.duration_time()).unwrap()
         }
 
         /// This returns the amount of time remaining
@@ -114,9 +113,9 @@ mod vesting_contract {
         #[ink(message)]
         pub fn time_remaining(&self) -> Timestamp {
             if self.time_now() < self.end_time() {
-                return self.end_time() - self.time_now();
+                self.end_time().checked_sub(self.time_now()).unwrap()
             } else {
-                return 0;
+                0
             }
         }
 
@@ -131,14 +130,16 @@ mod vesting_contract {
         /// is currently available for release.
         #[ink(message)]
         pub fn releasable_balance(&self) -> Balance {
-            return self.vested_amount() as Balance - self.released_balance();
+            (self.vested_amount() as Balance)
+                .checked_sub(self.released_balance())
+                .unwrap()
         }
 
         /// This calculates the amount that has already vested
         /// but hasn't been released from the contract yet.
         #[ink(message)]
         pub fn vested_amount(&self) -> Balance {
-            return self.vesting_schedule(self.this_contract_balance(), self.time_now());
+            self.vesting_schedule(self.this_contract_balance(), self.time_now())
         }
 
         /// This sends the releasable balance to the beneficiary.
@@ -147,7 +148,7 @@ mod vesting_contract {
         pub fn release(&mut self) -> Result<(), Error> {
             let releasable = self.releasable_balance();
             if releasable == 0 {
-                return Err(Error::ZeroReleasableBalance);
+                return Err(Error::ZeroReleasableBalance)
             }
 
             self.released_balance += releasable;
@@ -187,20 +188,20 @@ mod vesting_contract {
         /// If the vesting duration is 200 seconds and 100 seconds have
         /// passed since the start time, then 50% of the total_allocation
         /// would have vested.
-        ///
         pub fn vesting_schedule(
             &self,
             total_allocation: Balance,
             current_time: Timestamp,
         ) -> Balance {
             if current_time < self.start_time() {
-                return 0;
+                0
             } else if current_time >= self.end_time() {
-                return total_allocation;
+                return total_allocation
             } else {
                 return (total_allocation
-                    * (current_time - self.start_time()) as Balance)
-                    / self.duration_time() as Balance;
+                    * (current_time.checked_sub(self.start_time()).unwrap()) as Balance)
+                    .checked_div(self.duration_time() as Balance)
+                    .unwrap()
             }
         }
     }
@@ -212,7 +213,8 @@ mod vesting_contract {
         /// Checking that the default constructor does its job.
         #[ink::test]
         fn new_creates_contract_with_correct_values() {
-            let contract = VestingContract::new(AccountId::from([0x01; 32]), 200).unwrap();
+            let contract =
+                VestingContract::new(AccountId::from([0x01; 32]), 200).unwrap();
 
             assert_eq!(contract.beneficiary(), AccountId::from([0x01; 32]));
             assert_eq!(contract.duration_time(), 200 * 1000);
@@ -223,7 +225,8 @@ mod vesting_contract {
         /// There should be some time remaining before the vesting period ends.
         #[ink::test]
         fn time_remaining_works() {
-            let contract = VestingContract::new(AccountId::from([0x01; 32]), 200).unwrap();
+            let contract =
+                VestingContract::new(AccountId::from([0x01; 32]), 200).unwrap();
             assert!(contract.time_remaining() > 0);
         }
 
@@ -235,7 +238,8 @@ mod vesting_contract {
         ///       were released.
         #[ink::test]
         fn release_before_vesting_period_fails() {
-            let mut contract = VestingContract::new(AccountId::from([0x01; 32]), 200).unwrap();
+            let mut contract =
+                VestingContract::new(AccountId::from([0x01; 32]), 200).unwrap();
 
             assert_eq!(contract.release(), Err(Error::ZeroReleasableBalance));
             assert_eq!(contract.released_balance(), 0);
@@ -249,7 +253,8 @@ mod vesting_contract {
         ///       amount we simulated as a deposit.
         #[ink::test]
         fn release_after_vesting_period_works() {
-            let mut contract = VestingContract::new(AccountId::from([0x01; 32]), 0).unwrap();
+            let mut contract =
+                VestingContract::new(AccountId::from([0x01; 32]), 0).unwrap();
             contract.releasable_balance += 1000000;
 
             assert_eq!(contract.release(), Ok(()));
@@ -262,7 +267,8 @@ mod vesting_contract {
         ///       the total allocation.
         #[ink::test]
         fn vesting_schedule_works() {
-            let contract = VestingContract::new(AccountId::from([0x01; 32]), 200).unwrap();
+            let contract =
+                VestingContract::new(AccountId::from([0x01; 32]), 200).unwrap();
 
             assert_eq!(
                 contract.vesting_schedule(1000, contract.start_time() + 100 * 1000),
