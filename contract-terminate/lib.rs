@@ -55,33 +55,29 @@ pub mod just_terminates {
 
     #[cfg(all(test, feature = "e2e-tests"))]
     mod e2e_tests {
-        use super::JustTerminateRef;
+        use super::*;
+        use ink_e2e::ContractsBackend;
+
         type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
         #[ink_e2e::test]
-        async fn e2e_contract_terminates(
-            mut client: ink_e2e::Client<C, E>,
+        async fn e2e_contract_terminates<Client: E2EBackend>(
+            mut client: Client,
         ) -> E2EResult<()> {
             // given
-            let constructor = JustTerminateRef::new();
-            let contract_acc_id = client
-                .instantiate(
-                    "contract_terminate",
-                    &ink_e2e::alice(),
-                    constructor,
-                    0,
-                    None,
-                )
+            let mut constructor = JustTerminateRef::new();
+            let contract = client
+                .instantiate("contract_terminate", &ink_e2e::alice(), &mut constructor)
+                .submit()
                 .await
-                .expect("instantiate failed")
-                .account_id;
+                .expect("instantiate failed");
+            let mut call_builder = contract.call_builder::<JustTerminate>();
 
             // when
-            let terminate_me =
-                ink_e2e::build_message::<JustTerminateRef>(contract_acc_id)
-                    .call(|contract| contract.terminate_me());
+            let terminate_me = call_builder.terminate_me();
             let call_res = client
-                .call(&ink_e2e::alice(), terminate_me, 0, None)
+                .call(&ink_e2e::alice(), &terminate_me)
+                .submit()
                 .await
                 .expect("terminate_me messages failed");
 

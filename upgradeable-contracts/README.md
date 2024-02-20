@@ -12,6 +12,21 @@ This is exactly what `set_code_hash()` function does.
 However, developers needs to be mindful of storage compatibility.
 You can read more about storage compatibility on [use.ink](https://use.ink/basics/upgradeable-contracts#replacing-contract-code-with-set_code_hash)
 
+## [`set-code-hash`](set-code-hash-migration/)
+
+When upgrading a contract, the new code may have a different storage layout. This example illustrates a method to 
+migrate the storage from the old layout to the new layout. It does so by using an intermediate `migration` contract
+which performs the storage upgrade. The workflow is as follows:
+
+
+1. Upload a `migration` contract with a message `migrate` which performs the storage migration.
+2. Set code hash to the `migration` contract.
+3. Upload the upgraded version of the original contract.
+4. Call `migrate` on the `migration` contract, passing the code hash of the new updated incrementer contract from `3.` 
+This must happen as a single message, because following the storage migration, the contract will not be able to be 
+called again, since it will fail to load the migrated storage.
+
+
 ## [Delegator](delegator/)
 
 Delegator pattern is based around a low level cross contract call function `delegate_call`.
@@ -25,11 +40,11 @@ However, there are certain nuances associated with using `delegate_call`.
 
 First of all, as demonstrated in the example, if the delegated code intends to mutate the caller's storage,
 a developer needs to be mindful. If the delegated code modifies layout-full storage
-(i.e. it contains at least non-`Lazy`, non-`Mapping` field), the `.set_tail_call(true)` flag of `CallFlags` needs to be specified and the storage layouts must match.
+(i.e. it contains at least non-`Lazy`, non-`Mapping` field), the `CallFlags::TAIL_CALL` flag needs to be specified and the storage layouts must match.
 This is due to the way ink! execution call stack is operated
 (see [Stack Exchange Answer](https://substrate.stackexchange.com/a/3352/3098) for more explanation).
 
-If the delegated code only modifies `Lazy` or `Mapping` field, the keys must be identical and `.set_tail_call(true)` is optional.
+If the delegated code only modifies `Lazy` or `Mapping` field, the keys must be identical and `CallFlags::TAIL_CALL` is optional.
 This is because `Lazy` and `Mapping` interact with the storage directly instead of loading and flushing storage states.
 
 If your storage is completely layoutless (it only contains `Lazy` and `Mapping` fields), the order of fields and layout do not need to match for the same reason as mentioned above.

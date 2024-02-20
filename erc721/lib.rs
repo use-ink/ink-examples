@@ -56,11 +56,6 @@
 mod erc721 {
     use ink::storage::Mapping;
 
-    use scale::{
-        Decode,
-        Encode,
-    };
-
     /// A token ID.
     pub type TokenId = u32;
 
@@ -77,8 +72,8 @@ mod erc721 {
         operator_approvals: Mapping<(AccountId, AccountId), ()>,
     }
 
-    #[derive(Encode, Decode, Debug, PartialEq, Eq, Copy, Clone)]
-    #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
+    #[derive(Debug, PartialEq, Eq, Copy, Clone)]
+    #[ink::scale_derive(Encode, Decode, TypeInfo)]
     pub enum Error {
         NotOwner,
         NotApproved,
@@ -222,12 +217,12 @@ mod erc721 {
 
             let owner = token_owner.get(id).ok_or(Error::TokenNotFound)?;
             if owner != caller {
-                return Err(Error::NotOwner)
+                return Err(Error::NotOwner);
             };
 
             let count = owned_tokens_count
                 .get(caller)
-                .map(|c| c - 1)
+                .map(|c| c.checked_sub(1).unwrap())
                 .ok_or(Error::CannotFetchValue)?;
             owned_tokens_count.insert(caller, &count);
             token_owner.remove(id);
@@ -249,11 +244,12 @@ mod erc721 {
             id: TokenId,
         ) -> Result<(), Error> {
             let caller = self.env().caller();
-            if !self.exists(id) {
-                return Err(Error::TokenNotFound)
+            let owner = self.owner_of(id).ok_or(Error::TokenNotFound)?;
+            if !self.approved_or_owner(caller, id, owner) {
+                return Err(Error::NotApproved);
             };
-            if !self.approved_or_owner(Some(caller), id) {
-                return Err(Error::NotApproved)
+            if owner != *from {
+                return Err(Error::NotOwner);
             };
             self.clear_approval(id);
             self.remove_token_from(from, id)?;
@@ -279,12 +275,12 @@ mod erc721 {
             } = self;
 
             if !token_owner.contains(id) {
-                return Err(Error::TokenNotFound)
+                return Err(Error::TokenNotFound);
             }
 
             let count = owned_tokens_count
                 .get(from)
-                .map(|c| c - 1)
+                .map(|c| c.checked_sub(1).unwrap())
                 .ok_or(Error::CannotFetchValue)?;
             owned_tokens_count.insert(from, &count);
             token_owner.remove(id);
@@ -301,14 +297,17 @@ mod erc721 {
             } = self;
 
             if token_owner.contains(id) {
-                return Err(Error::TokenExists)
+                return Err(Error::TokenExists);
             }
 
             if *to == AccountId::from([0x0; 32]) {
-                return Err(Error::NotAllowed)
+                return Err(Error::NotAllowed);
             };
 
-            let count = owned_tokens_count.get(to).map(|c| c + 1).unwrap_or(1);
+            let count = owned_tokens_count
+                .get(to)
+                .map(|c| c.checked_add(1).unwrap())
+                .unwrap_or(1);
 
             owned_tokens_count.insert(to, &count);
             token_owner.insert(id, to);
@@ -324,7 +323,7 @@ mod erc721 {
         ) -> Result<(), Error> {
             let caller = self.env().caller();
             if to == caller {
-                return Err(Error::NotAllowed)
+                return Err(Error::NotAllowed);
             }
             self.env().emit_event(ApprovalForAll {
                 owner: caller,
@@ -345,19 +344,17 @@ mod erc721 {
         /// the message's sender.
         fn approve_for(&mut self, to: &AccountId, id: TokenId) -> Result<(), Error> {
             let caller = self.env().caller();
-            let owner = self.owner_of(id);
-            if !(owner == Some(caller)
-                || self.approved_for_all(owner.expect("Error with AccountId"), caller))
-            {
-                return Err(Error::NotAllowed)
+            let owner = self.owner_of(id).ok_or(Error::TokenNotFound)?;
+            if !(owner == caller || self.approved_for_all(owner, caller)) {
+                return Err(Error::NotAllowed);
             };
 
             if *to == AccountId::from([0x0; 32]) {
-                return Err(Error::NotAllowed)
+                return Err(Error::NotAllowed);
             };
 
             if self.token_approvals.contains(id) {
-                return Err(Error::CannotInsert)
+                return Err(Error::CannotInsert);
             } else {
                 self.token_approvals.insert(id, to);
             }
@@ -388,20 +385,16 @@ mod erc721 {
 
         /// Returns true if the `AccountId` `from` is the owner of token `id`
         /// or it has been approved on behalf of the token `id` owner.
-        fn approved_or_owner(&self, from: Option<AccountId>, id: TokenId) -> bool {
-            let owner = self.owner_of(id);
-            from != Some(AccountId::from([0x0; 32]))
+        fn approved_or_owner(
+            &self,
+            from: AccountId,
+            id: TokenId,
+            owner: AccountId,
+        ) -> bool {
+            from != AccountId::from([0x0; 32])
                 && (from == owner
-                    || from == self.token_approvals.get(id)
-                    || self.approved_for_all(
-                        owner.expect("Error with AccountId"),
-                        from.expect("Error with AccountId"),
-                    ))
-        }
-
-        /// Returns true if token `id` exists or false if it does not.
-        fn exists(&self, id: TokenId) -> bool {
-            self.token_owner.contains(id)
+                    || self.token_approvals.get(id) == Some(from)
+                    || self.approved_for_all(owner, from))
         }
     }
 
@@ -563,6 +556,16 @@ mod erc721 {
         }
 
         #[ink::test]
+        fn approve_nonexistent_token_should_fail() {
+            let accounts =
+                ink::env::test::default_accounts::<ink::env::DefaultEnvironment>();
+            // Create a new contract instance.
+            let mut erc721 = Erc721::new();
+            // Approve transfer of nonexistent token id 1
+            assert_eq!(erc721.approve(accounts.bob, 1), Err(Error::TokenNotFound));
+        }
+
+        #[ink::test]
         fn not_approved_transfer_should_fail() {
             let accounts =
                 ink::env::test::default_accounts::<ink::env::DefaultEnvironment>();
@@ -630,6 +633,45 @@ mod erc721 {
             // Try burning this token with a different account
             set_caller(accounts.eve);
             assert_eq!(erc721.burn(1), Err(Error::NotOwner));
+        }
+
+        #[ink::test]
+        fn transfer_from_fails_not_owner() {
+            let accounts =
+                ink::env::test::default_accounts::<ink::env::DefaultEnvironment>();
+            // Create a new contract instance.
+            let mut erc721 = Erc721::new();
+            // Create token Id 1 for Alice
+            assert_eq!(erc721.mint(1), Ok(()));
+            // Bob can transfer alice's tokens
+            assert_eq!(erc721.set_approval_for_all(accounts.bob, true), Ok(()));
+            // Set caller to Frank
+            set_caller(accounts.frank);
+            // Create token Id 2 for Frank
+            assert_eq!(erc721.mint(2), Ok(()));
+            // Set caller to Bob
+            set_caller(accounts.bob);
+            // Bob makes invalid call to transfer_from (Alice is token owner, not Frank)
+            assert_eq!(
+                erc721.transfer_from(accounts.frank, accounts.bob, 1),
+                Err(Error::NotOwner)
+            );
+        }
+
+        #[ink::test]
+        fn transfer_fails_not_owner() {
+            let accounts =
+                ink::env::test::default_accounts::<ink::env::DefaultEnvironment>();
+            // Create a new contract instance.
+            let mut erc721 = Erc721::new();
+            // Create token Id 1 for Alice
+            assert_eq!(erc721.mint(1), Ok(()));
+            // Bob can transfer alice's tokens
+            assert_eq!(erc721.set_approval_for_all(accounts.bob, true), Ok(()));
+            // Set caller to bob
+            set_caller(accounts.bob);
+            // Bob makes invalid call to transfer (he is not token owner, Alice is)
+            assert_eq!(erc721.transfer(accounts.bob, 1), Err(Error::NotOwner));
         }
 
         fn set_caller(sender: AccountId) {

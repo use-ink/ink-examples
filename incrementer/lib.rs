@@ -1,5 +1,10 @@
 #![cfg_attr(not(feature = "std"), no_std, no_main)]
 
+pub use self::incrementer::{
+    Incrementer,
+    IncrementerRef,
+};
+
 #[ink::contract]
 mod incrementer {
     #[ink(storage)]
@@ -20,7 +25,7 @@ mod incrementer {
 
         #[ink(message)]
         pub fn inc(&mut self, by: i32) {
-            self.value += by;
+            self.value = self.value.checked_add(by).unwrap();
         }
 
         #[ink(message)]

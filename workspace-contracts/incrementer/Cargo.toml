@@ -1,15 +1,12 @@
 [package]
 name = "incrementer"
-version = "4.3.0"
+version = "5.0.0-rc.1"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 publish = false
 
 [dependencies]
 ink = { workspace = true }
-
-scale = { workspace = true, package = "parity-scale-codec" }
-scale-info = { workspace = true, optional = true }
 
 [lib]
 path = "lib.rs"
@@ -18,7 +15,5 @@ path = "lib.rs"
 default = ["std"]
 std = [
     "ink/std",
-    "scale/std",
-    "scale-info/std",
 ]
 ink-as-dependency = []
