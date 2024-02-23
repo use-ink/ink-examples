@@ -15,7 +15,6 @@
     "contract-transfer": "pnpm --filter contract-transfer dev",
     "erc20": "pnpm --filter erc20 dev",
     "erc721": "pnpm --filter erc721 dev",
-    "flipper": "pnpm --filter flipper dev",
     "incrementer": "pnpm --filter incrementer dev"
   },
   "packages": [
