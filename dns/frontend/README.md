@@ -14,3 +14,11 @@ pnpm dev
 ## Change the Code
 
 The actual interaction with the contract is all contained in the `./src/App.tsx` file. Every other file in the folder is only relevant for styling and bundling.
+
+## Demo
+
+![demo](https://raw.githubusercontent.com/paritytech/ink-examples/pz/dns-frontent-example/dns/frontend/demo.gif)
+
+## Demo 2
+
+![demo](demo.gif)
