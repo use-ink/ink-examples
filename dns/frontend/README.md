@@ -17,8 +17,4 @@ The actual interaction with the contract is all contained in the `./src/App.tsx`
 
 ## Demo
 
-![demo](https://raw.githubusercontent.com/paritytech/ink-examples/pz/dns-frontent-example/dns/frontend/demo.gif)
-
-## Demo 2
-
-![demo](demo.gif)
+<img src="demo.gif" width="600px" />
