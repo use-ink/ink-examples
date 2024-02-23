@@ -14,3 +14,8 @@ pnpm dev
 ## Change the Code
 
 The actual interaction with the contract is all contained in the `./src/App.tsx` file. Every other file in the folder is only relevant for styling and bundling.
+
+
+## Demo
+
+<img src="demo.gif" width="600px" />
