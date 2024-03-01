@@ -1,12 +1,12 @@
 [package]
 name = "erc721"
-version = "5.0.0-rc.1"
+version = "5.0.0-rc.2"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 publish = false
 
 [dependencies]
-ink = { version = "5.0.0-rc.1", default-features = false }
+ink = { version = "5.0.0-rc.2", default-features = false }
 
 [lib]
 path = "lib.rs"

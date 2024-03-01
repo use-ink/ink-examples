@@ -8,7 +8,7 @@ Have a look at the different examples to better understand how to use ink! to bu
 
 ### Can I add a new example here?
 
-Please don't add them here, but create a Pull Request to the `integration-tests` folder in [the ink! repository](https://github.com/paritytech/ink) instead.
+Please don't add them here, but create a Pull Request to the `integration-tests/public` folder in [the ink! repository](https://github.com/paritytech/ink) instead.
 The content of that folder is synchronized with this repository on new releases.
 
 ## Preparation
