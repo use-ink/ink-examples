@@ -6,7 +6,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-ink = { path = "../../../../../crates/ink", default-features = false }
+ink = { version = "5.0.0-rc.2", default-features = false }
 
 [lib]
 path = "lib.rs"
