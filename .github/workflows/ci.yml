@@ -52,22 +52,20 @@ jobs:
             .vscode/**
             **/.gitignore
             **/*.md
-            multi-contract-caller/**
             upgradeable-contracts/**
             workspace-contracts/**
             ui/**
             **/frontend/**
           json: true
 
-      - name: Look for changes in multi and upgradable contracts
-        id: CHANGED_MULTI_AND_UPGRADEABLE_CONTRACTS
+      - name: Look for changes in upgradable contracts
+        id: CHANGED_UPGRADEABLE_CONTRACTS
         uses: tj-actions/changed-files@v41
         with:
           dir_names: "true"
           dir_names_exclude_current_dir: "true"
           dir_names_max_depth: 2
           files: |
-            multi-contract-caller/**
             upgradeable-contracts/**
           files_ignore: |
             **/.gitignore
@@ -103,7 +101,7 @@ jobs:
         run: |
           ALL_CHANGED_CONTRACTS=$(jq -s 'add' \
                                 <(echo "${{ steps.CHANGED_CONTRACTS.outputs.all_changed_files }}") \
-                                <(echo "${{ steps.CHANGED_MULTI_AND_UPGRADEABLE_CONTRACTS.outputs.all_changed_files }}"))
+                                <(echo "${{ steps.CHANGED_UPGRADEABLE_CONTRACTS.outputs.all_changed_files }}"))
 
           if [ ${{steps.CHANGED_WORKSPACE_CONTRACTS.outputs.all_changed_files }} = "[]" ]
           then
