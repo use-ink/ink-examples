@@ -1,12 +1,12 @@
 [package]
 name = "basic-contract-caller"
-version = "5.0.0-rc.1"
+version = "5.0.0-rc.2"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 publish = false
 
 [dependencies]
-ink = { version = "5.0.0-rc.1", default-features = false }
+ink = { version = "5.0.0-rc.2", default-features = false }
 
 # Note: We **need** to specify the `ink-as-dependency` feature.
 #
@@ -14,7 +14,7 @@ ink = { version = "5.0.0-rc.1", default-features = false }
 other-contract = { path = "other-contract", default-features = false, features = ["ink-as-dependency"] }
 
 [dev-dependencies]
-ink_e2e = { version = "5.0.0-rc.1" }
+ink_e2e = { version = "5.0.0-rc.2" }
 
 [lib]
 path = "lib.rs"
