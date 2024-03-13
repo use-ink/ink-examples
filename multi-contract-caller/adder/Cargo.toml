@@ -1,11 +1,11 @@
 [package]
 name = "adder"
-version = "5.0.0-rc.2"
+version = "5.0.0"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 
 [dependencies]
-ink = { version = "5.0.0-rc.2", default-features = false }
+ink = { version = "5.0.0", default-features = false }
 
 accumulator = { path = "../accumulator", default-features = false, features = ["ink-as-dependency"] }
 
