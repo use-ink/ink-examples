@@ -1,0 +1,42 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+
+  body {
+    @apply font-sans text-base antialiased leading-6;
+  }
+
+  button, [type='submit'], [type='button'] {
+    @apply disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-50 bg-purple-500 hover:bg-purple-400  text-white font-bold py-2 px-4 border-b-4 border-purple-700 hover:border-purple-500 disabled:border-gray-500 rounded active:border-none active:mt-1;
+  }
+
+  a{
+    @apply text-purple-500   hover:text-purple-700  active:text-purple-700;
+  }
+
+  select {
+    @apply bg-purple-500 px-4 my-1 py-2 rounded text-white font-bold border-b-4 border-purple-700;
+  }
+
+  input {
+    @apply bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500;
+  }
+
+  #root{
+  }
+
+  .card {
+    @apply flex flex-col gap-4 py-4 px-4 w-full rounded-lg overflow-hidden border-2 border-slate-300 ;
+  }
+
+  .error {
+    @apply bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative;
+  }
+
+  .success {
+    @apply bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative;
+  }
+}

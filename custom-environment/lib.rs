@@ -8,14 +8,15 @@ use ink::env::{
 /// Our custom environment diverges from the `DefaultEnvironment` in the event topics
 /// limit.
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
+#[ink::scale_derive(TypeInfo)]
 pub enum EnvironmentWithManyTopics {}
 
 impl Environment for EnvironmentWithManyTopics {
-    // We allow for 5 topics in the event, therefore the contract pallet's schedule must
-    // allow for 6 of them (to allow the implicit topic for the event signature).
+    // We allow for 3 topics in the event, including the implicit topic for the event
+    // signature. Therefore, the contract pallet's schedule must also allow for at
+    // least 3 of them.
     const MAX_EVENT_TOPICS: usize =
-        <DefaultEnvironment as Environment>::MAX_EVENT_TOPICS + 1;
+        <DefaultEnvironment as Environment>::MAX_EVENT_TOPICS - 1;
 
     type AccountId = <DefaultEnvironment as Environment>::AccountId;
     type Balance = <DefaultEnvironment as Environment>::Balance;
@@ -42,12 +43,6 @@ mod runtime_call {
         first_topic: Balance,
         #[ink(topic)]
         second_topic: Balance,
-        #[ink(topic)]
-        third_topic: Balance,
-        #[ink(topic)]
-        fourth_topic: Balance,
-        #[ink(topic)]
-        fifth_topic: Balance,
     }
 
     impl Topics {
@@ -67,8 +62,6 @@ mod runtime_call {
     mod tests {
         use super::*;
 
-        type Event = <Topics as ink::reflect::ContractEventBase>::Type;
-
         #[ink::test]
         fn emits_event_with_many_topics() {
             let mut contract = Topics::new();
@@ -77,53 +70,41 @@ mod runtime_call {
             let emitted_events = ink::env::test::recorded_events().collect::<Vec<_>>();
             assert_eq!(emitted_events.len(), 1);
 
-            let emitted_event =
-                <Event as scale::Decode>::decode(&mut &emitted_events[0].data[..])
-                    .expect("encountered invalid contract event data buffer");
+            let emitted_event = <EventWithTopics as ink::scale::Decode>::decode(
+                &mut &emitted_events[0].data[..],
+            );
 
-            assert!(matches!(
-                emitted_event,
-                Event::EventWithTopics(EventWithTopics { .. })
-            ));
+            assert!(emitted_event.is_ok());
         }
     }
 
     #[cfg(all(test, feature = "e2e-tests"))]
     mod e2e_tests {
         use super::*;
-
-        use ink_e2e::MessageBuilder;
+        use ink_e2e::ContractsBackend;
 
         type E2EResult<T> = Result<T, Box<dyn std::error::Error>>;
 
         #[cfg(feature = "permissive-node")]
         #[ink_e2e::test(environment = crate::EnvironmentWithManyTopics)]
-        async fn calling_custom_environment_works(
-            mut client: Client<C, E>,
+        async fn calling_custom_environment_works<Client: E2EBackend>(
+            mut client: Client,
         ) -> E2EResult<()> {
             // given
-            let constructor = TopicsRef::new();
-            let contract_acc_id = client
-                .instantiate(
-                    "custom-environment",
-                    &ink_e2e::alice(),
-                    constructor,
-                    0,
-                    None,
-                )
+            let mut constructor = TopicsRef::new();
+            let contract = client
+                .instantiate("custom-environment", &ink_e2e::alice(), &mut constructor)
+                .submit()
                 .await
-                .expect("instantiate failed")
-                .account_id;
+                .expect("instantiate failed");
+            let mut call_builder = contract.call_builder::<Topics>();
 
             // when
-            let message =
-                MessageBuilder::<crate::EnvironmentWithManyTopics, TopicsRef>::from_account_id(
-                    contract_acc_id,
-                )
-                .call(|caller| caller.trigger());
+            let message = call_builder.trigger();
 
             let call_res = client
-                .call(&ink_e2e::alice(), message, 0, None)
+                .call(&ink_e2e::alice(), &message)
+                .submit()
                 .await
                 .expect("call failed");
 
@@ -135,33 +116,24 @@ mod runtime_call {
 
         #[cfg(not(feature = "permissive-node"))]
         #[ink_e2e::test(environment = crate::EnvironmentWithManyTopics)]
-        async fn calling_custom_environment_fails_if_incompatible_with_node(
-            mut client: Client<C, E>,
+        async fn calling_custom_environment_fails_if_incompatible_with_node<
+            Client: E2EBackend,
+        >(
+            mut client: Client,
         ) -> E2EResult<()> {
             // given
-            let constructor = TopicsRef::new();
-            let contract_acc_id = client
-                .instantiate(
-                    "custom-environment",
-                    &ink_e2e::alice(),
-                    constructor,
-                    0,
-                    None,
-                )
+            let mut constructor = TopicsRef::new();
+            let contract = client
+                .instantiate("custom-environment", &ink_e2e::alice(), &mut constructor)
+                .submit()
                 .await
-                .expect("instantiate failed")
-                .account_id;
+                .expect("instantiate failed");
+            let mut call_builder = contract.call_builder::<Topics>();
 
-            let message =
-                MessageBuilder::<crate::EnvironmentWithManyTopics, TopicsRef>::from_account_id(
-                    contract_acc_id,
-                )
-                    .call(|caller| caller.trigger());
+            let message = call_builder.trigger();
 
             // when
-            let call_res = client
-                .call_dry_run(&ink_e2e::alice(), &message, 0, None)
-                .await;
+            let call_res = client.call(&ink_e2e::alice(), &message).dry_run().await;
 
             // then
             assert!(call_res.is_err());

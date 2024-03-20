@@ -1,20 +1,17 @@
 [package]
 name = "trait-incrementer-caller"
-version = "4.0.0"
+version = "5.0.0"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 publish = false
 
 [dependencies]
-ink = { version = "4.3", default-features = false }
-
-scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
-scale-info = { version = "2.5", default-features = false, features = ["derive"], optional = true }
+ink = { version = "5.0.0", default-features = false }
 
 dyn-traits = { path = "./traits", default-features = false }
 
 [dev-dependencies]
-ink_e2e = { version = "4.3" }
+ink_e2e = { version = "5.0.0" }
 trait-incrementer = { path = "./contracts/incrementer", default-features = false, features = ["ink-as-dependency"] }
 
 [lib]
@@ -24,8 +21,6 @@ path = "lib.rs"
 default = ["std"]
 std = [
     "ink/std",
-    "scale/std",
-    "scale-info/std",
     "dyn-traits/std",
 ]
 e2e-tests = []
