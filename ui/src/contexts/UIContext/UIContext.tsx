@@ -58,7 +58,7 @@ export const UIProvider: React.FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
     setLedEffect(
       new Howl({
-        src: 'https://github.com/paritytech/ink-examples/raw/sr/submarine/ui/src/assets/audio/led.wav',
+        src: 'https://github.com/use-ink/ink-examples/raw/sr/submarine/ui/src/assets/audio/led.wav',
         volume: 0.8,
         html5: true,
       }),
@@ -66,7 +66,7 @@ export const UIProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
     setWaterSounds(
       new Howl({
-        src: 'https://github.com/paritytech/ink-examples/raw/sr/submarine/ui/src/assets/audio/underwater.mp3',
+        src: 'https://github.com/use-ink/ink-examples/raw/sr/submarine/ui/src/assets/audio/underwater.mp3',
         loop: true,
         volume: 1,
         html5: true,
