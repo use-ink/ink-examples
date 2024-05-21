@@ -8,12 +8,12 @@ Have a look at the different examples to better understand how to use ink! to bu
 
 ### Can I add a new example here?
 
-Please don't add them here, but create a Pull Request to the `integration-tests/public` folder in [the ink! repository](https://github.com/paritytech/ink) instead.
+Please don't add them here, but create a Pull Request to the `integration-tests/public` folder in [the ink! repository](https://github.com/use-ink/ink) instead.
 The content of that folder is synchronized with this repository on new releases.
 
 ## Preparation
 
-For building the example smart contracts found in this folder you will need to have [`cargo-contract`](https://github.com/paritytech/cargo-contract) installed.
+For building the example smart contracts found in this folder you will need to have [`cargo-contract`](https://github.com/use-ink/cargo-contract) installed.
 
 ```sh
 cargo install cargo-contract --force

@@ -171,7 +171,7 @@ jobs:
         uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
         with:
           crate: cargo-contract
-          git: https://github.com/paritytech/cargo-contract.git
+          git: https://github.com/use-ink/cargo-contract.git
           cache-key: ${{ matrix.platform }}
 
       - name: Install cargo-dylint
