@@ -11,7 +11,7 @@ frame-support = { version = "32.0.0", default-features = false }
 pallet-balances = { version = "33.0.0", default-features = false }
 
 [dev-dependencies]
-ink_e2e = { path = "../../../crates/e2e", features = ["sandbox"] }
+ink_e2e = { version = "5.1.0", features = ["sandbox"] }
 
 [lib]
 path = "lib.rs"
