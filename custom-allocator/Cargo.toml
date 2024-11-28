@@ -1,6 +1,6 @@
 [package]
 name = "custom-allocator"
-version = "5.0.0"
+version = "5.1.0"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2021"
 publish = false
@@ -8,13 +8,13 @@ publish = false
 [dependencies]
 # We're going to use a different allocator than the one provided by ink!. To do that we
 # first need to disable the included memory allocator.
-ink = { version = "5.0.0", default-features = false, features = ["no-allocator"]  }
+ink = { version = "5.1.0", default-features = false, features = ["no-allocator"]  }
 
 # This is going to be our new global memory allocator.
 dlmalloc = {version = "0.2", default-features = false, features = ["global"] }
 
 [dev-dependencies]
-ink_e2e = { version = "5.0.0" }
+ink_e2e = { version = "5.1.0" }
 
 [lib]
 path = "lib.rs"

@@ -3,7 +3,7 @@
 #![cfg_attr(not(feature = "std"), no_std, no_main)]
 
 #[ink::contract]
-mod lazyvec_integration_tests {
+mod lazyvec {
     use ink::{
         prelude::vec::Vec,
         storage::StorageVec,
@@ -103,11 +103,7 @@ mod lazyvec_integration_tests {
             // given
             let mut constructor = LazyVectorRef::default();
             let contract = client
-                .instantiate(
-                    "lazyvec-integration-tests",
-                    &ink_e2e::alice(),
-                    &mut constructor,
-                )
+                .instantiate("lazyvec", &ink_e2e::alice(), &mut constructor)
                 .submit()
                 .await
                 .expect("instantiate failed");

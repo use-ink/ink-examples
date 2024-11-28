@@ -4,5 +4,5 @@ exclude = [".cargo", "target"]
 resolver = "2"
 
 [workspace.dependencies]
-ink = { version = "5.0.0", default-features = false }
-ink_e2e = "5.0.0"
+ink = { version = "5.1.0", default-features = false }
+ink_e2e = "5.1.0"
