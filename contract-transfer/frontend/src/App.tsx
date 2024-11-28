@@ -46,7 +46,7 @@ function App() {
   return (
     <InkLayout
       className='md:py-12 md:p-6 p-4 h-screen flex items-center justify-center'
-      animationSrc='https://raw.githubusercontent.com/paritytech/ink-workshop/d819d10a35b2ac3d2bff4f77a96701a527b3ad3a/frontend/public/dark-sea-creatures.json'
+      animationSrc='https://raw.githubusercontent.com/use-ink/ink-workshop/d819d10a35b2ac3d2bff4f77a96701a527b3ad3a/frontend/public/dark-sea-creatures.json'
     >
       <div className='flex flex-col justify-center items-center h-full'>
         <Card className='mx-auto p-6 flex flex-col w-full max-w-md backdrop-blur-sm bg-opacity-70'>
