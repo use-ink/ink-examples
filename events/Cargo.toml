@@ -1,19 +1,19 @@
 [package]
 name = "events"
-version = "5.1.0"
+version = "6.0.0-alpha"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2021"
 publish = false
 
 [dependencies]
-ink = { version = "5.1.0", default-features = false }
+ink = { path = "../../../crates/ink", default-features = false }
 
 event-def = { path = "event-def", default-features = false }
 event-def2 = { path = "event-def2", default-features = false }
 event-def-unused = { path = "event-def-unused", default-features = false }
 
 [dev-dependencies]
-ink_e2e = { version = "5.1.0" }
+ink_e2e = { path = "../../../crates/e2e" }
 
 [lib]
 path = "lib.rs"
@@ -28,8 +28,3 @@ std = [
 ]
 ink-as-dependency = []
 e2e-tests = []
-
-[profile.test]
-# Need this for linkme crate to work for the event metadata unit test.
-# See https://github.com/dtolnay/linkme/issues/61#issuecomment-1503653702
-lto = "thin"

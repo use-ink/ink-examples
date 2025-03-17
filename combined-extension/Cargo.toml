@@ -1,12 +1,12 @@
 [package]
 name = "combined_extension"
-version = "5.1.0"
+version = "6.0.0-alpha"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2021"
 publish = false
 
 [dependencies]
-ink = { version = "5.1.0", default-features = false }
+ink = { path = "../../../crates/ink", default-features = false }
 psp22_extension = { path = "../psp22-extension", default-features = false, features = ["ink-as-dependency"] }
 rand_extension = { path = "../rand-extension", default-features = false, features = ["ink-as-dependency"] }
 

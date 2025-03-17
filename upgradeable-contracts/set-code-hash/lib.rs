@@ -37,10 +37,13 @@ pub mod incrementer {
         #[ink(message)]
         pub fn inc(&mut self) {
             self.count = self.count.checked_add(1).unwrap();
+            /*
+            // todo
             ink::env::debug_println!(
                 "The new count is {}, it was modified using the original contract code.",
                 self.count
             );
+            */
         }
 
         /// Returns the counter value which is stored in this contract's storage.
@@ -57,11 +60,12 @@ pub mod incrementer {
         ///
         /// In a production contract you would do some authorization here!
         #[ink(message)]
-        pub fn set_code(&mut self, code_hash: Hash) {
+        pub fn set_code(&mut self, code_hash: ink::H256) {
             self.env().set_code_hash(&code_hash).unwrap_or_else(|err| {
                 panic!("Failed to `set_code_hash` to {code_hash:?} due to {err:?}")
             });
-            ink::env::debug_println!("Switched code hash to {:?}.", code_hash);
+            // todo
+            // ink::env::debug_println!("Switched code hash to {:?}.", code_hash);
         }
     }
 
@@ -106,7 +110,6 @@ pub mod incrementer {
                 .expect("uploading `updated_incrementer` failed")
                 .code_hash;
 
-            let new_code_hash = new_code_hash.as_ref().try_into().unwrap();
             let set_code = call_builder.set_code(new_code_hash);
 
             let _set_code_result = client
