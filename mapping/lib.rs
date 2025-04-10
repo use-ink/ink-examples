@@ -5,6 +5,7 @@
 #[ink::contract]
 mod mapping {
     use ink::{
+        H160,
         prelude::{
             string::String,
             vec::Vec,
@@ -23,9 +24,9 @@ mod mapping {
     #[derive(Default)]
     pub struct Mappings {
         /// Mapping from owner to number of owned token.
-        balances: Mapping<AccountId, Balance>,
+        balances: Mapping<H160, Balance>,
         /// Mapping from owner to aliases.
-        names: Mapping<AccountId, Vec<String>>,
+        names: Mapping<H160, Vec<String>>,
     }
 
     impl Mappings {

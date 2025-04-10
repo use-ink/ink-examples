@@ -6,7 +6,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-ink = { path = "../../../crates/ink", default-features = false }
+ink = { git = "https://github.com/use-ink/ink.git", branch = "master", version = "6.0.0-alpha", default-features = false, features = ["unstable-hostfn"] }
 
 # Note: We **need** to specify the `ink-as-dependency` feature.
 #
@@ -15,7 +15,7 @@ other-contract = { path = "other-contract", default-features = false, features =
 pallet-revive-uapi = { git = "https://github.com/paritytech/polkadot-sdk", rev = "f8c90b2a01ec77579bccd21ae17bd6ff2eeffd6a", default-features = false, features = ["unstable-hostfn"] }
 
 [dev-dependencies]
-ink_e2e = { path = "../../../crates/e2e" }
+ink_e2e = { git = "https://github.com/use-ink/ink.git", branch = "master", version = "6.0.0-alpha", default-features = false }
 
 [lib]
 path = "lib.rs"
