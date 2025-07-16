@@ -6,7 +6,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-ink = { version = "6.0.0-alpha", default-features = false, features = ["unstable-hostfn"] }
+ink = { git = "https://github.com/use-ink/ink", branch = "master", default-features = false, features = ["unstable-hostfn"] }
 sp-runtime = { git = "https://github.com/paritytech/polkadot-sdk", rev = "f8c90b2a01ec77579bccd21ae17bd6ff2eeffd6a", default-features = false }
 
 # We need to explicitly turn off some of the `sp-io` features, to avoid conflicts
@@ -18,7 +18,7 @@ sp-io = { git = "https://github.com/paritytech/polkadot-sdk", rev = "f8c90b2a01e
 sp-runtime-interface = { git = "https://github.com/paritytech/polkadot-sdk", rev = "f8c90b2a01ec77579bccd21ae17bd6ff2eeffd6a", default-features = false, features = ["disable_target_static_assertions"] }
 
 [dev-dependencies]
-ink_e2e = { version = "6.0.0-alpha", default-features = false }
+ink_e2e = { git = "https://github.com/use-ink/ink", branch = "master", default-features = false }
 
 [lib]
 path = "lib.rs"

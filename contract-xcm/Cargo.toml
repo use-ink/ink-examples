@@ -6,12 +6,12 @@ edition = "2021"
 publish = false
 
 [dependencies]
-ink = { version = "6.0.0-alpha", default-features = false, features = ["unstable-hostfn"] }
+ink = { git = "https://github.com/use-ink/ink", branch = "master", default-features = false, features = ["unstable-hostfn"] }
 frame-support = { git = "https://github.com/paritytech/polkadot-sdk", rev = "f8c90b2a01ec77579bccd21ae17bd6ff2eeffd6a", default-features = false }
 pallet-balances = { git = "https://github.com/paritytech/polkadot-sdk", rev = "f8c90b2a01ec77579bccd21ae17bd6ff2eeffd6a", default-features = false }
 
 [dev-dependencies]
-ink_e2e = { version = "6.0.0-alpha", default-features = false, features = ["sandbox"] }
+ink_e2e = { git = "https://github.com/use-ink/ink", branch = "master", default-features = false, features = ["sandbox"] }
 
 [lib]
 path = "lib.rs"
