@@ -28,11 +28,11 @@ edition = "2021"
 publish = false
 
 [dependencies]
-ink = { version = "6.0.0-alpha", default-features = false, features = ["unstable-hostfn"] }
+ink = { git = "https://github.com/use-ink/ink", branch = "master", default-features = false, features = ["unstable-hostfn"] }
 flipper-traits = { path = "traits", default-features = false }
 
 [dev-dependencies]
-ink_e2e = { version = "6.0.0-alpha", default-features = false, features = ["sandbox"] }
+ink_e2e = { git = "https://github.com/use-ink/ink", branch = "master", default-features = false, features = ["sandbox"] }
 sandbox-runtime = { path = "sandbox-runtime", default-features = false }
 scale-value = "0.18.0"
 # can't use workspace dependency because of `cargo-contract` build not
