@@ -7,6 +7,7 @@ mod basic_contract_caller {
     /// Note that the other contract must have re-exported it (`pub use
     /// OtherContractRef`) for us to have access to it.
     use other_contract::OtherContractRef;
+    use ink::{H256, U256};
 
     #[ink(storage)]
     pub struct BasicContractCaller {
@@ -19,11 +20,11 @@ mod basic_contract_caller {
         ///
         /// To do this we will use the uploaded `code_hash` of `OtherContract`.
         #[ink(constructor)]
-        pub fn new(other_contract_code_hash: Hash) -> Self {
+        pub fn new(other_contract_code_hash: H256) -> Self {
             let other_contract = OtherContractRef::new(true)
                 .code_hash(other_contract_code_hash)
-                .endowment(0)
-                .salt_bytes([0xDE, 0xAD, 0xBE, 0xEF])
+                .endowment(U256::from(0))
+                .salt_bytes(Some([1;32]))
                 .instantiate();
 
             Self { other_contract }

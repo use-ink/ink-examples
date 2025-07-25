@@ -1,24 +1,24 @@
 [package]
 name = "call-runtime"
-version = "5.1.0"
+version = "6.0.0-alpha"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2021"
 publish = false
 
 [dependencies]
-ink = { version = "5.1.0", default-features = false }
+ink = { version = "6.0.0-alpha", default-features = false, features = ["unstable-hostfn"] }
+sp-runtime = { git = "https://github.com/paritytech/polkadot-sdk", rev = "f8c90b2a01ec77579bccd21ae17bd6ff2eeffd6a", default-features = false }
 
-# Substrate
-#
 # We need to explicitly turn off some of the `sp-io` features, to avoid conflicts
 # (especially for global allocator).
-#
 # See also: https://substrate.stackexchange.com/questions/4733/error-when-compiling-a-contract-using-the-xcm-chain-extension.
-sp-io = { version = "23.0.0", default-features = false, features = ["disable_panic_handler", "disable_oom", "disable_allocator"] }
-sp-runtime = { version = "24.0.0", default-features = false }
+#
+# For `sp-runtime-interface` we need to turn off static asserts.
+sp-io = { git = "https://github.com/paritytech/polkadot-sdk", rev = "f8c90b2a01ec77579bccd21ae17bd6ff2eeffd6a", default-features = false, features = ["disable_panic_handler", "disable_oom", "disable_allocator"] }
+sp-runtime-interface = { git = "https://github.com/paritytech/polkadot-sdk", rev = "f8c90b2a01ec77579bccd21ae17bd6ff2eeffd6a", default-features = false, features = ["disable_target_static_assertions"] }
 
 [dev-dependencies]
-ink_e2e = { version = "5.1.0" }
+ink_e2e = { version = "6.0.0-alpha", default-features = false }
 
 [lib]
 path = "lib.rs"
@@ -28,6 +28,7 @@ default = ["std"]
 std = [
     "ink/std",
     "sp-runtime/std",
+    "sp-runtime-interface/std",
     "sp-io/std",
 ]
 ink-as-dependency = []

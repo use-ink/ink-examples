@@ -2,6 +2,8 @@
 
 #[ink::contract]
 pub mod flipper {
+    use ink::U256;
+
     #[ink(storage)]
     pub struct Flipper {
         value: bool,
@@ -34,7 +36,7 @@ pub mod flipper {
 
         /// Returns the current balance of the Flipper.
         #[ink(message)]
-        pub fn get_contract_balance(&self) -> Balance {
+        pub fn get_contract_balance(&self) -> U256 {
             self.env().balance()
         }
     }

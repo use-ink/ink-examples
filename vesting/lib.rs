@@ -2,15 +2,16 @@
 
 #[ink::contract]
 mod vesting_contract {
+    use ink::{H160, U256};
 
     #[ink(storage)]
     pub struct VestingContract {
-        releasable_balance: Balance,
-        released_balance: Balance,
+        releasable_balance: U256,
+        released_balance: U256,
         duration_time: Timestamp,
         start_time: Timestamp,
-        beneficiary: AccountId,
-        owner: AccountId,
+        beneficiary: H160,
+        owner: H160,
     }
 
     /// Error for when the beneficiary is a zero address.
@@ -25,8 +26,8 @@ mod vesting_contract {
     /// To emit events when a release is made.
     #[ink(event)]
     pub struct Released {
-        value: Balance,
-        to: AccountId,
+        value: U256,
+        to: H160,
     }
 
     /// ## This is to set the following during contract deployment:
@@ -44,10 +45,10 @@ mod vesting_contract {
     impl VestingContract {
         #[ink(constructor, payable)]
         pub fn new(
-            beneficiary: AccountId,
+            beneficiary: H160,
             duration_time_in_sec: Timestamp,
         ) -> Result<Self, Error> {
-            if beneficiary == AccountId::from([0x0; 32]) {
+            if beneficiary == H160::from([0x0; 20]) {
                 return Err(Error::InvalidBeneficiary)
             }
 
@@ -57,8 +58,8 @@ mod vesting_contract {
 
             let start_time = Self::env().block_timestamp();
             let owner = Self::env().caller();
-            let releasable_balance = 0;
-            let released_balance = 0;
+            let releasable_balance = U256::from(0);
+            let released_balance = U256::from(0);
 
             Ok(Self {
                 duration_time,
@@ -77,13 +78,13 @@ mod vesting_contract {
 
         /// This returns this contract balance.
         #[ink(message)]
-        pub fn this_contract_balance(&self) -> Balance {
+        pub fn this_contract_balance(&self) -> U256 {
             self.env().balance()
         }
 
         /// This returns the beneficiary wallet addr.
         #[ink(message)]
-        pub fn beneficiary(&self) -> AccountId {
+        pub fn beneficiary(&self) -> H160 {
             self.beneficiary
         }
 
@@ -122,15 +123,15 @@ mod vesting_contract {
         /// This returns the amount of native token that
         /// has already vested.
         #[ink(message)]
-        pub fn released_balance(&self) -> Balance {
+        pub fn released_balance(&self) -> U256 {
             self.released_balance
         }
 
         /// This returns the amount of native token that
         /// is currently available for release.
         #[ink(message)]
-        pub fn releasable_balance(&self) -> Balance {
-            (self.vested_amount() as Balance)
+        pub fn releasable_balance(&self) -> U256 {
+            self.vested_amount()
                 .checked_sub(self.released_balance())
                 .unwrap()
         }
@@ -138,7 +139,7 @@ mod vesting_contract {
         /// This calculates the amount that has already vested
         /// but hasn't been released from the contract yet.
         #[ink(message)]
-        pub fn vested_amount(&self) -> Balance {
+        pub fn vested_amount(&self) -> U256 {
             self.vesting_schedule(self.this_contract_balance(), self.time_now())
         }
 
@@ -147,7 +148,7 @@ mod vesting_contract {
         #[ink(message)]
         pub fn release(&mut self) -> Result<(), Error> {
             let releasable = self.releasable_balance();
-            if releasable == 0 {
+            if releasable == U256::from(0) {
                 return Err(Error::ZeroReleasableBalance)
             }
 
@@ -191,19 +192,19 @@ mod vesting_contract {
         /// would have vested.
         pub fn vesting_schedule(
             &self,
-            total_allocation: Balance,
+            total_allocation: U256,
             current_time: Timestamp,
-        ) -> Balance {
+        ) -> U256 {
             if current_time < self.start_time() {
-                0
+                U256::from(0)
             } else if current_time >= self.end_time() {
                 return total_allocation
             } else {
                 return (total_allocation.checked_mul(
-                    (current_time.checked_sub(self.start_time()).unwrap()) as Balance,
+                    U256::from(current_time.checked_sub(self.start_time()).unwrap()),
                 ))
                 .unwrap()
-                .checked_div(self.duration_time() as Balance)
+                .checked_div(U256::from(self.duration_time()))
                 .unwrap()
             }
         }
