@@ -9,7 +9,7 @@ publish = false
 ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false, features = ["unstable-hostfn"] }
 
 [dev-dependencies]
-ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false }
+ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1" }
 
 [lib]
 path = "lib.rs"

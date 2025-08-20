@@ -220,8 +220,12 @@ jobs:
             cargo contract --version
 
       - name: Build ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os != 'Windows' && matrix.contract != 'workspace-contracts'
+        if: runner.os != 'Windows' && matrix.contract != 'workspace-contracts' && matrix.contract != 'custom-allocator'
         run: cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+
+      - name: Build ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
+        if: runner.os != 'Windows' && matrix.contract == 'custom-allocator'
+        run: cargo +nightly contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
 
       - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows' && matrix.contract != 'workspace-contracts' && matrix.contract != 'static-buffer'
