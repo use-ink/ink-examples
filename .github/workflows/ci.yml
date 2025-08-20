@@ -87,7 +87,6 @@ jobs:
             **/*.md
           json: true
 
-
       - name: List all changed files
         run: |
           echo " Changed workspace contracts " 
@@ -161,58 +160,59 @@ jobs:
           override: true
 
       - name: Rust Cache
-        uses: Swatinem/rust-cache@v2.7.0
+        uses: Swatinem/rust-cache@v2.8.0
         with:
           cache-on-failure: true
           workspaces: ${{ matrix.contract }}
           key: ${{ matrix.contract }}
 
-      - name: Install `cargo-contract` `main`
-        uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
+      - name: Install `cargo-contract`
+        uses: baptiste0928/cargo-install@v3
         with:
           crate: cargo-contract
           git: https://github.com/use-ink/cargo-contract.git
+          tag: v6.0.0-alpha.1
           cache-key: ${{ matrix.platform }}
 
       - name: Install cargo-dylint
-        uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
+        uses: baptiste0928/cargo-install@v3
         with:
           crate: cargo-dylint
           version: 1
 
       - name: Install dylint-link
-        uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2.2.0
+        uses: baptiste0928/cargo-install@v3
         with:
           crate: dylint-link
           version: 1
 
-      - name: Download and run latest `substrate-contracts-node` binary
+      - name: Download and run latest `ink-node` binary
         if: runner.os == 'Linux'
         env:
-          CONTRACTS_NODE_URL: https://github.com/paritytech/substrate-contracts-node/releases/latest/download/substrate-contracts-node-
+          CONTRACTS_NODE_URL: https://github.com/use-ink/ink-node/releases/latest/download/ink-node-
           CONTRACTS_NODE_OS: linux
         run: |
-          curl -L -o substrate-contracts-node.tar.gz "$CONTRACTS_NODE_URL$CONTRACTS_NODE_OS.tar.gz"
-          unzip substrate-contracts-node.zip && \
-          chmod +x artifacts/substrate-contracts-node-linux/substrate-contracts-node &&
-          ./artifacts/substrate-contracts-node-linux/substrate-contracts-node -linfo,runtime::contracts=debug  2>&1 | tee /tmp/contracts-node.log &
+          curl -L -o ink-node.tar.gz "$CONTRACTS_NODE_URL$CONTRACTS_NODE_OS.tar.gz"
+          unzip ink-node.zip && \
+          chmod +x artifacts/ink-node-linux/ink-node &&
+          ./artifacts/ink-node-linux/ink-node -linfo,runtime::revive=debug  2>&1 | tee /tmp/ink-node.log &
 
-      - name: Download and run latest `substrate-contracts-node` binary
+      - name: Download and run latest `ink-node` binary
         if: runner.os == 'macOS'
         env:
-          CONTRACTS_NODE_URL: https://github.com/paritytech/substrate-contracts-node/releases/latest/download/substrate-contracts-node-
+          CONTRACTS_NODE_URL: https://github.com/use-ink/ink-node/releases/latest/download/ink-node-
           CONTRACTS_NODE_OS: mac-universal
         run: |
-            curl -L -o substrate-contracts-node.tar.gz "$CONTRACTS_NODE_URL$CONTRACTS_NODE_OS.tar.gz"
-            unzip substrate-contracts-node.zip && \
-            chmod +x artifacts/substrate-contracts-node-mac/substrate-contracts-node &&
-            ./artifacts/substrate-contracts-node-mac/substrate-contracts-node -linfo,runtime::contracts=debug  2>&1 | tee /tmp/contracts-node.log &
+            curl -L -o ink-node.tar.gz "$CONTRACTS_NODE_URL$CONTRACTS_NODE_OS.tar.gz"
+            unzip ink-node.zip && \
+            chmod +x artifacts/ink-node-mac/ink-node &&
+            ./artifacts/ink-node-mac/ink-node -linfo,runtime::revive=debug  2>&1 | tee /tmp/ink-node.log &
 
-      - name: Install and run latest `substrate-contracts-node` binary
+      - name: Install and run latest `ink-node` binary
         if: runner.os == 'Windows'
         run: |
-            cargo install contracts-node --git https://github.com/paritytech/substrate-contracts-node.git --force --locked && \
-            substrate-contracts-node -lruntime::contracts=debug  2>&1 | tee /tmp/contracts-node.log &
+            cargo install ink-node --git https://github.com/use-ink/ink-node.git --force --locked && \
+            ink-node -lruntime::revive=debug  2>&1 | tee /tmp/ink-node.log &
 
       - name: Output versions
         run: |
@@ -232,10 +232,3 @@ jobs:
         run: |
           cargo clean --manifest-path=${{ matrix.contract }}/Cargo.toml
           INK_STATIC_BUFFER_SIZE=30 cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml
-
-      - name: Build workspace ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os != 'Windows' && matrix.contract == 'workspace-contracts'
-        run: |
-          echo FOLLOWING SEEMS TO WORK WITH CARGO-CONTRACT 4.0
-          cargo contract build --verbose --manifest-path=workspace-contracts/flipper/Cargo.toml
-          cargo contract build --verbose --manifest-path=workspace-contracts/incrementer/Cargo.toml
