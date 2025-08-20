@@ -1,12 +1,12 @@
 [package]
 name = "trait-incrementer"
-version = "6.0.0-alpha"
+version = "6.0.0-alpha.1"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2021"
 publish = false
 
 [dependencies]
-ink = { version = "6.0.0-alpha", default-features = false, features = ["unstable-hostfn"] }
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false }
 
 dyn-traits = { path = "../../traits", default-features = false }
 
@@ -20,3 +20,6 @@ std = [
     "dyn-traits/std",
 ]
 ink-as-dependency = []
+
+[package.metadata.ink-lang]
+abi = "ink"

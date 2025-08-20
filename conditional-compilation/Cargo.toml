@@ -1,14 +1,14 @@
 [package]
 name = "conditional-compilation"
-version = "6.0.0-alpha"
+version = "6.0.0-alpha.1"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2021"
 
 [dependencies]
-ink = { version = "6.0.0-alpha", default-features = false, features = ["unstable-hostfn"] }
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false, features = ["unstable-hostfn"] }
 
 [dev-dependencies]
-ink_e2e = { version = "6.0.0-alpha", default-features = false }
+ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1" }
 
 [lib]
 path = "lib.rs"
@@ -23,3 +23,6 @@ e2e-tests = []
 # user-defined features
 foo = []
 bar = []
+
+[package.metadata.ink-lang]
+abi = "ink"

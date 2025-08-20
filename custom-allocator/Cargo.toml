@@ -1,6 +1,6 @@
 [package]
 name = "custom-allocator"
-version = "6.0.0-alpha"
+version = "6.0.0-alpha.1"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2021"
 publish = false
@@ -8,7 +8,7 @@ publish = false
 [dependencies]
 # We're going to use a different allocator than the one provided by ink!. To do that we
 # first need to disable the included memory allocator.
-ink = { version = "6.0.0-alpha", default-features = false, features = ["unstable-hostfn"] }
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false, features = ["no-allocator"] }
 
 # todo
 #foo = { path = "../../../foo", default-features = false }
@@ -17,7 +17,7 @@ ink = { version = "6.0.0-alpha", default-features = false, features = ["unstable
 #bumpalo = "3.16.0"
 
 [dev-dependencies]
-ink_e2e = { version = "6.0.0-alpha", default-features = false }
+ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1" }
 
 [lib]
 path = "lib.rs"
@@ -29,3 +29,6 @@ std = [
 ]
 ink-as-dependency = []
 e2e-tests = []
+
+[package.metadata.ink-lang]
+abi = "ink"

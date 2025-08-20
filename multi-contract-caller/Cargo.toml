@@ -1,19 +1,19 @@
 [package]
 name = "multi-contract-caller"
-version = "6.0.0-alpha"
+version = "6.0.0-alpha.1"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2021"
 publish = false
 
 [dependencies]
-ink = { version = "6.0.0-alpha", default-features = false, features = ["unstable-hostfn"] }
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false, features = ["unstable-hostfn"] }
 
 adder = { path = "adder", default-features = false, features = ["ink-as-dependency"] }
 subber = { path = "subber", default-features = false, features = ["ink-as-dependency"] }
 accumulator = { path = "accumulator", default-features = false, features = ["ink-as-dependency"] }
 
 [dev-dependencies]
-ink_e2e = { version = "6.0.0-alpha", default-features = false }
+ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1" }
 
 [lib]
 path = "lib.rs"
@@ -35,3 +35,6 @@ members = [
     "adder",
     "subber",
 ]
+
+[package.metadata.ink-lang]
+abi = "ink"

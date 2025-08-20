@@ -1,5 +1,5 @@
 [package]
-name = "pallet-contract-caller"
+name = "pallet-revive-caller"
 version = "0.1.0"
 description = "Demonstrate calling an ink! contract from a pallet"
 authors = ["Use Ink <ink@use.ink>"]
@@ -15,13 +15,13 @@ targets = ["x86_64-unknown-linux-gnu"]
 [dependencies]
 codec = { workspace = true, default-features = false, features = ["derive"] }
 scale-info = { workspace = true, default-features = false, features = ["derive"] }
-frame-support = { workspace = true, default-features = false }
+frame-support = { workspace = true, default-features = false, features = ["try-runtime"] }
 frame-system = { workspace = true, default-features = false }
 sp-runtime = { workspace = true, default-features = false }
 
-pallet-contracts = { workspace = true, default-features = false }
+pallet-revive = { workspace = true, default-features = false, features = ["try-runtime"] }
 flipper-traits = { path = "../../traits", default-features = false }
-ink = { version = "5.1.0", features = ["no-panic-handler", "no-allocator"] }
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", features = ["no-panic-handler", "no-allocator"] }
 
 [features]
 default = ["std"]
@@ -31,7 +31,10 @@ std = [
     "frame-system/std",
     "sp-runtime/std",
     "scale-info/std",
-    "pallet-contracts/std",
+    "pallet-revive/std",
     "ink/std"
 ]
 try-runtime = []
+
+[package.metadata.ink-lang]
+abi = "ink"
