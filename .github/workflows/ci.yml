@@ -226,11 +226,19 @@ jobs:
 
       - name: Build ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows' && matrix.contract == 'custom-allocator'
-        run: cargo +nightly contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+        run:
+          rustup component add rust-src --toolchain nightly-x86_64-unknown-linux-gnu
+          cargo +nightly contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
 
       - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
-        if: runner.os != 'Windows' && matrix.contract != 'workspace-contracts' && matrix.contract != 'static-buffer'
+        if: runner.os != 'Windows' && matrix.contract != 'workspace-contracts' && matrix.contract != 'static-buffer' && matrix.contract != 'custom-allocator'
         run: cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+
+      - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
+        if: runner.os != 'Windows' && matrix.contract == 'custom-allocator'
+        run:
+          rustup component add rust-src --toolchain nightly-x86_64-unknown-linux-gnu
+          cargo +nightly test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
 
       - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows' && matrix.contract == 'static-buffer'
