@@ -171,6 +171,7 @@ jobs:
         with:
           crate: cargo-contract
           git: https://github.com/use-ink/cargo-contract.git
+          locked: false
           tag: v6.0.0-alpha.1
           cache-key: ${{ matrix.platform }}
 
