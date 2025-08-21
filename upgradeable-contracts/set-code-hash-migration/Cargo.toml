@@ -1,18 +1,18 @@
 [package]
 name = "incrementer"
-version = "6.0.0-alpha"
+version = "6.0.0-alpha.1"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2021"
 publish = false
 
 [dependencies]
-ink = { version = "6.0.0-alpha", default-features = false, features = ["unstable-hostfn"] }
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false, features = ["unstable-hostfn"] }
 
 migration = { path = "./migration", default-features = false, features = ["ink-as-dependency"] }
 updated-incrementer = { path = "./updated-incrementer", default-features = false, features = ["ink-as-dependency"] }
 
 [dev-dependencies]
-ink_e2e = { version = "6.0.0-alpha", default-features = false }
+ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1" }
 
 [lib]
 path = "lib.rs"
@@ -26,3 +26,6 @@ std = [
 ]
 ink-as-dependency = []
 e2e-tests = []
+
+[package.metadata.ink-lang]
+abi = "ink"

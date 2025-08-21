@@ -1,0 +1,29 @@
+[package]
+name = "contract1"
+version = "0.1.0"
+edition = "2021"
+authors = ["Víctor M. González <victor.gonzalez@coinfabrik.com>"]
+
+[lib]
+path = "lib.rs"
+
+[features]
+default = ["std"]
+std = ["ink/std"]
+ink-as-dependency = []
+e2e-tests = []
+
+[dependencies]
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false }
+
+[dev-dependencies]
+ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1" }
+
+[profile.dev]
+overflow-checks = false
+
+[profile.release]
+overflow-checks = false
+
+[package.metadata.ink-lang]
+abi = "ink"

@@ -5,7 +5,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-ink = { version = "6.0.0-alpha", default-features = false, features = ["unstable-hostfn"] }  
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false }
 
 [lib]
 path = "src/lib.rs"
@@ -15,3 +15,6 @@ default = ["std"]
 std = [
     "ink/std",
 ]
+
+[package.metadata.ink-lang]
+abi = "ink"
