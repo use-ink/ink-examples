@@ -6,7 +6,7 @@ edition = "2024"
 publish = false
 
 [dependencies]
-ink = { path = "../../../crates/ink", default-features = false }
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.3", default-features = false }
 
 # Note: We **need** to specify the `ink-as-dependency` feature.
 #
@@ -15,7 +15,7 @@ other-contract = { path = "other-contract", default-features = false, features =
 pallet-revive-uapi = { version = "0.4.0", default-features = false }
 
 [dev-dependencies]
-ink_e2e = { path = "../../../crates/e2e" }
+ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.3" }
 
 [lib]
 path = "lib.rs"

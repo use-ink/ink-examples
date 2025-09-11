@@ -6,13 +6,13 @@ edition = "2024"
 publish = false
 
 [dependencies]
-ink = { path = "../../../../crates/ink", default-features = false, features = ["unstable-hostfn"] }
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.3", default-features = false, features = ["unstable-hostfn"] }
 
 migration = { path = "./migration", default-features = false, features = ["ink-as-dependency"] }
 updated-incrementer = { path = "./updated-incrementer", default-features = false, features = ["ink-as-dependency"] }
 
 [dev-dependencies]
-ink_e2e = { path = "../../../../crates/e2e" }
+ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.3" }
 
 [lib]
 path = "lib.rs"
