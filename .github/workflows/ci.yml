@@ -28,7 +28,7 @@ jobs:
     env:
       # constant values for matrix
       platform: '[\"ubuntu-latest\", \"macos-latest\"]'
-      toolchain: '[\"stable\"]'
+      toolchain: '[\"1.88.0\"]'
     outputs:
       MATRIX: ${{ steps.build_matrix.outputs.MATRIX }}
       SKIP_CHECKS: ${{ steps.build_matrix.outputs.SKIP_CHECKS }}
