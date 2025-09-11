@@ -21,7 +21,6 @@ on:
       - '**README.md'
       - 'LICENSE'
 
-
 jobs:
   prepare_matrix:
     name:
@@ -172,7 +171,7 @@ jobs:
           crate: cargo-contract
           git: https://github.com/use-ink/cargo-contract.git
           locked: false
-          tag: v6.0.0-alpha.1
+          tag: v6.0.0-alpha.3
           cache-key: ${{ matrix.platform }}
 
       - name: Install cargo-dylint
