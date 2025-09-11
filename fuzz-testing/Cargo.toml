@@ -1,15 +1,15 @@
 [package]
 name = "fuzz_testing"
-version = "6.0.0-alpha.1"
+version = "6.0.0-alpha.3"
 authors = ["Use Ink <ink@use.ink>"]
-edition = "2021"
+edition = "2024"
 publish = false
 
 [dependencies]
-ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false }
+ink = { path = "../../../crates/ink", default-features = false }
 
 [dev-dependencies]
-ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", features = ["sandbox"] }
+ink_e2e = { path = "../../../crates/e2e", features = ["sandbox"] }
 
 # for fuzz testing
 quickcheck = { version = "1" }

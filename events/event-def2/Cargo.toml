@@ -2,10 +2,10 @@
 name = "event-def2"
 authors = ["Use Ink <ink@use.ink>"]
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
-ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false }
+ink = { path = "../../../../crates/ink", default-features = false }
 
 [lib]
 path = "src/lib.rs"
