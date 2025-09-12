@@ -2,17 +2,17 @@
 name = "own-code-hash"
 version = "4.3.0"
 authors = ["Parity Technologies <admin@parity.io>"]
-edition = "2021"
+edition = "2024"
 publish = false
 
 [dependencies]
-ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false, features = ["unstable-hostfn"] }
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.3", default-features = false }
 # todo remove scale in favor of ink::scale
 scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2.5", default-features = false, features = ["derive"], optional = true }
 
 [dev-dependencies]
-ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1" }
+ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.3" }
 
 [lib]
 path = "lib.rs"

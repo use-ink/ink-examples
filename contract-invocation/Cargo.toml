@@ -1,7 +1,7 @@
 [package]
 name = "instantiate_contract"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 authors = ["Víctor M. González <victor.gonzalez@coinfabrik.com>"]
 
 [lib]
@@ -23,7 +23,7 @@ ink-as-dependency = []
 e2e-tests = []
 
 [dependencies]
-ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false, features = ["unstable-hostfn"] }
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.3", default-features = false }
 scale = { package = "parity-scale-codec", version = "3.7.4", default-features = false, features = [
     "derive",
 ] }
@@ -47,7 +47,7 @@ virtual_contract_ver2 = { path = "./virtual_contract_ver2", default-features = f
 ] }
 
 [dev-dependencies]
-ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1" }
+ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.3" }
 
 [profile.dev]
 overflow-checks = false

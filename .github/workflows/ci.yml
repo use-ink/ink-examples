@@ -21,7 +21,6 @@ on:
       - '**README.md'
       - 'LICENSE'
 
-
 jobs:
   prepare_matrix:
     name:
@@ -29,7 +28,7 @@ jobs:
     env:
       # constant values for matrix
       platform: '[\"ubuntu-latest\", \"macos-latest\"]'
-      toolchain: '[\"stable\"]'
+      toolchain: '[\"1.88.0\"]'
     outputs:
       MATRIX: ${{ steps.build_matrix.outputs.MATRIX }}
       SKIP_CHECKS: ${{ steps.build_matrix.outputs.SKIP_CHECKS }}
@@ -171,8 +170,8 @@ jobs:
         with:
           crate: cargo-contract
           git: https://github.com/use-ink/cargo-contract.git
-          locked: false
-          tag: v6.0.0-alpha.1
+          locked: true
+          tag: v6.0.0-alpha.3
           cache-key: ${{ matrix.platform }}
 
       - name: Install cargo-dylint
@@ -227,9 +226,7 @@ jobs:
       - name: Build ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows' && matrix.contract == 'custom-allocator'
         run:
-          rustup component add rust-src --toolchain nightly-x86_64-unknown-linux-gnu;
-          rustup component add rust-src --toolchain nightly-aarch64-apple-darwin;
-          cargo +nightly contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+          RUSTC_BOOTSTRAP=1 cargo contract build --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
 
       - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows' && matrix.contract != 'workspace-contracts' && matrix.contract != 'static-buffer' && matrix.contract != 'custom-allocator'
@@ -238,8 +235,7 @@ jobs:
       - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows' && matrix.contract == 'custom-allocator'
         run:
-          rustup component add rust-src --toolchain nightly-x86_64-unknown-linux-gnu;
-          cargo +nightly test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+          RUSTC_BOOTSTRAP=1 cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
 
       - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows' && matrix.contract == 'static-buffer'

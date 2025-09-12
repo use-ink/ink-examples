@@ -1,14 +1,14 @@
 [package]
 name = "custom-allocator"
-version = "6.0.0-alpha.1"
+version = "6.0.0-alpha.3"
 authors = ["Use Ink <ink@use.ink>"]
-edition = "2021"
+edition = "2024"
 publish = false
 
 [dependencies]
 # We're going to use a different allocator than the one provided by ink!. To do that we
 # first need to disable the included memory allocator.
-ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false, features = ["no-allocator"] }
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.3", default-features = false, features = ["no-allocator"] }
 
 # todo
 #foo = { path = "../../../foo", default-features = false }
@@ -17,7 +17,7 @@ ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-
 #bumpalo = "3.16.0"
 
 [dev-dependencies]
-ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1" }
+ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.3" }
 
 [lib]
 path = "lib.rs"

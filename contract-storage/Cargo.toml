@@ -1,15 +1,15 @@
 [package]
 name = "contract-storage"
-version = "6.0.0-alpha.1"
+version = "6.0.0-alpha.3"
 authors = ["Use Ink <ink@use.ink>"]
-edition = "2021"
+edition = "2024"
 publish = false
 
 [dependencies]
-ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false, features = ["unstable-hostfn"] }
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.3", default-features = false }
 
 [dev-dependencies]
-ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1" }
+ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.3" }
 
 [lib]
 path = "lib.rs"
