@@ -1,13 +1,13 @@
 [package]
 name = "payment_channel"
-version = "6.0.0-alpha.3"
+version = "6.0.0-alpha.4"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2024"
 publish = false
 
 [dependencies]
 # `unstable-hostfn` is needed for the `pallet-revive` function `terminate_contract`
-ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.3", default-features = false, features = ["unstable-hostfn"] }
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.4", default-features = false, features = ["unstable-hostfn"] }
 sp-core = { git = "https://github.com/use-ink/polkadot-sdk.git", rev = "a71ec19a94702ea71767ba5ac97603ea6c6305c1", default-features = false }
 
 [dev-dependencies]
