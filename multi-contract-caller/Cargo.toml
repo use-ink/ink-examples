@@ -1,19 +1,19 @@
 [package]
 name = "multi-contract-caller"
-version = "6.0.0-alpha.3"
+version = "6.0.0-alpha.4"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2024"
 publish = false
 
 [dependencies]
-ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.3", default-features = false }
+ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.4", default-features = false }
 
 adder = { path = "adder", default-features = false, features = ["ink-as-dependency"] }
 subber = { path = "subber", default-features = false, features = ["ink-as-dependency"] }
 accumulator = { path = "accumulator", default-features = false, features = ["ink-as-dependency"] }
 
 [dev-dependencies]
-ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.3" }
+ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.4" }
 
 [lib]
 path = "lib.rs"
