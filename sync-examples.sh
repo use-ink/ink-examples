@@ -17,6 +17,7 @@ fd Cargo.toml $INK_PROJECT_FOLDER/integration-tests/public/ |
 
 # Find all `Cargo.toml` files and replace the `path`
 find . -name "Cargo.toml" -type f | while read -r file; do
+  # replace `ink`
   perl -pi -e "s|path = \"./\.\./crates/ink\"|$INK_SUBSTITUTION|" "$file"
   perl -pi -e "s|path = \"\.\./\.\./crates/ink\"|$INK_SUBSTITUTION|" "$file"
   perl -pi -e "s|path = \"\.\.\/\.\./\.\./crates/ink\"|$INK_SUBSTITUTION|" "$file"
@@ -24,16 +25,11 @@ find . -name "Cargo.toml" -type f | while read -r file; do
   perl -pi -e "s|path = \"\.\.\/\.\.\/\.\.\/\.\./\.\./crates/ink\"|$INK_SUBSTITUTION|" "$file"
   perl -pi -e "s|path = \"\.\.\/\.\.\/\.\.\/\.\.\/\.\./\.\./crates/ink\"|$INK_SUBSTITUTION|" "$file"
 
+  # replace `ink_sandbox`
   perl -pi -e "s|path = \"\.\./\.\.\/\.\./\.\.\/\.\./crates/e2e/sandbox\"|$INK_SUBSTITUTION|" "$file"
   perl -pi -e "s|path = \"\.\.\/\.\./\.\.\/\.\./crates/e2e/sandbox\"|$INK_SUBSTITUTION|" "$file"
 
-  perl -pi -e "s|path = \"\.\./\.\./crates/ink\"|$INK_SUBSTITUTION|" "$file"
-  perl -pi -e "s|path = \"\.\.\/\.\./\.\./crates/ink\"|$INK_SUBSTITUTION|" "$file"
-  perl -pi -e "s|path = \"\.\.\/\.\.\/\.\./\.\./crates/ink\"|$INK_SUBSTITUTION|" "$file"
-  perl -pi -e "s|path = \"\.\.\/\.\.\/\.\.\/\.\./\.\./crates/ink\"|$INK_SUBSTITUTION|" "$file"
-  perl -pi -e "s|path = \"\.\.\/\.\.\/\.\.\/\.\.\/\.\./\.\./crates/ink\"|$INK_SUBSTITUTION|" "$file"
-
-
+  # replace `ink_e2e`
   perl -pi -e "s|path = \"./\.\./crates/e2e\"|$INK_E2E_SUBSTITUTION|" "$file"
   perl -pi -e "s|path = \"\.\./\.\./crates/e2e\"|$INK_E2E_SUBSTITUTION|" "$file"
   perl -pi -e "s|path = \"\.\.\/\.\./\.\./crates/e2e\"|$INK_E2E_SUBSTITUTION|" "$file"
