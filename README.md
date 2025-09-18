@@ -49,6 +49,10 @@ The `.contract` file combines the Wasm and metadata into one file and can be use
 
 All examples are built with [useink](https://use.ink/frontend/overview), a React hooks library built by the ink! team.
 
+### Synchronize this repository with ink! releases
+
+This repository contains a script to ease this proccess: [`sync-examples.sh`](https://github.com/use-ink/ink-examples/blob/main/sync-examples.sh).
+
 ## License
 
 The examples in this folder are released into the public domain.
