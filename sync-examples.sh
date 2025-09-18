@@ -10,6 +10,8 @@ INK_PROJECT_FOLDER="../ink"
 INK_SUBSTITUTION='git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.4"'
 INK_E2E_SUBSTITUTION='git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.4"'
 
+# Clean all examples first, if there are still `target` folders the copy
+# will take ages.
 fd Cargo.toml $INK_PROJECT_FOLDER/integration-tests/public/ |
 	xargs -n1 -I{} bash -c "echo {}; cargo clean --manifest-path={}" 
 
