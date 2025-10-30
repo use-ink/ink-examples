@@ -9,7 +9,7 @@ INK_PROJECT_FOLDER="../ink"
 # What to substitute the relative `path = "../"` with.
 INK_SUBSTITUTION='version = "6.0.0-beta"'
 INK_E2E_SUBSTITUTION='version = "6.0.0-beta"'
-INK_SANDBOX_SUBSTITUTION='git = "https://github.com/use-ink/ink", tag = "v6.0.0-beta"'
+INK_SANDBOX_SUBSTITUTION='git = "https://github.com/use-ink/ink", branch = "6.0.0-beta"'
 
 # Clean all examples first, if there are still `target` folders the copy
 # will take ages.
