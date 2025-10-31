@@ -1,19 +1,19 @@
 [package]
 name = "events"
-version = "6.0.0-alpha.4"
+version = "6.0.0-beta"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2024"
 publish = false
 
 [dependencies]
-ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.4", default-features = false }
+ink = { version = "6.0.0-beta", default-features = false }
 
 event-def = { path = "event-def", default-features = false }
 event-def2 = { path = "event-def2", default-features = false }
 event-def-unused = { path = "event-def-unused", default-features = false }
 
 [dev-dependencies]
-ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.4" }
+ink_e2e = { version = "6.0.0-beta" }
 
 [lib]
 path = "lib.rs"

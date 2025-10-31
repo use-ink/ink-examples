@@ -23,7 +23,7 @@ ink-as-dependency = []
 e2e-tests = []
 
 [dependencies]
-ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.4", default-features = false }
+ink = { version = "6.0.0-beta", default-features = false }
 scale = { package = "parity-scale-codec", version = "3.7.4", default-features = false, features = [
     "derive",
 ] }
@@ -47,7 +47,7 @@ virtual_contract_ver2 = { path = "./virtual_contract_ver2", default-features = f
 ] }
 
 [dev-dependencies]
-ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.4" }
+ink_e2e = { version = "6.0.0-beta" }
 
 [profile.dev]
 overflow-checks = false

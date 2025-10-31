@@ -7,8 +7,9 @@
 INK_PROJECT_FOLDER="../ink"
 
 # What to substitute the relative `path = "../"` with.
-INK_SUBSTITUTION='git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.4"'
-INK_E2E_SUBSTITUTION='git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.4"'
+INK_SUBSTITUTION='version = "6.0.0-beta"'
+INK_E2E_SUBSTITUTION='version = "6.0.0-beta"'
+INK_SANDBOX_SUBSTITUTION='git = "https://github.com/use-ink/ink", branch = "6.0.0-beta"'
 
 # Clean all examples first, if there are still `target` folders the copy
 # will take ages.
@@ -28,8 +29,11 @@ find . -name "Cargo.toml" -type f | while read -r file; do
   perl -pi -e "s|path = \"\.\.\/\.\.\/\.\.\/\.\.\/\.\./\.\./crates/ink\"|$INK_SUBSTITUTION|" "$file"
 
   # replace `ink_sandbox`
-  perl -pi -e "s|path = \"\.\./\.\.\/\.\./\.\.\/\.\./crates/e2e/sandbox\"|$INK_SUBSTITUTION|" "$file"
-  perl -pi -e "s|path = \"\.\.\/\.\./\.\.\/\.\./crates/e2e/sandbox\"|$INK_SUBSTITUTION|" "$file"
+  perl -pi -e "s|path = \"\.\.\/\.\./\.\.\/\.\./\.\.\/\.\./crates/sandbox\"|$INK_SANDBOX_SUBSTITUTION|" "$file"
+  perl -pi -e "s|path = \"\.\./\.\.\/\.\./\.\.\/\.\./crates/sandbox\"|$INK_SANDBOX_SUBSTITUTION|" "$file"
+  perl -pi -e "s|path = \"\.\.\/\.\./\.\.\/\.\./crates/sandbox\"|$INK_SANDBOX_SUBSTITUTION|" "$file"
+  perl -pi -e "s|path = \"\.\./\.\.\/\.\./crates/sandbox\"|$INK_SANDBOX_SUBSTITUTION|" "$file"
+  perl -pi -e "s|path = \"\.\.\/\.\./crates/sandbox\"|$INK_SANDBOX_SUBSTITUTION|" "$file"
 
   # replace `ink_e2e`
   perl -pi -e "s|path = \"./\.\./crates/e2e\"|$INK_E2E_SUBSTITUTION|" "$file"
