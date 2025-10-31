@@ -6,7 +6,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-features = false, features = ["unstable-hostfn"] }
+ink = { version = "6.0.0-beta", default-features = false }
 
 # Note: We **need** to specify the `ink-as-dependency` feature.
 #
@@ -14,7 +14,7 @@ ink = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1", default-
 other-contract = { path = "other-contract", default-features = false, features = ["ink-as-dependency"] }
 
 [dev-dependencies]
-ink_e2e = { git = "https://github.com/use-ink/ink", tag = "v6.0.0-alpha.1" }
+ink_e2e = { version = "6.0.0-beta" }
 
 [lib]
 path = "lib.rs"
