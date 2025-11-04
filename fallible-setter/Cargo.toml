@@ -1,5 +1,5 @@
 [package]
-name = "contract_transfer"
+name = "fallible-setter"
 version = "6.0.0-beta"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2024"
@@ -9,8 +9,7 @@ publish = false
 ink = { version = "6.0.0-beta", default-features = false }
 
 [dev-dependencies]
-ink_e2e = { version = "6.0.0-beta"}
-ink_sandbox = { git = "https://github.com/use-ink/ink", branch = "6.0.0-beta" }
+ink_e2e = { version = "6.0.0-beta" }
 
 [lib]
 path = "lib.rs"
@@ -24,4 +23,4 @@ ink-as-dependency = []
 e2e-tests = []
 
 [package.metadata.ink-lang]
-abi = "ink"
+abi = "sol"
