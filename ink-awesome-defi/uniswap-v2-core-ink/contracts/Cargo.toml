@@ -1,0 +1,39 @@
+[package]
+name = "global"
+version = "0.1.0"
+authors = ["developeruche <developeruche@gmail.com>"]
+edition = "2021"
+
+[dependencies]
+ink = { version = "4.2.0", default-features = false }
+
+openbrush = { git = "https://github.com/727-Ventures/openbrush-contracts", version = "4.0.0-beta.1", default-features = false, features = ["psp22","ownable","access_control", "psp34", "reentrancy_guard", "pausable"]}
+
+scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
+scale-info = { version = "2.6", default-features = false, features = ["derive"], optional = true }
+sp-arithmetic = { version = "15", default-features = false }
+
+[dev-dependencies]
+ink_e2e = "4.2.0"
+
+[lib]
+path = "global.rs"
+
+[features]
+default = ["std"]
+std = [
+    "ink/std",
+    "scale/std",
+    "scale-info/std",
+
+    "openbrush/std",
+    "sp-arithmetic/std",
+]
+ink-as-dependency = []
+e2e-tests = []
+
+[profile.dev]
+overflow-checks = false
+
+[profile.release]
+overflow-checks = false
