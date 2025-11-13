@@ -1,12 +1,12 @@
 [package]
 name = "cross-contract-calls"
-version = "6.0.0-beta"
+version = "6.0.0-beta.1"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2024"
 publish = false
 
 [dependencies]
-ink = { version = "6.0.0-beta", default-features = false }
+ink = { version = "6.0.0-beta.1", default-features = false }
 
 # Note: We **need** to specify the `ink-as-dependency` feature.
 #
@@ -15,7 +15,7 @@ other-contract = { path = "other-contract", default-features = false, features =
 pallet-revive-uapi = { version = "0.8.0", default-features = false }
 
 [dev-dependencies]
-ink_e2e = { version = "6.0.0-beta" }
+ink_e2e = { version = "6.0.0-beta.1" }
 
 [lib]
 path = "lib.rs"

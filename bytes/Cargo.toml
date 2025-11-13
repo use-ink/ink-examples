@@ -1,6 +1,5 @@
 [package]
-name = "debugging_strategies"
-description = "Illustrates different debugging strategies"
+name = "bytes"
 version = "6.0.0-beta.1"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2024"
@@ -8,7 +7,6 @@ publish = false
 
 [dependencies]
 ink = { version = "6.0.0-beta.1", default-features = false }
-flipper = { path = "../flipper/", default-features = false, features = ["ink-as-dependency"] }
 
 [dev-dependencies]
 ink_e2e = { version = "6.0.0-beta.1" }
@@ -19,11 +17,10 @@ path = "lib.rs"
 [features]
 default = ["std"]
 std = [
-    "ink/std",
+    "ink/std"
 ]
 ink-as-dependency = []
 e2e-tests = []
-debug = []
 
 [package.metadata.ink-lang]
-abi = "ink"
+abi = "sol"

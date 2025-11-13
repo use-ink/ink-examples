@@ -1,15 +1,15 @@
 [package]
 name = "contract-xcm"
-version = "6.0.0-beta"
+version = "6.0.0-beta.1"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2024"
 publish = false
 
 [dependencies]
-ink = { version = "6.0.0-beta", default-features = false, features = ["xcm"] }
+ink = { version = "6.0.0-beta.1", default-features = false, features = ["xcm"] }
 
 [dev-dependencies]
-ink_e2e = { version = "6.0.0-beta" }
+ink_e2e = { version = "6.0.0-beta.1" }
 
 [lib]
 path = "lib.rs"

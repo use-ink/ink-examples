@@ -1,6 +1,6 @@
 [package]
 name = "custom-allocator"
-version = "6.0.0-beta"
+version = "6.0.0-beta.1"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2024"
 publish = false
@@ -8,7 +8,7 @@ publish = false
 [dependencies]
 # We're going to use a different allocator than the one provided by ink!. To do that we
 # first need to disable the included memory allocator.
-ink = { version = "6.0.0-beta", default-features = false, features = ["no-allocator"] }
+ink = { version = "6.0.0-beta.1", default-features = false, features = ["no-allocator"] }
 
 # todo
 #foo = { path = "../../../foo", default-features = false }
@@ -17,7 +17,7 @@ ink = { version = "6.0.0-beta", default-features = false, features = ["no-alloca
 #bumpalo = "3.16.0"
 
 [dev-dependencies]
-ink_e2e = { version = "6.0.0-beta" }
+ink_e2e = { version = "6.0.0-beta.1" }
 
 [lib]
 path = "lib.rs"
