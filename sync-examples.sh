@@ -9,6 +9,7 @@ INK_PROJECT_FOLDER="../ink"
 # What to substitute the relative `path = "../"` with.
 INK_SUBSTITUTION='version = "6.0.0-beta.1"'
 INK_E2E_SUBSTITUTION='version = "6.0.0-beta.1"'
+INK_PRECOMPILES_SUBSTITUTION='version = "6.0.0-beta.1"'
 INK_SANDBOX_SUBSTITUTION='git = "https://github.com/use-ink/ink", branch = "6.0.0-beta.1"'
 
 # Clean all examples first, if there are still `target` folders the copy
@@ -42,4 +43,7 @@ find . -name "Cargo.toml" -type f | while read -r file; do
   perl -pi -e "s|path = \"\.\.\/\.\.\/\.\./\.\./crates/e2e\"|$INK_E2E_SUBSTITUTION|" "$file"
   perl -pi -e "s|path = \"\.\.\/\.\.\/\.\.\/\.\./\.\./crates/e2e\"|$INK_E2E_SUBSTITUTION|" "$file"
   perl -pi -e "s|path = \"\.\.\/\.\.\/\.\.\/\.\.\/\.\./\.\./crates/e2e\"|$INK_E2E_SUBSTITUTION|" "$file"
+
+  # replace `ink_precompiles`
+  perl -pi -e "s|path = \"./\.\./crates/precompiles\"|$INK_PRECOMPILES_SUBSTITUTION|" "$file"
 done
