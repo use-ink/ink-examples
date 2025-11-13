@@ -230,12 +230,12 @@ jobs:
 
       - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows' && matrix.contract != 'workspace-contracts' && matrix.contract != 'static-buffer' && matrix.contract != 'custom-allocator'
-        run: cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+        run: cargo contract test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
 
       - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows' && matrix.contract == 'custom-allocator'
         run:
-          RUSTC_BOOTSTRAP=1 cargo test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
+          RUSTC_BOOTSTRAP=1 cargo contract test --verbose --manifest-path=${{ matrix.contract }}/Cargo.toml;
 
       - name: Test ${{ matrix.contract }} on ${{ matrix.platform }}-${{ matrix.toolchain }}
         if: runner.os != 'Windows' && matrix.contract == 'static-buffer'
