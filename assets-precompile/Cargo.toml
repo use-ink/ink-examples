@@ -1,16 +1,18 @@
 [package]
-name = "contract_transfer"
-version = "6.0.0-beta.1"
+name = "assets_precompile"
+version = "6.0.0-alpha.4"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2024"
 publish = false
 
 [dependencies]
 ink = { version = "6.0.0-beta", default-features = false }
+ink_precompiles = { path = "../../../crates/precompiles", default-features = false }
 
 [dev-dependencies]
-ink_e2e = { version = "6.0.0-beta"}
+ink_e2e = { version = "6.0.0-beta" }
 ink_sandbox = { git = "https://github.com/use-ink/ink", branch = "6.0.0-beta" }
+hex = "0.4"
 
 [lib]
 path = "lib.rs"
@@ -19,9 +21,17 @@ path = "lib.rs"
 default = ["std"]
 std = [
     "ink/std",
+    "ink_precompiles/std",
 ]
 ink-as-dependency = []
 e2e-tests = []
 
 [package.metadata.ink-lang]
 abi = "ink"
+
+[lints.rust.unexpected_cfgs]
+level = "warn"
+check-cfg = [
+    'cfg(ink_abi, values("ink", "sol", "all"))'
+]
+
