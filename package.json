@@ -13,6 +13,7 @@
     "basic-contract-caller": "pnpm --filter basic-contract-caller dev",
     "contract-terminate": "pnpm --filter contract-terminate dev",
     "contract-transfer": "pnpm --filter contract-transfer dev",
+    "dns": "pnpm --filter dns-frontend-example dev",
     "erc20": "pnpm --filter erc20 dev",
     "erc721": "pnpm --filter erc721 dev",
     "incrementer": "pnpm --filter incrementer dev"
