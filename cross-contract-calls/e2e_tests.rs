@@ -1,6 +1,6 @@
 use super::cross_contract_calls::*;
-use other_contract::OtherContractRef;
 use ink_e2e::ContractsBackend;
+use other_contract::OtherContractRef;
 
 type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
@@ -15,8 +15,7 @@ async fn instantiate_no_limits<Client: E2EBackend>(mut client: Client) -> E2ERes
         .expect("other-contract instantiate failed");
 
     // when
-    let mut constructor =
-        CrossContractCallsRef::new(other_contract.addr);
+    let mut constructor = CrossContractCallsRef::new(other_contract.addr);
     let contract = client
         .instantiate("cross-contract-calls", &ink_e2e::alice(), &mut constructor)
         .submit()
@@ -38,8 +37,7 @@ async fn flip_and_get<Client: E2EBackend>(mut client: Client) -> E2EResult<()> {
         .await
         .expect("other-contract instantiate failed");
 
-    let mut constructor =
-        CrossContractCallsRef::new(other_contract.addr);
+    let mut constructor = CrossContractCallsRef::new(other_contract.addr);
     let contract = client
         .instantiate("cross-contract-calls", &ink_e2e::alice(), &mut constructor)
         .submit()
