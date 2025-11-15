@@ -17,7 +17,8 @@ mod cross_contract_calls {
         pub fn new(other_contract_address: ink::Address) -> Self {
             // Note: In the future, this will be replaced by:
             // let other_contract = OtherContractRef::from(other_contract_address);
-            let other_contract = ink::env::call::FromAddr::from_addr(other_contract_address);
+            let other_contract =
+                ink::env::call::FromAddr::from_addr(other_contract_address);
             Self { other_contract }
         }
 
