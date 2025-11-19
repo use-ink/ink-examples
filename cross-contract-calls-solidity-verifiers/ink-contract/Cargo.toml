@@ -1,0 +1,34 @@
+[package]
+name = "contracts"
+version = "0.1.0"
+authors = ["[your_name] <[your_email]>"]
+edition = "2021"
+
+[dependencies]
+const-crypto = "0.3.0"
+ink = { version = "6.0.0-beta", default-features = false, features = ["unstable-hostfn"] }
+scale-info = { version = "2.11.6", default-features = false, features = ["derive"] }
+
+[dev-dependencies]
+ink_e2e = "6.0.0-beta"
+
+[lib]
+path = "lib.rs"
+
+[features]
+default = ["std"]
+std = [
+    "ink/std",
+    "scale-info/std",
+]
+ink-as-dependency = []
+e2e-tests = []
+
+[package.metadata.ink-lang]
+abi = "all"
+
+[lints.rust.unexpected_cfgs]
+level = "warn"
+check-cfg = [
+    'cfg(ink_abi, values("ink", "sol", "all"))'
+]

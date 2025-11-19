@@ -1,0 +1,21 @@
+{
+  "name": "zk-anonymous-poll",
+  "version": "1.0.0",
+  "description": "Anonymous polling system using ZK proofs with Noir",
+  "scripts": {
+    "build:circuit": "./scripts/build-circuit.sh",
+    "build:contracts": "cd contracts && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "test": "npm run test:circuit && npm run test:contracts",
+    "test:circuit": "cd circuits && nargo test",
+    "test:contracts": "cd contracts && npm test",
+    "dev": "cd frontend && npm run dev"
+  },
+  "keywords": ["zk", "noir", "anonymous", "poll", "zero-knowledge"],
+  "author": "Lynette7",
+  "license": "MIT",
+  "devDependencies": {
+    "@noir-lang/noir_js": "^0.17.0",
+    "@noir-lang/backend_barretenberg": "^0.17.0"
+  }
+}

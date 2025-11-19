@@ -1,0 +1,24 @@
+[package]
+name = "circuits"
+type = "bin"
+authors = [""]
+
+[dependencies]
+
+# Configuration for the circuit
+[circuit]
+# Maximum number of constraints (adjust based on your needs)
+max_constraints = 100000
+
+# Backend configuration
+[backend]
+# Use Barretenberg backend (default)
+backend = "barretenberg"
+
+# Optimization settings
+[optimization]
+# Enable optimizations for smaller proof size
+optimize_for_size = true
+
+# Enable parallel proving (if supported)
+enable_parallel = true
