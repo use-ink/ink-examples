@@ -1,0 +1,31 @@
+[package]
+name = "wrapper"
+version = "0.1.0"
+authors = ["You"]
+edition = "2021"
+
+[dependencies]
+ink = { version = "5.1.1", default-features = false }
+scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
+scale-info = { version = "2.6", default-features = false, features = ["derive"] }
+
+# Dependency on the local flipper crate
+flipper = { path = "../flipper", default-features = false, features = ["ink-as-dependency"] }
+
+[dev-dependencies]
+ink_e2e = "5.1.1"
+
+[lib]
+name = "wrapper"
+path = "lib.rs"
+
+[features]
+default = ["std"]
+std = [
+    "ink/std",
+    "scale/std",
+    "scale-info/std",
+    "flipper/std", # Important for linking
+]
+ink-as-dependency = []
+e2e-tests = []

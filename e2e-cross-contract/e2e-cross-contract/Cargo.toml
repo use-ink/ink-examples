@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "flipper",
+    "wrapper"
+]
+resolver = "2"
+exclude = ["target"]
