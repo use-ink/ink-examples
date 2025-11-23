@@ -1,0 +1,21 @@
+[package]
+name = "flipper"
+version = "0.1.0"
+authors = ["Use Ink <ink@use.ink>"]
+edition = "2021"
+
+[dependencies]
+ink = { version = "6.0.0-beta", default-features = false }
+
+[dev-dependencies]
+ink_e2e = { version = "6.0.0-beta" }
+
+[lib]
+path = "lib.rs"
+
+[features]
+default = ["std"]
+std = [
+    "ink/std",
+]
+ink-as-dependency = []
