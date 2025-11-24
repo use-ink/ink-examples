@@ -1,0 +1,27 @@
+[package]
+name = "erc721"
+version = "0.1.0"
+authors = ["Use Ink <ink@use.ink>"]
+edition = "2021"
+
+[dependencies]
+ink = { version = "6.0.0-beta", default-features = false }
+
+# Using the correct package name for encoding
+scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
+scale-info = { version = "2.6", default-features = false, features = ["derive"], optional = true }
+
+[dev-dependencies]
+ink_e2e = { version = "6.0.0-beta" }
+
+[lib]
+path = "lib.rs"
+
+[features]
+default = ["std"]
+std = [
+    "ink/std",
+    "scale/std",
+    "scale-info/std",
+]
+ink-as-dependency = []
