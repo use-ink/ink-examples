@@ -1,0 +1,33 @@
+[package]
+name = "TokenFactory"
+version = "0.1.0"
+authors = ["[Luciano Otto Rodrigues] [https://github.com/Lucianoottor]"]
+edition = "2024"
+
+[dependencies]
+ink = { version = "6.0.0-beta.1", default-features = false, features = ["unstable-hostfn"] }
+scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
+scale-info = { version = "2.6", default-features = false, features = ["derive"], optional = true }
+SimpleToken = { path = "SimpleToken", default-features = false, features = ["ink-as-dependency"] } # we have to pass the other contract as dependency
+
+
+[lib]
+path = "lib.rs"
+
+[features]
+default = ["std"]
+std = [
+    "ink/std",
+    "SimpleToken/std" # enable std for the dependency
+]
+ink-as-dependency = []
+e2e-tests = []
+
+[package.metadata.ink-lang]
+abi = "ink"
+
+[lints.rust.unexpected_cfgs]
+level = "warn"
+check-cfg = [
+    'cfg(ink_abi, values("ink", "sol", "all"))'
+]
