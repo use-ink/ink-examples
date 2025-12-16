@@ -2,6 +2,7 @@ packages:
   - "ui"
   - "basic-contract-caller/frontend"
   - "contract-transfer/frontend"
+  - "dns/frontend"
   - "contract-terminate/frontend"
   - "erc20/frontend"
   - "erc721/frontend"
