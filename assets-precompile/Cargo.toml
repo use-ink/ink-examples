@@ -1,17 +1,17 @@
 [package]
 name = "assets_precompile"
-version = "6.0.0-beta.1"
+version = "6.0.0-beta.2"
 authors = ["Use Ink <ink@use.ink>"]
 edition = "2024"
 publish = false
 
 [dependencies]
-ink = { version = "6.0.0-beta.1", default-features = false }
-ink_precompiles = { version = "6.0.0-beta.1", default-features = false }
+ink = { version = "6.0.0-beta.2", default-features = false }
+ink_precompiles = { version = "6.0.0-beta.2", default-features = false }
 
 [dev-dependencies]
-ink_e2e = { version = "6.0.0-beta.1" }
-ink_sandbox = { git = "https://github.com/use-ink/ink", branch = "6.0.0-beta.1" }
+ink_e2e = { version = "6.0.0-beta.2" }
+ink_sandbox = { git = "https://github.com/use-ink/ink", branch = "6.0.0-beta.2" }
 hex = "0.4"
 
 [lib]

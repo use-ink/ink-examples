@@ -6,11 +6,11 @@ edition = "2021"
 
 [dependencies]
 const-crypto = "0.3.0"
-ink = { version = "6.0.0-beta", default-features = false, features = ["unstable-hostfn"] }
+ink = { version = "6.0.0-beta.2", default-features = false, features = ["unstable-hostfn"] }
 scale-info = { version = "2.11.6", default-features = false, features = ["derive"] }
 
 [dev-dependencies]
-ink_e2e = "6.0.0-beta"
+ink_e2e = "6.0.0-beta.2"
 
 [lib]
 path = "lib.rs"
