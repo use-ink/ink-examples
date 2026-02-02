@@ -10,7 +10,7 @@ ink = { version = "6.0.0-beta.1", default-features = false }
 hex-literal = "1"
 
 [dev-dependencies]
-ink_e2e = { version = "6.0.0-beta.1" }
+ink_e2e = { version = "6.0.0-beta.2" }
 blake2 = "0.10"
 
 [lib]

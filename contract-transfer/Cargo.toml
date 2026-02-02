@@ -9,8 +9,8 @@ publish = false
 ink = { version = "6.0.0-beta.1", default-features = false }
 
 [dev-dependencies]
-ink_e2e = { version = "6.0.0-beta.1"}
-ink_sandbox = { git = "https://github.com/use-ink/ink", branch = "6.0.0-beta.1" }
+ink_e2e = { version = "6.0.0-beta.2" }
+ink_sandbox = { git = "https://github.com/use-ink/ink", branch = "6.0.0-beta" }
 
 [lib]
 path = "lib.rs"
